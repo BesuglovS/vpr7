@@ -458,6 +458,7 @@
           console.error("Ошибка загрузки данных:", error);
           // Fallback данные
           protocols = ["http", "https", "ftp", "ftps"];
+          domainsCyrillic = ["тест.рф", "пример.рф", "файлы.рф"];
           domainsLatin = [
             "test.org",
             "example.com",
@@ -465,7 +466,9 @@
             "docs.info",
             "files.net",
           ];
+          pathsCyrillic = ["документы", "файлы", "загрузки"];
           pathsLatin = ["docs", "files", "download", "uploads", "archive"];
+          filesCyrillic = ["отчёт.docx", "документ.pdf", "задание.txt"];
           filesLatin = [
             "info.docx",
             "document.pdf",
