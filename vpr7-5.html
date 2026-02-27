@@ -1,0 +1,1510 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Логические задачи</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.6rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 25px;
+      }
+
+      .task-text .highlight {
+        background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .logic-table-container {
+        overflow-x: auto;
+        margin: 20px 0;
+      }
+
+      .logic-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .logic-table th,
+      .logic-table td {
+        border: 2px solid #e0e0e0;
+        padding: 0;
+        text-align: center;
+        min-width: 80px;
+      }
+
+      .logic-table th {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .logic-table th.name-header {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        min-width: 120px;
+      }
+
+      .logic-table td.name-cell {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 12px 15px;
+        font-weight: 600;
+        text-align: left;
+      }
+
+      .logic-table td.clickable {
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+        min-height: 50px;
+        height: 50px;
+      }
+
+      .logic-table td.clickable:hover {
+        background: rgba(102, 126, 234, 0.1);
+      }
+
+      .logic-table td.clickable.plus {
+        background: rgba(17, 153, 142, 0.2);
+        color: #11998e;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .logic-table td.clickable.minus {
+        background: rgba(235, 51, 73, 0.15);
+        color: #eb3349;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .logic-table td.clickable.correct {
+        background: rgba(17, 153, 142, 0.3);
+        border-color: #38ef7d;
+      }
+
+      .logic-table td.clickable.incorrect {
+        background: rgba(235, 51, 73, 0.3);
+        border-color: #f45c43;
+      }
+
+      .logic-table td.clickable.correct-minus {
+        background: rgba(17, 153, 142, 0.2);
+        border-color: #38ef7d;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-clear {
+        background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .correct-answer {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #fff;
+      }
+
+      .legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+
+      .legend-box {
+        width: 30px;
+        height: 30px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .legend-box.plus {
+        background: rgba(17, 153, 142, 0.2);
+        color: #11998e;
+      }
+
+      .legend-box.minus {
+        background: rgba(235, 51, 73, 0.15);
+        color: #eb3349;
+      }
+
+      .legend-box.empty {
+        background: white;
+      }
+
+      .hint-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px 15px;
+        margin-top: 20px;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.9rem;
+      }
+
+      .hint-box strong {
+        color: #856404;
+      }
+
+      .reasoning-steps {
+        margin-top: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: none;
+      }
+
+      .reasoning-steps h4 {
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .reasoning-steps ol {
+        margin-left: 20px;
+        color: #555;
+        line-height: 1.8;
+      }
+
+      .reasoning-steps li {
+        margin-bottom: 5px;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          font-size: 1rem;
+        }
+
+        .logic-table th,
+        .logic-table td.name-cell {
+          padding: 8px 5px;
+          font-size: 0.85rem;
+        }
+
+        .logic-table td.clickable {
+          min-width: 60px;
+          height: 45px;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+
+        .legend {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>🧩 Логические задачи</h1>
+
+      <div class="instructions">
+        Кликайте на ячейки таблицы для постановки плюсов и минусов. Заполните
+        таблицу логическими выводами.
+      </div>
+
+      <div class="task-card">
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="logic-table-container">
+          <table class="logic-table" id="logicTable">
+            <thead>
+              <tr>
+                <th class="name-header">Имя / Фамилия</th>
+                <th id="surname1">-</th>
+                <th id="surname2">-</th>
+                <th id="surname3">-</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-box empty"></div>
+            <span>Пусто (кликните)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-box plus">+</div>
+            <span>Плюс (соответствует)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-box minus">−</div>
+            <span>Минус (не соответствует)</span>
+          </div>
+        </div>
+
+        <div class="hint-box" id="hintBox" style="display: none">
+          <strong>💡 Подсказка:</strong> <span id="hintText"></span>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div id="feedbackText"></div>
+          <div class="correct-answer" id="correctAnswer"></div>
+        </div>
+
+        <div class="reasoning-steps" id="reasoningSteps">
+          <h4>Ход рассуждений:</h4>
+          <ol id="reasoningList"></ol>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-check" onclick="checkAnswer()">
+            ✓ Проверить
+          </button>
+          <button class="btn btn-clear" onclick="clearAll()">✕ Очистить</button>
+          <button class="btn btn-reset" onclick="resetGame()">
+            🔄 Новая задача
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let femaleNames = [];
+      let maleNames = [];
+      let femaleSurnames = [];
+      let maleSurnames = [];
+
+      let currentTask = null;
+      let answered = false;
+
+      // Склонение имён (родительный падеж - "у кого?")
+      function declineNameGenitive(name, isFemale) {
+        // Женские имена
+        if (isFemale) {
+          // Имена на -а -> -ы или -и по правилам русской орфографии
+          // После г, к, х, ж, ш, ч, щ пишется -и (Ольга -> Ольги, Вика -> Вики)
+          // После других согласных пишется -ы (Анна -> Анны, Ирина -> Ирины)
+          if (name.endsWith("а")) {
+            const beforeLast = name.slice(-2, -1).toLowerCase();
+            if (/[гкхжшчщ]/.test(beforeLast)) {
+              return name.slice(0, -1) + "и";
+            }
+            return name.slice(0, -1) + "ы";
+          }
+          // Имена на -я -> -и (София -> Софии, Мария -> Марии)
+          if (name.endsWith("я")) {
+            return name.slice(0, -1) + "и";
+          }
+          // Имена на мягкий знак -> -и (Любовь -> Любови)
+          if (name.endsWith("ь")) {
+            return name.slice(0, -1) + "и";
+          }
+          return name;
+        }
+        // Мужские имена
+        else {
+          // Имена на -й -> -я (Андрей -> Андрея, Сергей -> Сергея)
+          // ВАЖНО: проверяем ДО согласных, так как "й" тоже согласная
+          if (name.endsWith("й")) {
+            return name.slice(0, -1) + "я";
+          }
+          // Имена на согласную -> -а (Максим -> Максима, Александр -> Александра)
+          if (/[бвгджзклмнпрстфхцчшщ]$/.test(name)) {
+            return name + "а";
+          }
+          // Имена на -а -> -ы (Никита -> Никиты)
+          if (name.endsWith("а")) {
+            return name.slice(0, -1) + "ы";
+          }
+          // Имена на -я -> -и (Илья -> Ильи)
+          if (name.endsWith("я")) {
+            return name.slice(0, -1) + "и";
+          }
+          return name;
+        }
+      }
+
+      // Склонение фамилий (родительный падеж)
+      function declineSurnameGenitive(surname, isFemale) {
+        if (isFemale) {
+          // Женские фамилии на -а -> -ой (Иванова -> Ивановой)
+          if (surname.endsWith("а")) {
+            return surname.slice(0, -1) + "ой";
+          }
+          return surname;
+        } else {
+          // Мужские фамилии на согласную -> -а (Иванов -> Иванова)
+          if (/[бвгджзйклмнпрстфхцчшщ]$/.test(surname)) {
+            return surname + "а";
+          }
+          // Фамилии на -й -> -я (Белый -> Белого)
+          if (surname.endsWith("й")) {
+            return surname.slice(0, -1) + "я";
+          }
+          // Фамилии на -о не склоняются (Фомино -> Фомино)
+          if (surname.endsWith("о")) {
+            return surname;
+          }
+          return surname;
+        }
+      }
+
+      // Загрузка данных из файла
+      async function loadData() {
+        try {
+          const response = await fetch("vpr7-5.txt");
+          const text = await response.text();
+          parseData(text);
+          startGame();
+        } catch (error) {
+          console.error("Ошибка загрузки данных:", error);
+          // Fallback данные
+          femaleNames = [
+            "Мария",
+            "Ирина",
+            "Светлана",
+            "Анна",
+            "Елена",
+            "Ольга",
+          ];
+          maleNames = [
+            "Александр",
+            "Дмитрий",
+            "Максим",
+            "Сергей",
+            "Андрей",
+            "Алексей",
+          ];
+          femaleSurnames = [
+            "Миронова",
+            "Иванова",
+            "Сергеева",
+            "Петрова",
+            "Сидорова",
+            "Козлова",
+          ];
+          maleSurnames = [
+            "Миронов",
+            "Иванов",
+            "Сергеев",
+            "Петров",
+            "Сидоров",
+            "Козлов",
+          ];
+          startGame();
+        }
+      }
+
+      // Парсинг данных из файла
+      function parseData(text) {
+        const lines = text.split("\n");
+        let currentSection = "";
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("# Имена (женские)")) {
+            currentSection = "femaleNames";
+          } else if (line.startsWith("# Имена (мужские)")) {
+            currentSection = "maleNames";
+          } else if (line.startsWith("# Фамилии (женские)")) {
+            currentSection = "femaleSurnames";
+          } else if (line.startsWith("# Фамилии (мужские)")) {
+            currentSection = "maleSurnames";
+          } else if (line.startsWith("# Фамилии (общие)")) {
+            currentSection = ""; // Пропускаем общие фамилии
+          } else if (line && !line.startsWith("#")) {
+            if (currentSection === "femaleNames") femaleNames.push(line);
+            else if (currentSection === "maleNames") maleNames.push(line);
+            else if (currentSection === "femaleSurnames")
+              femaleSurnames.push(line);
+            else if (currentSection === "maleSurnames") maleSurnames.push(line);
+          }
+        });
+      }
+
+      // Начало игры
+      function startGame() {
+        generateTask();
+      }
+
+      // Генерация задания
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("reasoningSteps").style.display = "none";
+
+        // Выбираем тип задачи (мужчины или женщины)
+        const useFemale = Math.random() > 0.5;
+        const names = useFemale ? femaleNames : maleNames;
+        const surnames = useFemale ? femaleSurnames : maleSurnames;
+        const personType = useFemale ? "девочки" : "мальчики";
+
+        // Выбираем 3 имени и соответствующие фамилии
+        const selectedIndices = [];
+        while (selectedIndices.length < 3) {
+          const idx = Math.floor(Math.random() * names.length);
+          if (!selectedIndices.includes(idx)) {
+            selectedIndices.push(idx);
+          }
+        }
+
+        const selectedNames = selectedIndices.map((i) => names[i]);
+        const selectedSurnames = selectedIndices.map((i) => surnames[i]);
+
+        // Генерируем задачу с условиями
+        const task = generatePuzzle(
+          selectedNames,
+          selectedSurnames,
+          personType,
+        );
+
+        if (!task) {
+          // Если не удалось сгенерировать, пробуем снова
+          generateTask();
+          return;
+        }
+
+        currentTask = task;
+        renderTask();
+      }
+
+      // Генерация головоломки с условиями
+      function generatePuzzle(names, surnames, personType) {
+        // Выбираем случайный шаблон задачи
+        const templates = [
+          generateTemplate1, // Классический шаблон с исключением
+          generateTemplate2, // Шаблон с буквами в фамилии
+          generateTemplate3, // Шаблон с первыми буквами
+          generateTemplate4, // Комбинированный шаблон
+        ];
+
+        // Перемешиваем шаблоны и пробуем каждый
+        const shuffledTemplates = [...templates].sort(
+          () => Math.random() - 0.5,
+        );
+
+        for (const template of shuffledTemplates) {
+          const result = template(names, surnames, personType);
+          if (result) {
+            return result;
+          }
+        }
+
+        return null;
+      }
+
+      // Шаблон 1: Классический (А не Б, В и Г имеют общую букву, Д не Е)
+      function generateTemplate1(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+
+        // Случайно назначаем фамилии
+        const shuffledSurnames = [...surnames];
+        for (let i = shuffledSurnames.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledSurnames[i], shuffledSurnames[j]] = [
+            shuffledSurnames[j],
+            shuffledSurnames[i],
+          ];
+        }
+
+        const matches = names.map((name, i) => ({
+          name: name,
+          surname: shuffledSurnames[i],
+        }));
+
+        const conditions = [];
+        const getSurname = (name) => shuffledSurnames[names.indexOf(name)];
+
+        // Условие 1: А не Б (отрицание)
+        const name1 = names[0];
+        const wrongSurname = shuffledSurnames[1]; // Фамилия второго человека
+        conditions.push({
+          type: "notSurname",
+          text: `<span class="highlight">${name1}</span> не <span class="highlight">${wrongSurname}</span>.`,
+          relevantInfo: {
+            name: name1,
+            notSurname: wrongSurname,
+            actualSurname: getSurname(name1),
+          },
+        });
+
+        // Условие 2: Находим общую букву в фамилиях двух человек
+        const name2 = names[1];
+        const name3 = names[2];
+        const surname1 = getSurname(name1);
+        const surname2 = getSurname(name2);
+        const surname3 = getSurname(name3);
+
+        // Ищем общую букву, которая есть ТОЛЬКО в surname2 и surname3, но НЕ в surname1
+        let commonLetter = null;
+        for (const letter of surname2.toLowerCase()) {
+          if (
+            surname3.toLowerCase().includes(letter) &&
+            !surname1.toLowerCase().includes(letter)
+          ) {
+            commonLetter = letter;
+            break;
+          }
+        }
+
+        if (commonLetter) {
+          const name2Gen = declineNameGenitive(name2, isFemale);
+          const name3Gen = declineNameGenitive(name3, isFemale);
+          const name1Gen = declineNameGenitive(name1, isFemale);
+          conditions.push({
+            type: "sameLetterInSurname",
+            text: `У <span class="highlight">${name2Gen}</span> и у <span class="highlight">${name3Gen}</span> в фамилии есть буква «${commonLetter.toUpperCase()}» (а у <span class="highlight">${name1Gen}</span> такой буквы в фамилии нет).`,
+            relevantInfo: {
+              person1: name2,
+              person2: name3,
+              letter: commonLetter,
+              surnames: [surname2, surname3],
+              excludedPerson: name1,
+            },
+          });
+        } else {
+          // Если общая буква не найдена, возвращаем null - этот шаблон не подходит
+          return null;
+        }
+
+        // Условие 3: Дополнительное отрицание или подсказка
+        const remainingName = names.find(
+          (n) =>
+            n !== name1 || shuffledSurnames[names.indexOf(n)] !== wrongSurname,
+        );
+        const name1Surname = getSurname(name1);
+        conditions.push({
+          type: "notSurname",
+          text: `<span class="highlight">${name2}</span> не <span class="highlight">${name1Surname}</span>.`,
+          relevantInfo: {
+            name: name2,
+            notSurname: name1Surname,
+            actualSurname: surname2,
+          },
+        });
+
+        // Проверяем, что условия дают однозначное решение
+        if (!validatePuzzle(names, shuffledSurnames, conditions)) {
+          return null;
+        }
+
+        const taskText = generateTaskTextV2(
+          names,
+          shuffledSurnames,
+          conditions,
+          personType,
+        );
+        const reasoning = generateReasoningV2(
+          names,
+          shuffledSurnames,
+          conditions,
+          personType,
+        );
+
+        return {
+          text: taskText,
+          names: names,
+          surnames: shuffledSurnames,
+          correctMatches: matches,
+          reasoning: reasoning,
+          conditions: conditions,
+        };
+      }
+
+      // Шаблон 2: С буквами в фамилии
+      function generateTemplate2(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+
+        // Ищем комбинацию, где две фамилии имеют общую букву
+        const permutations = getPermutations([...surnames]);
+
+        for (const perm of permutations) {
+          const getSurname = (name) => perm[names.indexOf(name)];
+
+          // Ищем общую букву у двух фамилий
+          for (let i = 0; i < names.length; i++) {
+            for (let j = i + 1; j < names.length; j++) {
+              const si = perm[i].toLowerCase();
+              const sj = perm[j].toLowerCase();
+
+              for (const letter of si) {
+                if (sj.includes(letter)) {
+                  // Нашли общую букву!
+                  const conditions = [];
+
+                  // Условие 1: Два человека имеют общую букву
+                  const nameiGen = declineNameGenitive(names[i], isFemale);
+                  const namejGen = declineNameGenitive(names[j], isFemale);
+                  conditions.push({
+                    type: "sameLetterInSurname",
+                    text: `У <span class="highlight">${nameiGen}</span> и у <span class="highlight">${namejGen}</span> в фамилии есть буква «${letter.toUpperCase()}».`,
+                    relevantInfo: {
+                      person1: names[i],
+                      person2: names[j],
+                      letter: letter,
+                      surnames: [perm[i], perm[j]],
+                    },
+                  });
+
+                  // Условие 2: Третий человек не имеет этой буквы
+                  const thirdIdx = 3 - i - j;
+                  const thirdName = names[thirdIdx];
+                  const thirdSurname = perm[thirdIdx];
+
+                  if (!thirdSurname.toLowerCase().includes(letter)) {
+                    conditions.push({
+                      type: "notSurname",
+                      text: `<span class="highlight">${thirdName}</span> не <span class="highlight">${perm[i]}</span>.`,
+                      relevantInfo: {
+                        name: thirdName,
+                        notSurname: perm[i],
+                        actualSurname: thirdSurname,
+                      },
+                    });
+
+                    // Условие 3: Подсказка для различения
+                    conditions.push({
+                      type: "notSurname",
+                      text: `<span class="highlight">${names[i]}</span> не <span class="highlight">${perm[j]}</span>.`,
+                      relevantInfo: {
+                        name: names[i],
+                        notSurname: perm[j],
+                        actualSurname: perm[i],
+                      },
+                    });
+
+                    // Проверяем, что условия дают однозначное решение
+                    if (!validatePuzzle(names, perm, conditions)) {
+                      continue;
+                    }
+
+                    const matches = names.map((name, idx) => ({
+                      name: name,
+                      surname: perm[idx],
+                    }));
+
+                    const taskText = generateTaskTextV2(
+                      names,
+                      perm,
+                      conditions,
+                      personType,
+                    );
+                    const reasoning = generateReasoningV2(
+                      names,
+                      perm,
+                      conditions,
+                      personType,
+                    );
+
+                    return {
+                      text: taskText,
+                      names: names,
+                      surnames: perm,
+                      correctMatches: matches,
+                      reasoning: reasoning,
+                      conditions: conditions,
+                    };
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return null;
+      }
+
+      // Шаблон 3: С первыми буквами
+      function generateTemplate3(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+        const permutations = getPermutations([...surnames]);
+
+        for (const perm of permutations) {
+          const conditions = [];
+
+          // Ищем совпадение первой буквы имени с первой буквой фамилии другого человека
+          let foundMatch = false;
+          for (let i = 0; i < names.length && !foundMatch; i++) {
+            for (let j = 0; j < names.length && !foundMatch; j++) {
+              if (
+                i !== j &&
+                names[i][0].toLowerCase() === perm[j][0].toLowerCase()
+              ) {
+                foundMatch = true;
+
+                // Склоняем имена в родительный падеж
+                const name1Gen = declineNameGenitive(names[i], isFemale);
+                const name2Gen = declineNameGenitive(names[j], isFemale);
+
+                // Условие 1: Первая буква имени А совпадает с первой буквой фамилии Б
+                conditions.push({
+                  type: "sameFirstLetter",
+                  text: `У <span class="highlight">${name1Gen}</span> первая буква имени такая же, как первая буква фамилии у <span class="highlight">${name2Gen}</span>.`,
+                  relevantInfo: {
+                    name1: names[i],
+                    name2: names[j],
+                    surname2: perm[j],
+                  },
+                });
+
+                // Условие 2: Кто-то не имеет фамилию
+                const k = 3 - i - j;
+                conditions.push({
+                  type: "notSurname",
+                  text: `<span class="highlight">${names[k]}</span> не <span class="highlight">${perm[i]}</span>.`,
+                  relevantInfo: {
+                    name: names[k],
+                    notSurname: perm[i],
+                    actualSurname: perm[k],
+                  },
+                });
+
+                // Условие 3: Дополнительное отрицание
+                conditions.push({
+                  type: "notSurname",
+                  text: `<span class="highlight">${names[j]}</span> не <span class="highlight">${perm[k]}</span>.`,
+                  relevantInfo: {
+                    name: names[j],
+                    notSurname: perm[k],
+                    actualSurname: perm[j],
+                  },
+                });
+
+                // Проверяем, что условия дают однозначное решение
+                if (!validatePuzzle(names, perm, conditions)) {
+                  continue;
+                }
+
+                const matches = names.map((name, idx) => ({
+                  name: name,
+                  surname: perm[idx],
+                }));
+
+                const taskText = generateTaskTextV2(
+                  names,
+                  perm,
+                  conditions,
+                  personType,
+                );
+                const reasoning = generateReasoningV2(
+                  names,
+                  perm,
+                  conditions,
+                  personType,
+                );
+
+                return {
+                  text: taskText,
+                  names: names,
+                  surnames: perm,
+                  correctMatches: matches,
+                  reasoning: reasoning,
+                  conditions: conditions,
+                };
+              }
+            }
+          }
+        }
+
+        return null;
+      }
+
+      // Шаблон 4: Комбинированный (с совпадением первых букв)
+      function generateTemplate4(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+        const permutations = getPermutations([...surnames]);
+
+        for (const perm of permutations) {
+          const conditions = [];
+
+          // Ищем человека, у которого первая буква имени совпадает с первой буквой его фамилии
+          // И при этом НЕТ другой фамилии на ту же букву (для однозначности)
+          let matchIdx = -1;
+          for (let i = 0; i < names.length; i++) {
+            if (names[i][0].toLowerCase() === perm[i][0].toLowerCase()) {
+              // Проверяем, что нет другой фамилии на ту же букву
+              const letter = perm[i][0].toLowerCase();
+              const surnamesWithSameLetter = perm.filter(
+                (s) => s[0].toLowerCase() === letter,
+              );
+              if (surnamesWithSameLetter.length === 1) {
+                matchIdx = i;
+                break;
+              }
+            }
+          }
+
+          if (matchIdx === -1) continue;
+
+          // Склоняем имя в родительный падеж
+          const matchedNameGen = declineNameGenitive(names[matchIdx], isFemale);
+
+          // Условие 1: У этого человека первые буквы совпадают
+          conditions.push({
+            type: "sameFirstLetterOwn",
+            text: `У <span class="highlight">${matchedNameGen}</span> первая буква имени и фамилии совпадают.`,
+            relevantInfo: { name: names[matchIdx], surname: perm[matchIdx] },
+          });
+
+          // Условие 2: Кто-то НЕ имеет фамилию (отрицание)
+          const otherIdx1 = (matchIdx + 1) % 3;
+          const otherIdx2 = (matchIdx + 2) % 3;
+          conditions.push({
+            type: "notSurname",
+            text: `<span class="highlight">${names[otherIdx1]}</span> не <span class="highlight">${perm[matchIdx]}</span>.`,
+            relevantInfo: {
+              name: names[otherIdx1],
+              notSurname: perm[matchIdx],
+              actualSurname: perm[otherIdx1],
+            },
+          });
+
+          // Условие 3: Ещё одно отрицание
+          conditions.push({
+            type: "notSurname",
+            text: `<span class="highlight">${names[otherIdx2]}</span> не <span class="highlight">${perm[otherIdx1]}</span>.`,
+            relevantInfo: {
+              name: names[otherIdx2],
+              notSurname: perm[otherIdx1],
+              actualSurname: perm[otherIdx2],
+            },
+          });
+
+          // Проверяем, что условия дают однозначное решение
+          if (!validatePuzzle(names, perm, conditions)) {
+            continue;
+          }
+
+          const matches = names.map((name, idx) => ({
+            name: name,
+            surname: perm[idx],
+          }));
+
+          const taskText = generateTaskTextV2(
+            names,
+            perm,
+            conditions,
+            personType,
+          );
+          const reasoning = generateReasoningV2(
+            names,
+            perm,
+            conditions,
+            personType,
+          );
+
+          return {
+            text: taskText,
+            names: names,
+            surnames: perm,
+            correctMatches: matches,
+            reasoning: reasoning,
+            conditions: conditions,
+          };
+        }
+
+        return null;
+      }
+
+      // Проверка, что условия дают однозначное решение
+      function validatePuzzle(names, surnames, conditions) {
+        // Строим матрицу возможных соответствий
+        const possible = {};
+        names.forEach((name) => {
+          possible[name] = new Set(surnames);
+        });
+
+        // Применяем условия для сужения вариантов
+        for (const condition of conditions) {
+          if (condition.type === "notSurname") {
+            const { name, notSurname } = condition.relevantInfo;
+            possible[name].delete(notSurname);
+          } else if (condition.type === "sameLetterInSurname") {
+            const {
+              person1,
+              person2,
+              surnames: condSurnames,
+            } = condition.relevantInfo;
+            // Эти два человека имеют фамилии из condSurnames
+            // Сужаем их возможности до этих двух фамилий
+            const otherSurname = names.find(
+              (n) => n !== person1 && n !== person2,
+            );
+            // Удаляем эти фамилии у третьего человека
+            if (otherSurname) {
+              possible[otherSurname].delete(condSurnames[0]);
+              possible[otherSurname].delete(condSurnames[1]);
+            }
+          } else if (condition.type === "sameFirstLetterOwn") {
+            const { name, surname } = condition.relevantInfo;
+            // Прямое соответствие
+            possible[name] = new Set([surname]);
+            // Удаляем эту фамилию у других
+            names.forEach((n) => {
+              if (n !== name) possible[n].delete(surname);
+            });
+          } else if (condition.type === "sameFirstLetter") {
+            const { name2, surname2 } = condition.relevantInfo;
+            // name2 имеет surname2
+            possible[name2] = new Set([surname2]);
+            names.forEach((n) => {
+              if (n !== name2) possible[n].delete(surname2);
+            });
+          }
+        }
+
+        // Проверяем, что каждый человек имеет ровно одну возможную фамилию
+        // и каждая фамилия назначена ровно одному человеку
+        let changed = true;
+        while (changed) {
+          changed = false;
+          for (const name of names) {
+            if (possible[name].size === 1) {
+              const surname = [...possible[name]][0];
+              // Удаляем эту фамилию у других
+              for (const otherName of names) {
+                if (otherName !== name && possible[otherName].has(surname)) {
+                  possible[otherName].delete(surname);
+                  changed = true;
+                }
+              }
+            }
+          }
+        }
+
+        // Проверяем однозначность
+        for (const name of names) {
+          if (possible[name].size !== 1) {
+            return false;
+          }
+        }
+
+        // Проверяем, что все фамилии распределены
+        const assignedSurnames = new Set(names.map((n) => [...possible[n]][0]));
+        if (assignedSurnames.size !== names.length) {
+          return false;
+        }
+
+        return true;
+      }
+
+      // Получить все перестановки массива
+      function getPermutations(arr) {
+        if (arr.length <= 2) {
+          return arr.length === 2 ? [arr, [arr[1], arr[0]]] : [arr];
+        }
+        return arr.reduce(
+          (acc, item, i) =>
+            acc.concat(
+              getPermutations([...arr.slice(0, i), ...arr.slice(i + 1)]).map(
+                (val) => [item, ...val],
+              ),
+            ),
+          [],
+        );
+      }
+
+      // Генерация текста задачи (новая версия)
+      function generateTaskTextV2(names, surnames, conditions, personType) {
+        const namesList = names.join(", ");
+        const surnamesList = surnames.join(", ");
+        const isFemale = personType === "девочки";
+
+        let taskText = `Трое ${isFemale ? "подруг" : "друзей"} ${
+          isFemale ? "празднуют день рождения" : "празднуют день рождения"
+        }: <span class="highlight">${namesList}</span>. `;
+        taskText += `Их фамилии: <span class="highlight">${surnamesList}</span>. `;
+
+        // Добавляем условия
+        conditions.forEach((condition, idx) => {
+          taskText += `<br><strong>${idx + 1})</strong> ${condition.text}`;
+        });
+
+        taskText += `<br>Заполните таблицу: поставьте <strong>+</strong> там, где имя и фамилия соответствуют друг другу, и <strong>−</strong> где не соответствуют.`;
+
+        return taskText;
+      }
+
+      // Генерация рассуждений для решения (новая версия)
+      function generateReasoningV2(names, surnames, conditions, personType) {
+        const steps = [];
+        const isFemale = personType === "девочки";
+        const getIdx = (name) => names.indexOf(name);
+        const getSurname = (name) => surnames[getIdx(name)];
+
+        // Анализируем условия и строим логическую цепочку
+        const knownMatches = new Map(); // имя -> фамилия
+        const excludedSurnames = new Map(); // имя -> Set фамилий, которые НЕ подходят
+
+        // Обрабатываем каждое условие
+        for (const condition of conditions) {
+          switch (condition.type) {
+            case "notSurname": {
+              const { name, notSurname, actualSurname } =
+                condition.relevantInfo;
+              if (!excludedSurnames.has(name)) {
+                excludedSurnames.set(name, new Set());
+              }
+              excludedSurnames.get(name).add(notSurname);
+              steps.push(
+                `Из условия следует, что <span class="highlight">${name}</span> не <span class="highlight">${notSurname}</span>.`,
+              );
+              break;
+            }
+
+            case "sameLetterInSurname": {
+              const {
+                person1,
+                person2,
+                letter,
+                surnames: condSurnames,
+              } = condition.relevantInfo;
+              const upperLetter = letter.toUpperCase();
+              steps.push(
+                `<span class="highlight">${person1}</span> и <span class="highlight">${person2}</span> имеют в фамилии букву «${upperLetter}». Значит, их фамилии – <span class="highlight">${condSurnames[0]}</span> и <span class="highlight">${condSurnames[1]}</span>.`,
+              );
+
+              // Если знаем одну фамилию, можем определить другую
+              if (knownMatches.has(person1)) {
+                knownMatches.set(
+                  person2,
+                  condSurnames.find((s) => s !== knownMatches.get(person1)),
+                );
+              } else if (knownMatches.has(person2)) {
+                knownMatches.set(
+                  person1,
+                  condSurnames.find((s) => s !== knownMatches.get(person2)),
+                );
+              }
+              break;
+            }
+
+            case "sameFirstLetter": {
+              const { name1, name2, surname2 } = condition.relevantInfo;
+              steps.push(
+                `У <span class="highlight">${name1}</span> имя начинается с «${name1[0].toUpperCase()}», значит фамилия <span class="highlight">${name2}</span> – <span class="highlight">${surname2}</span>.`,
+              );
+              knownMatches.set(name2, surname2);
+              break;
+            }
+
+            case "differentFirstLetter": {
+              const { name, surname } = condition.relevantInfo;
+              steps.push(
+                `У <span class="highlight">${name}</span> первая буква имени (${name[0].toUpperCase()}) отличается от первой буквы фамилии. Это условие помогает отсеять варианты.`,
+              );
+              break;
+            }
+
+            case "letterInName": {
+              const { name1, name2, surname2, letter } = condition.relevantInfo;
+              steps.push(
+                `В фамилии <span class="highlight">${surname2}</span> есть буква из имени <span class="highlight">${name1}</span>. Фамилия <span class="highlight">${name2}</span> – <span class="highlight">${surname2}</span>.`,
+              );
+              knownMatches.set(name2, surname2);
+              break;
+            }
+
+            case "differentFirstLetterSimple": {
+              const { name1, name2, surname2 } = condition.relevantInfo;
+              steps.push(
+                `У <span class="highlight">${name1}</span> и фамилии <span class="highlight">${surname2}</span> первые буквы разные. Это исключает некоторые варианты.`,
+              );
+              break;
+            }
+
+            case "sameFirstLetterOwn": {
+              const { name, surname } = condition.relevantInfo;
+              steps.push(
+                `У <span class="highlight">${name}</span> первая буква имени «${name[0].toUpperCase()}» совпадает с первой буквой фамилии «${surname[0].toUpperCase()}». Значит, <span class="highlight">${name}</span> – <span class="highlight">${surname}</span>.`,
+              );
+              knownMatches.set(name, surname);
+              break;
+            }
+          }
+        }
+
+        // Добавляем итоговый вывод
+        const foundMatches = [];
+        for (const name of names) {
+          const surname = getSurname(name);
+          if (knownMatches.has(name)) {
+            foundMatches.push(
+              `<span class="highlight">${name}</span> – <span class="highlight">${surname}</span>`,
+            );
+          }
+        }
+
+        if (foundMatches.length > 0) {
+          steps.push(`Ответ: ${foundMatches.join(", ")}.`);
+        } else {
+          // Если не удалось автоматически вывести, показываем ответ
+          const allMatches = names.map(
+            (n) =>
+              `<span class="highlight">${n}</span> – <span class="highlight">${getSurname(n)}</span>`,
+          );
+          steps.push(
+            `Путём логических рассуждений определяем: ${allMatches.join(", ")}.`,
+          );
+        }
+
+        return steps;
+      }
+
+      // Функция для перемешивания массива
+      function shuffleArray(arr) {
+        const result = [...arr];
+        for (let i = result.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
+      }
+
+      // Отрисовка задания
+      function renderTask() {
+        document.getElementById("taskText").innerHTML = currentTask.text;
+
+        // Перемешиваем порядок отображения имён (строки) и фамилий (столбцы)
+        const nameOrder = shuffleArray([0, 1, 2]);
+        const surnameOrder = shuffleArray([0, 1, 2]);
+
+        const displayNames = nameOrder.map((i) => currentTask.names[i]);
+        const displaySurnames = surnameOrder.map(
+          (i) => currentTask.surnames[i],
+        );
+
+        // Сохраняем порядок для проверки
+        currentTask.displayNameOrder = nameOrder;
+        currentTask.displaySurnameOrder = surnameOrder;
+
+        // Обновляем заголовки таблицы
+        document.getElementById("surname1").textContent = displaySurnames[0];
+        document.getElementById("surname2").textContent = displaySurnames[1];
+        document.getElementById("surname3").textContent = displaySurnames[2];
+
+        // Отрисовываем строки таблицы
+        const tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = "";
+
+        displayNames.forEach((name, displayRowIdx) => {
+          const originalRowIdx = nameOrder[displayRowIdx];
+          const row = document.createElement("tr");
+
+          // Ячейка с именем
+          const nameCell = document.createElement("td");
+          nameCell.className = "name-cell";
+          nameCell.textContent = name;
+          row.appendChild(nameCell);
+
+          // Ячейки для кликов
+          displaySurnames.forEach((surname, displayColIdx) => {
+            const originalColIdx = surnameOrder[displayColIdx];
+            const cell = document.createElement("td");
+            cell.className = "clickable";
+            cell.dataset.displayRow = displayRowIdx;
+            cell.dataset.displayCol = displayColIdx;
+            cell.dataset.originalRow = originalRowIdx;
+            cell.dataset.originalCol = originalColIdx;
+            cell.dataset.name = name;
+            cell.dataset.surname = surname;
+
+            cell.addEventListener("click", handleCellClick);
+
+            row.appendChild(cell);
+          });
+
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Обработчик клика по ячейке
+      function handleCellClick(e) {
+        const cell = e.target;
+        const currentState = cell.dataset.state || "empty";
+
+        // Циклическое переключение: пусто -> + -> - -> пусто
+        switch (currentState) {
+          case "empty":
+            cell.dataset.state = "plus";
+            cell.className = "clickable plus";
+            cell.textContent = "+";
+            break;
+          case "plus":
+            cell.dataset.state = "minus";
+            cell.className = "clickable minus";
+            cell.textContent = "−";
+            break;
+          case "minus":
+            cell.dataset.state = "empty";
+            cell.className = "clickable";
+            cell.textContent = "";
+            break;
+        }
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const cells = document.querySelectorAll(".clickable");
+        let allFilled = true;
+        let correctCount = 0;
+        let totalCells = cells.length;
+
+        // Проверяем, все ли ячейки заполнены
+        cells.forEach((cell) => {
+          if (!cell.dataset.state || cell.dataset.state === "empty") {
+            allFilled = false;
+          }
+        });
+
+        if (!allFilled) {
+          alert("Заполните все ячейки таблицы!");
+          return;
+        }
+
+        answered = true;
+
+        // Строим правильную матрицу ответов (в оригинальных индексах)
+        const correctMatrix = [];
+        currentTask.names.forEach((name, rowIdx) => {
+          const row = [];
+          currentTask.surnames.forEach((surname, colIdx) => {
+            const match = currentTask.correctMatches.find(
+              (m) => m.name === name,
+            );
+            row.push(match.surname === surname ? "plus" : "minus");
+          });
+          correctMatrix.push(row);
+        });
+
+        // Проверяем каждую ячейку, используя оригинальные индексы
+        cells.forEach((cell) => {
+          const originalRow = parseInt(cell.dataset.originalRow);
+          const originalCol = parseInt(cell.dataset.originalCol);
+          const userState = cell.dataset.state;
+          const correctState = correctMatrix[originalRow][originalCol];
+
+          if (userState === correctState) {
+            correctCount++;
+            if (userState === "plus") {
+              cell.classList.add("correct");
+            } else {
+              cell.classList.add("correct-minus");
+            }
+          } else {
+            cell.classList.add("incorrect");
+          }
+        });
+
+        const feedback = document.getElementById("feedback");
+        const feedbackText = document.getElementById("feedbackText");
+
+        if (correctCount === totalCells) {
+          feedback.className = "feedback correct";
+          feedbackText.textContent = "🎉 Отлично! Все ячейки заполнены верно!";
+        } else {
+          feedback.className = "feedback incorrect";
+          feedbackText.textContent = `❌ Правильно: ${correctCount} из ${totalCells}`;
+
+          let correctAnswer = "Правильные ответы: ";
+          currentTask.correctMatches.forEach((m, i) => {
+            correctAnswer += `${m.name} - ${m.surname}`;
+            if (i < currentTask.correctMatches.length - 1)
+              correctAnswer += ", ";
+          });
+          document.getElementById("correctAnswer").textContent = correctAnswer;
+        }
+
+        feedback.style.display = "block";
+
+        // Показываем ход рассуждений
+        if (currentTask.reasoning && currentTask.reasoning.length > 0) {
+          const reasoningSteps = document.getElementById("reasoningSteps");
+          const reasoningList = document.getElementById("reasoningList");
+          reasoningList.innerHTML = "";
+
+          currentTask.reasoning.forEach((step) => {
+            const li = document.createElement("li");
+            li.innerHTML = step;
+            reasoningList.appendChild(li);
+          });
+
+          reasoningSteps.style.display = "block";
+        }
+      }
+
+      // Очистка всех ячеек
+      function clearAll() {
+        const cells = document.querySelectorAll(".clickable");
+        cells.forEach((cell) => {
+          cell.dataset.state = "empty";
+          cell.className = "clickable";
+          cell.textContent = "";
+        });
+
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("reasoningSteps").style.display = "none";
+        answered = false;
+      }
+
+      // Сброс игры
+      function resetGame() {
+        startGame();
+      }
+
+      // Запуск
+      loadData();
+    </script>
+  </body>
+</html>
