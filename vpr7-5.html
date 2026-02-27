@@ -879,6 +879,16 @@
                 i !== j &&
                 names[i][0].toLowerCase() === perm[j][0].toLowerCase()
               ) {
+                // ВАЖНО: Проверяем, что только ОДНА фамилия начинается на эту букву
+                // Иначе условие будет неоднозначным
+                const letter = perm[j][0].toLowerCase();
+                const surnamesWithSameLetter = perm.filter(
+                  (s) => s[0].toLowerCase() === letter,
+                );
+                if (surnamesWithSameLetter.length > 1) {
+                  continue; // Пропускаем - неоднозначно
+                }
+
                 foundMatch = true;
 
                 // Склоняем имена в родительный падеж
@@ -921,6 +931,8 @@
 
                 // Проверяем, что условия дают однозначное решение
                 if (!validatePuzzle(names, perm, conditions)) {
+                  foundMatch = false;
+                  conditions.length = 0;
                   continue;
                 }
 
