@@ -464,16 +464,27 @@ USB-флеш-накопитель (Флешка)
         const targetCategory = dropZone.dataset.category;
         const correctCategory = deviceCategories[deviceName];
 
+        // Запоминаем предыдущее состояние
+        const wasCorrect = deviceEl.classList.contains("correct");
+        const wasIncorrect = deviceEl.classList.contains("incorrect");
+
         dropZone.appendChild(deviceEl);
 
         // Проверяем правильность
         if (targetCategory === correctCategory) {
           deviceEl.classList.remove("incorrect");
           deviceEl.classList.add("correct");
-          correctAnswers++;
+          // Увеличиваем счётчик только если не был уже правильным
+          if (!wasCorrect) {
+            correctAnswers++;
+          }
         } else {
           deviceEl.classList.remove("correct");
           deviceEl.classList.add("incorrect");
+          // Уменьшаем счётчик если был правильным, а стал неправильным
+          if (wasCorrect) {
+            correctAnswers--;
+          }
         }
 
         updateScore();
