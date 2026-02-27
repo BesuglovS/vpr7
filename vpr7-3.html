@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Типы файлов и расширения</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.5rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .extensions-pool {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .extensions-pool h3 {
+        color: #333;
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      .extensions-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        min-height: 60px;
+        padding: 10px;
+        background: #f0f4f8;
+        border-radius: 10px;
+        border: 2px dashed #b0bec5;
+      }
+
+      .extension-item {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: grab;
+        user-select: none;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        touch-action: none;
+      }
+
+      .extension-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+      }
+
+      .extension-item.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+      }
+
+      .extension-item.placed {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+      }
+
+      .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 900px) {
+        .categories-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .categories-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .category-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+      }
+
+      .category-card h4 {
+        color: #333;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+        text-align: center;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .category-dropzone {
+        min-height: 80px;
+        padding: 10px;
+        background: #f8f9fa;
+        border: 2px dashed #b0bec5;
+        border-radius: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: flex-start;
+        align-content: flex-start;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+
+      .category-dropzone.drag-over {
+        background: rgba(102, 126, 234, 0.15);
+        border-color: #667eea;
+      }
+
+      .category-dropzone .extension-item {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+
+      .category-card.correct h4 {
+        color: #11998e;
+        border-bottom-color: #38ef7d;
+      }
+
+      .category-card.incorrect h4 {
+        color: #eb3349;
+        border-bottom-color: #f45c43;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-clear {
+        background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+      }
+
+      .btn-next {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .score-board {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .score {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .score span {
+        color: #11998e;
+      }
+
+      .feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .results-detail {
+        margin-top: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: none;
+      }
+
+      .results-detail h4 {
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 10px;
+        margin: 3px 0;
+        border-radius: 5px;
+        font-size: 0.9rem;
+      }
+
+      .result-item.correct {
+        background: rgba(17, 153, 142, 0.2);
+        color: #11998e;
+      }
+
+      .result-item.incorrect {
+        background: rgba(235, 51, 73, 0.2);
+        color: #eb3349;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.2rem;
+        }
+
+        .extension-item {
+          padding: 8px 14px;
+          font-size: 0.9rem;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>📁 Типы файлов и расширения</h1>
+
+      <div class="instructions">
+        Распределите расширения файлов по соответствующим категориям.
+        Перетаскивайте мышью или пальцем. Нажмите на расширение, чтобы вернуть
+        его в пул.
+      </div>
+
+      <div class="extensions-pool">
+        <h3>📦 Расширения файлов для распределения</h3>
+        <div class="extensions-container" id="extensionsPool"></div>
+      </div>
+
+      <div class="categories-grid" id="categoriesGrid"></div>
+
+      <div class="feedback" id="feedback">
+        <div id="feedbackText"></div>
+      </div>
+
+      <div class="results-detail" id="resultsDetail">
+        <h4>Подробные результаты:</h4>
+        <div id="resultsList"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-check" onclick="checkAnswer()">
+          ✓ Проверить
+        </button>
+        <button class="btn btn-clear" onclick="clearAll()">✕ Очистить</button>
+        <button class="btn btn-reset" onclick="resetGame()">
+          🔄 Новая игра
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let categories = {};
+      let currentExtensions = [];
+      let answered = false;
+      let correctCount = 0;
+
+      // Загрузка данных из файла
+      async function loadData() {
+        try {
+          const response = await fetch("vpr7-3.txt");
+          const text = await response.text();
+          parseData(text);
+          startGame();
+        } catch (error) {
+          console.error("Ошибка загрузки данных:", error);
+          // Fallback данные
+          categories = {
+            "текстовый файл": [".odt", ".doc", ".docx", ".pdf", ".txt"],
+            презентация: [".odp", ".ppt", ".pptx"],
+            таблица: [".ods", ".xls", ".xlsx"],
+            "графический файл": [".bmp", ".gif", ".jpg", ".png", ".tiff"],
+            аудиофайл: [".aac", ".flac", ".mp3", ".ogg", ".wav"],
+            видеофайл: [".avi", ".mkv", ".mov", ".mp4", ".webm"],
+            архив: [".7z", ".rar", ".zip"],
+            "веб-страница": [".htm", ".html"],
+            "исполняемый файл": [".exe"],
+          };
+          startGame();
+        }
+      }
+
+      // Парсинг данных из файла
+      function parseData(text) {
+        const lines = text.split("\n");
+        let currentCategory = "";
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("@")) {
+            currentCategory = line.substring(1).trim();
+            categories[currentCategory] = [];
+          } else if (line && currentCategory) {
+            categories[currentCategory].push(line);
+          }
+        });
+      }
+
+      // Начало игры
+      function startGame() {
+        generateTask();
+      }
+
+      // Генерация задания
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("resultsDetail").style.display = "none";
+
+        // Собираем все расширения
+        let allExtensions = [];
+        Object.keys(categories).forEach((cat) => {
+          categories[cat].forEach((ext) => {
+            allExtensions.push({ extension: ext, category: cat });
+          });
+        });
+
+        // Перемешиваем и выбираем 12 расширений
+        shuffleArray(allExtensions);
+        currentExtensions = allExtensions.slice(0, 12);
+
+        // Перемешиваем выбранные расширения для отображения
+        const shuffledForDisplay = [...currentExtensions];
+        shuffleArray(shuffledForDisplay);
+
+        renderCategories();
+        renderExtensions(shuffledForDisplay);
+      }
+
+      // Перемешивание массива
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      // Отрисовка категорий
+      function renderCategories() {
+        const grid = document.getElementById("categoriesGrid");
+        grid.innerHTML = "";
+
+        Object.keys(categories).forEach((cat) => {
+          const card = document.createElement("div");
+          card.className = "category-card";
+          card.dataset.category = cat;
+
+          const title = document.createElement("h4");
+          title.textContent = cat;
+          card.appendChild(title);
+
+          const dropzone = document.createElement("div");
+          dropzone.className = "category-dropzone";
+          dropzone.dataset.category = cat;
+
+          // Drag events
+          dropzone.addEventListener("dragover", handleDragOver);
+          dropzone.addEventListener("dragleave", handleDragLeave);
+          dropzone.addEventListener("drop", handleDrop);
+
+          card.appendChild(dropzone);
+          grid.appendChild(card);
+        });
+      }
+
+      // Отрисовка расширений
+      function renderExtensions(extensions) {
+        const pool = document.getElementById("extensionsPool");
+        pool.innerHTML = "";
+
+        extensions.forEach((item) => {
+          const el = createExtensionElement(item);
+          pool.appendChild(el);
+        });
+      }
+
+      // Создание элемента расширения
+      function createExtensionElement(item) {
+        const el = document.createElement("div");
+        el.className = "extension-item";
+        el.textContent = item.extension;
+        el.draggable = true;
+        el.dataset.extension = item.extension;
+        el.dataset.correctCategory = item.category;
+
+        // Drag events
+        el.addEventListener("dragstart", handleDragStart);
+        el.addEventListener("dragend", handleDragEnd);
+
+        // Touch events
+        el.addEventListener("touchstart", handleTouchStart, { passive: false });
+        el.addEventListener("touchmove", handleTouchMove, { passive: false });
+        el.addEventListener("touchend", handleTouchEnd);
+
+        // Click для возврата в пул
+        el.addEventListener("click", handleClick);
+
+        return el;
+      }
+
+      // Обработка клика - возврат в пул
+      function handleClick(e) {
+        const el = e.target;
+        const pool = document.getElementById("extensionsPool");
+
+        if (el.parentElement !== pool) {
+          pool.appendChild(el);
+          el.classList.remove("placed");
+        }
+      }
+
+      // Drag handlers
+      let draggedElement = null;
+
+      function handleDragStart(e) {
+        draggedElement = e.target;
+        e.target.classList.add("dragging");
+        e.dataTransfer.setData("text/plain", e.target.dataset.extension);
+        e.dataTransfer.effectAllowed = "move";
+      }
+
+      function handleDragEnd(e) {
+        e.target.classList.remove("dragging");
+        draggedElement = null;
+
+        // Убираем подсветку со всех зон
+        document.querySelectorAll(".category-dropzone").forEach((zone) => {
+          zone.classList.remove("drag-over");
+        });
+      }
+
+      function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        e.currentTarget.classList.add("drag-over");
+      }
+
+      function handleDragLeave(e) {
+        e.currentTarget.classList.remove("drag-over");
+      }
+
+      function handleDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("drag-over");
+
+        if (draggedElement) {
+          e.currentTarget.appendChild(draggedElement);
+          draggedElement.classList.add("placed");
+        }
+      }
+
+      // Touch handlers
+      let touchElement = null;
+      let touchClone = null;
+
+      function handleTouchStart(e) {
+        e.preventDefault();
+        touchElement = e.target;
+        const touch = e.touches[0];
+
+        touchClone = touchElement.cloneNode(true);
+        touchClone.style.position = "fixed";
+        touchClone.style.zIndex = "1000";
+        touchClone.style.pointerEvents = "none";
+        touchClone.style.opacity = "0.8";
+        touchClone.style.transform = "scale(1.1)";
+        document.body.appendChild(touchClone);
+
+        updateClonePosition(touch);
+        touchElement.classList.add("dragging");
+      }
+
+      function handleTouchMove(e) {
+        e.preventDefault();
+        if (!touchClone) return;
+
+        const touch = e.touches[0];
+        updateClonePosition(touch);
+
+        const dropzones = document.querySelectorAll(".category-dropzone");
+        const pool = document.getElementById("extensionsPool");
+        const poolRect = pool.getBoundingClientRect();
+
+        // Подсвечиваем зоны при наведении
+        dropzones.forEach((zone) => {
+          zone.classList.remove("drag-over");
+          const rect = zone.getBoundingClientRect();
+
+          if (
+            touch.clientX >= rect.left &&
+            touch.clientX <= rect.right &&
+            touch.clientY >= rect.top &&
+            touch.clientY <= rect.bottom
+          ) {
+            zone.classList.add("drag-over");
+            zone.appendChild(touchElement);
+            touchElement.classList.add("placed");
+          }
+        });
+
+        // Проверяем пул
+        if (
+          touch.clientX >= poolRect.left &&
+          touch.clientX <= poolRect.right &&
+          touch.clientY >= poolRect.top &&
+          touch.clientY <= poolRect.bottom
+        ) {
+          pool.classList.add("drag-over");
+          pool.appendChild(touchElement);
+          touchElement.classList.remove("placed");
+        } else {
+          pool.classList.remove("drag-over");
+        }
+      }
+
+      function handleTouchEnd(e) {
+        if (!touchElement || !touchClone) return;
+
+        document.querySelectorAll(".category-dropzone").forEach((zone) => {
+          zone.classList.remove("drag-over");
+        });
+        document.getElementById("extensionsPool").classList.remove("drag-over");
+
+        touchElement.classList.remove("dragging");
+        touchClone.remove();
+        touchClone = null;
+        touchElement = null;
+      }
+
+      function updateClonePosition(touch) {
+        if (touchClone) {
+          touchClone.style.left =
+            touch.clientX - touchClone.offsetWidth / 2 + "px";
+          touchClone.style.top =
+            touch.clientY - touchClone.offsetHeight / 2 + "px";
+        }
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const pool = document.getElementById("extensionsPool");
+        const poolItems = pool.querySelectorAll(".extension-item");
+
+        if (poolItems.length > 0) {
+          alert("Распределите все расширения по категориям!");
+          return;
+        }
+
+        answered = true;
+        let correctAnswers = 0;
+        const results = [];
+
+        // Проверяем каждую категорию
+        document.querySelectorAll(".category-card").forEach((card) => {
+          const category = card.dataset.category;
+          const dropzone = card.querySelector(".category-dropzone");
+          const items = dropzone.querySelectorAll(".extension-item");
+
+          let categoryCorrect = 0;
+          let categoryTotal = items.length;
+
+          items.forEach((item) => {
+            const isCorrect = item.dataset.correctCategory === category;
+            if (isCorrect) {
+              correctAnswers++;
+              categoryCorrect++;
+            }
+            results.push({
+              extension: item.dataset.extension,
+              userCategory: category,
+              correctCategory: item.dataset.correctCategory,
+              isCorrect: isCorrect,
+            });
+          });
+
+          if (categoryTotal > 0) {
+            if (categoryCorrect === categoryTotal) {
+              card.classList.add("correct");
+              card.classList.remove("incorrect");
+            } else if (categoryCorrect === 0) {
+              card.classList.add("incorrect");
+              card.classList.remove("correct");
+            } else {
+              card.classList.add("incorrect");
+              card.classList.remove("correct");
+            }
+          }
+        });
+
+        const feedback = document.getElementById("feedback");
+        const feedbackText = document.getElementById("feedbackText");
+
+        if (correctAnswers === 12) {
+          correctCount++;
+          feedback.className = "feedback correct";
+          feedbackText.textContent =
+            "🎉 Отлично! Все расширения распределены правильно!";
+        } else {
+          feedback.className = "feedback incorrect";
+          feedbackText.textContent = `❌ Правильно: ${correctAnswers} из 12`;
+        }
+
+        feedback.style.display = "block";
+
+        // Показываем подробные результаты
+        const resultsDetail = document.getElementById("resultsDetail");
+        const resultsList = document.getElementById("resultsList");
+        resultsList.innerHTML = "";
+
+        results.forEach((r) => {
+          const item = document.createElement("div");
+          item.className = `result-item ${r.isCorrect ? "correct" : "incorrect"}`;
+          item.innerHTML = `
+            <span>${r.extension}</span>
+            <span>${r.isCorrect ? "✓" : `✗ (правильно: ${r.correctCategory})`}</span>
+          `;
+          resultsList.appendChild(item);
+        });
+
+        resultsDetail.style.display = "block";
+      }
+
+      // Очистка всех категорий
+      function clearAll() {
+        const pool = document.getElementById("extensionsPool");
+        const items = document.querySelectorAll(".extension-item");
+
+        items.forEach((item) => {
+          pool.appendChild(item);
+          item.classList.remove("placed");
+        });
+
+        // Убираем подсветку с карточек
+        document.querySelectorAll(".category-card").forEach((card) => {
+          card.classList.remove("correct", "incorrect");
+        });
+      }
+
+      // Сброс игры
+      function resetGame() {
+        startGame();
+      }
+
+      // Запуск
+      loadData();
+    </script>
+  </body>
+</html>

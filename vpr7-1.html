@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Распределение устройств по категориям</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.8rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 1rem;
+        color: #333;
+      }
+
+      .game-area {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .devices-pool {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .devices-pool h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        text-align: center;
+      }
+
+      .devices-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        min-height: 60px;
+      }
+
+      .device {
+        background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 12px 18px;
+        border-radius: 25px;
+        cursor: grab;
+        user-select: none;
+        font-weight: 500;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        touch-action: none;
+      }
+
+      .device:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+      }
+
+      .device.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+      }
+
+      .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+      }
+
+      .category {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .category.drag-over {
+        transform: scale(1.02);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        border: 3px dashed #667eea;
+      }
+
+      .category h3 {
+        color: #333;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #eee;
+        font-size: 1rem;
+      }
+
+      .category-devices {
+        min-height: 80px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px;
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        background: #f9f9f9;
+      }
+
+      .device.correct {
+        background: linear-gradient(
+          145deg,
+          #11998e 0%,
+          #38ef7d 100%
+        ) !important;
+        box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4) !important;
+      }
+
+      .device.incorrect {
+        background: linear-gradient(
+          145deg,
+          #eb3349 0%,
+          #f45c43 100%
+        ) !important;
+        box-shadow: 0 4px 15px rgba(235, 51, 73, 0.4) !important;
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-10px);
+        }
+        75% {
+          transform: translateX(10px);
+        }
+      }
+
+      .score-board {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .score {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .score span {
+        color: #667eea;
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 15px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .btn-reset:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .success-message {
+        display: none;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        animation: pulse 1s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.4rem;
+        }
+
+        .device {
+          padding: 10px 14px;
+          font-size: 0.9rem;
+        }
+
+        .category h3 {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>🎮 Распредели устройства по категориям</h1>
+
+      <div class="instructions">
+        Перетащите каждое устройство в правильную категорию. Используйте мышь
+        или палец!
+      </div>
+
+      <div class="game-area">
+        <div class="devices-pool">
+          <h2>📦 Устройства для распределения</h2>
+          <div class="devices-container" id="devicesPool"></div>
+        </div>
+
+        <div class="categories-grid" id="categoriesGrid"></div>
+      </div>
+
+      <div class="score-board">
+        <div class="score">
+          Правильно: <span id="correctCount">0</span> /
+          <span id="totalCount">0</span>
+        </div>
+        <button class="btn-reset" onclick="resetGame()">
+          🔄 Начать заново
+        </button>
+      </div>
+
+      <div class="success-message" id="successMessage">
+        🎉 Поздравляем! Все устройства распределены правильно!
+      </div>
+    </div>
+
+    <script>
+      let categories = {};
+      let selectedDevices = [];
+      let correctAnswers = 0;
+      let totalDevices = 0;
+      let deviceCategories = {};
+
+      // Загрузка данных из файла
+      async function loadData() {
+        try {
+          const response = await fetch("vpr7-1.txt");
+          const text = await response.text();
+          parseData(text);
+          initGame();
+        } catch (error) {
+          console.error("Ошибка загрузки данных:", error);
+          // Fallback - встроенные данные
+          const fallbackData = `@Устройства ввода
+Клавиатура
+Мышь
+Сканер документов
+
+@Устройства вывода
+Монитор
+Принтер
+Наушники
+
+@Устройства хранения
+SSD (твердотельный накопитель)
+USB-флеш-накопитель (Флешка)
+
+@Устройства обработки
+Процессор (CPU — центральная обработка данных)`;
+          parseData(fallbackData);
+          initGame();
+        }
+      }
+
+      // Парсинг данных из файла
+      function parseData(text) {
+        const lines = text.split("\n");
+        let currentCategory = "";
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("@")) {
+            currentCategory = line.substring(1).trim();
+            categories[currentCategory] = [];
+          } else if (line && currentCategory) {
+            categories[currentCategory].push(line);
+          }
+        });
+      }
+
+      // Инициализация игры
+      function initGame() {
+        // Выбираем по 2-3 устройства из каждой категории (всего 9)
+        selectedDevices = [];
+        deviceCategories = {};
+
+        const categoryNames = Object.keys(categories);
+        const devicesPerCategory = [3, 2, 2, 2]; // Распределение 9 устройств
+
+        categoryNames.forEach((category, index) => {
+          const devices = [...categories[category]];
+          const count = devicesPerCategory[index] || 2;
+
+          for (let i = 0; i < count && devices.length > 0; i++) {
+            const randomIndex = Math.floor(Math.random() * devices.length);
+            const device = devices.splice(randomIndex, 1)[0];
+            selectedDevices.push(device);
+            deviceCategories[device] = category;
+          }
+        });
+
+        // Перемешиваем устройства
+        selectedDevices.sort(() => Math.random() - 0.5);
+
+        totalDevices = selectedDevices.length;
+        correctAnswers = 0;
+
+        renderCategories();
+        renderDevices();
+        updateScore();
+      }
+
+      // Отрисовка категорий
+      function renderCategories() {
+        const grid = document.getElementById("categoriesGrid");
+        grid.innerHTML = "";
+
+        Object.keys(categories).forEach((category) => {
+          const categoryDiv = document.createElement("div");
+          categoryDiv.className = "category";
+          categoryDiv.dataset.category = category;
+
+          categoryDiv.innerHTML = `
+                    <h3>📁 ${category}</h3>
+                    <div class="category-devices" data-category="${category}"></div>
+                `;
+
+          grid.appendChild(categoryDiv);
+
+          // Добавляем обработчики для drop zone
+          const dropZone = categoryDiv.querySelector(".category-devices");
+          setupDropZone(dropZone, categoryDiv);
+        });
+      }
+
+      // Отрисовка устройств
+      function renderDevices() {
+        const pool = document.getElementById("devicesPool");
+        pool.innerHTML = "";
+
+        selectedDevices.forEach((device) => {
+          const deviceEl = createDeviceElement(device);
+          pool.appendChild(deviceEl);
+        });
+      }
+
+      // Создание элемента устройства
+      function createDeviceElement(device) {
+        const el = document.createElement("div");
+        el.className = "device";
+        el.textContent = device;
+        el.draggable = true;
+        el.dataset.device = device;
+
+        // Drag events
+        el.addEventListener("dragstart", handleDragStart);
+        el.addEventListener("dragend", handleDragEnd);
+
+        // Touch events
+        el.addEventListener("touchstart", handleTouchStart, { passive: false });
+        el.addEventListener("touchmove", handleTouchMove, { passive: false });
+        el.addEventListener("touchend", handleTouchEnd);
+
+        return el;
+      }
+
+      // Настройка drop zone
+      function setupDropZone(dropZone, categoryDiv) {
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          categoryDiv.classList.add("drag-over");
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+          categoryDiv.classList.remove("drag-over");
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          categoryDiv.classList.remove("drag-over");
+
+          const deviceName = e.dataTransfer.getData("text/plain");
+          const deviceEl = document.querySelector(
+            `[data-device="${deviceName}"]`,
+          );
+
+          if (deviceEl) {
+            handleDeviceDrop(deviceEl, dropZone, deviceName);
+          }
+        });
+      }
+
+      // Обработка drop устройства
+      function handleDeviceDrop(deviceEl, dropZone, deviceName) {
+        const targetCategory = dropZone.dataset.category;
+        const correctCategory = deviceCategories[deviceName];
+
+        dropZone.appendChild(deviceEl);
+
+        // Проверяем правильность
+        if (targetCategory === correctCategory) {
+          deviceEl.classList.remove("incorrect");
+          deviceEl.classList.add("correct");
+          correctAnswers++;
+        } else {
+          deviceEl.classList.remove("correct");
+          deviceEl.classList.add("incorrect");
+        }
+
+        updateScore();
+        checkWin();
+      }
+
+      // Drag handlers
+      let draggedElement = null;
+
+      function handleDragStart(e) {
+        draggedElement = e.target;
+        e.target.classList.add("dragging");
+        e.dataTransfer.setData("text/plain", e.target.dataset.device);
+      }
+
+      function handleDragEnd(e) {
+        e.target.classList.remove("dragging");
+        draggedElement = null;
+      }
+
+      // Touch handlers
+      let touchElement = null;
+      let touchClone = null;
+      let touchStartX, touchStartY;
+
+      function handleTouchStart(e) {
+        e.preventDefault();
+        touchElement = e.target;
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+
+        // Создаем клон для перетаскивания
+        touchClone = touchElement.cloneNode(true);
+        touchClone.style.position = "fixed";
+        touchClone.style.zIndex = "1000";
+        touchClone.style.pointerEvents = "none";
+        touchClone.style.opacity = "0.8";
+        touchClone.style.transform = "scale(1.1)";
+        document.body.appendChild(touchClone);
+
+        updateClonePosition(touch);
+        touchElement.classList.add("dragging");
+      }
+
+      function handleTouchMove(e) {
+        e.preventDefault();
+        if (!touchClone) return;
+
+        const touch = e.touches[0];
+        updateClonePosition(touch);
+
+        // Подсвечиваем категорию под пальцем
+        const categories = document.querySelectorAll(".category");
+        categories.forEach((cat) => {
+          const rect = cat.getBoundingClientRect();
+          if (
+            touch.clientX >= rect.left &&
+            touch.clientX <= rect.right &&
+            touch.clientY >= rect.top &&
+            touch.clientY <= rect.bottom
+          ) {
+            cat.classList.add("drag-over");
+          } else {
+            cat.classList.remove("drag-over");
+          }
+        });
+      }
+
+      function handleTouchEnd(e) {
+        if (!touchElement || !touchClone) return;
+
+        const touch = e.changedTouches[0];
+
+        // Находим категорию под пальцем
+        const dropZones = document.querySelectorAll(".category-devices");
+        let targetZone = null;
+
+        dropZones.forEach((zone) => {
+          const rect = zone.getBoundingClientRect();
+          if (
+            touch.clientX >= rect.left &&
+            touch.clientX <= rect.right &&
+            touch.clientY >= rect.top &&
+            touch.clientY <= rect.bottom
+          ) {
+            targetZone = zone;
+          }
+        });
+
+        // Убираем подсветку
+        document.querySelectorAll(".category").forEach((cat) => {
+          cat.classList.remove("drag-over");
+        });
+
+        if (targetZone) {
+          const deviceName = touchElement.dataset.device;
+          handleDeviceDrop(touchElement, targetZone, deviceName);
+        }
+
+        touchElement.classList.remove("dragging");
+        touchClone.remove();
+        touchClone = null;
+        touchElement = null;
+      }
+
+      function updateClonePosition(touch) {
+        if (touchClone) {
+          touchClone.style.left =
+            touch.clientX - touchClone.offsetWidth / 2 + "px";
+          touchClone.style.top =
+            touch.clientY - touchClone.offsetHeight / 2 + "px";
+        }
+      }
+
+      // Обновление счета
+      function updateScore() {
+        document.getElementById("correctCount").textContent = correctAnswers;
+        document.getElementById("totalCount").textContent = totalDevices;
+      }
+
+      // Проверка победы
+      function checkWin() {
+        const allPlaced =
+          document.getElementById("devicesPool").children.length === 0;
+        if (allPlaced && correctAnswers === totalDevices) {
+          document.getElementById("successMessage").style.display = "block";
+        } else {
+          document.getElementById("successMessage").style.display = "none";
+        }
+      }
+
+      // Сброс игры
+      function resetGame() {
+        document.getElementById("successMessage").style.display = "none";
+        categories = {};
+        selectedDevices = [];
+        correctAnswers = 0;
+        loadData();
+      }
+
+      // Запуск
+      loadData();
+    </script>
+  </body>
+</html>

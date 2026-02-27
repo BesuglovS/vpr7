@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ВПР - Задания по информатике</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2.2rem;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+      }
+
+      .tasks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .task-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-number {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .task-card:nth-child(2) .task-number {
+        background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+        box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+      }
+
+      .task-card:nth-child(3) .task-number {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+      }
+
+      .task-card:nth-child(4) .task-number {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
+      }
+
+      .task-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .task-description {
+        font-size: 0.95rem;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .task-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.6rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+          margin-bottom: 30px;
+        }
+
+        .task-card {
+          padding: 25px 20px;
+        }
+
+        .task-number {
+          width: 60px;
+          height: 60px;
+          font-size: 1.5rem;
+        }
+
+        .task-title {
+          font-size: 1.1rem;
+        }
+
+        .task-description {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎓 ВПР - Информатика</h1>
+      <p class="subtitle">
+        Интерактивные задания для подготовки к проверочной работе
+      </p>
+
+      <div class="tasks-grid">
+        <a href="vpr7-1.html" class="task-card">
+          <div class="task-number">1</div>
+          <div class="task-icon">🖥️</div>
+          <h2 class="task-title">Устройства компьютера</h2>
+          <p class="task-description">
+            Распределите устройства по категориям: ввод, вывод, хранение и
+            обработка информации
+          </p>
+        </a>
+
+        <a href="vpr7-2.html" class="task-card">
+          <div class="task-number">2</div>
+          <div class="task-icon">📁</div>
+          <h2 class="task-title">Пути к файлам</h2>
+          <p class="task-description">
+            Определите полный путь к папке или файлу после навигации по файловой
+            системе
+          </p>
+        </a>
+
+        <a href="vpr7-3.html" class="task-card">
+          <div class="task-number">3</div>
+          <div class="task-icon">📄</div>
+          <h2 class="task-title">Типы файлов</h2>
+          <p class="task-description">
+            Распределите расширения файлов по соответствующим категориям
+          </p>
+        </a>
+      </div>
+
+      <p class="footer">Выберите задание для начала работы</p>
+    </div>
+  </body>
+</html>

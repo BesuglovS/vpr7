@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Определение пути к папке или файлу</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.6rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .task-counter {
+        text-align: center;
+        color: #e94560;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .task-text .highlight {
+        background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .path-workspace {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .path-parts-pool {
+        background: #f0f4f8;
+        border-radius: 12px;
+        padding: 15px;
+        border: 2px dashed #b0bec5;
+      }
+
+      .path-parts-pool h3 {
+        color: #546e7a;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        text-align: center;
+      }
+
+      .parts-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        min-height: 50px;
+      }
+
+      .path-part {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: grab;
+        user-select: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        touch-action: none;
+      }
+
+      .path-part:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+      }
+
+      .path-part.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+      }
+
+      .path-part.disk {
+        background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+        box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+      }
+
+      .path-part.folder {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+      }
+
+      .path-part.file {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+      }
+
+      .path-part.separator {
+        background: #607d8b;
+        padding: 10px 12px;
+        font-weight: bold;
+      }
+
+      .path-assembly {
+        background: #263238;
+        border-radius: 12px;
+        padding: 20px;
+        min-height: 80px;
+      }
+
+      .path-assembly h3 {
+        color: #b0bec5;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        text-align: center;
+      }
+
+      .assembly-zone {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        min-height: 50px;
+        padding: 10px;
+        border: 2px dashed #546e7a;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        align-items: center;
+      }
+
+      .assembly-zone.drag-over {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+      }
+
+      .parts-container.drag-over {
+        background: rgba(102, 126, 234, 0.15);
+        border-radius: 8px;
+      }
+
+      .assembly-zone .path-part {
+        margin: 2px;
+      }
+
+      .result-display {
+        background: #1a1a2e;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 15px;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 1rem;
+        color: #4fc3f7;
+        word-break: break-all;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .result-display.correct {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .result-display.incorrect {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-10px);
+        }
+        75% {
+          transform: translateX(10px);
+        }
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-clear {
+        background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+      }
+
+      .btn-next {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .score-board {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .score {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .score span {
+        color: #11998e;
+      }
+
+      .feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .correct-answer {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #fff;
+      }
+
+      .hint-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px 15px;
+        margin-top: 15px;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.9rem;
+      }
+
+      .hint-box strong {
+        color: #856404;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          font-size: 1rem;
+        }
+
+        .path-part {
+          padding: 8px 12px;
+          font-size: 0.85rem;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>📁 Определение пути к папке или файлу</h1>
+
+      <div class="instructions">
+        Соберите правильный путь, перетаскивая части в нужном порядке или
+        нажимая на них. Элементы из пула добавляются в конец, из зоны сборки —
+        возвращаются в пул.
+      </div>
+
+      <div class="task-card">
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="path-workspace">
+          <div class="path-parts-pool">
+            <h3>📦 Доступные элементы пути</h3>
+            <div class="parts-container" id="partsPool"></div>
+          </div>
+
+          <div class="path-assembly">
+            <h3>🔧 Соберите путь здесь</h3>
+            <div class="assembly-zone" id="assemblyZone"></div>
+            <div class="result-display" id="resultDisplay">
+              Перетащите элементы для сборки пути
+            </div>
+          </div>
+        </div>
+
+        <div class="hint-box" id="hintBox" style="display: none">
+          <strong>💡 Подсказка:</strong> <span id="hintText"></span>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div id="feedbackText"></div>
+          <div class="correct-answer" id="correctAnswer"></div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-check" onclick="checkAnswer()">
+            ✓ Проверить
+          </button>
+          <button class="btn btn-clear" onclick="clearAssembly()">
+            ✕ Очистить
+          </button>
+        </div>
+      </div>
+
+      <div class="score-board">
+        <button class="btn btn-reset" onclick="resetGame()">
+          🔄 Новое задание
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let foldersCyrillic = [];
+      let foldersLatin = [];
+      let filesCyrillic = [];
+      let filesLatin = [];
+
+      let currentTask = null;
+      let answered = false;
+
+      // Загрузка данных из файла
+      async function loadData() {
+        try {
+          const response = await fetch("vpr7-2.txt");
+          const text = await response.text();
+          parseData(text);
+          startGame();
+        } catch (error) {
+          console.error("Ошибка загрузки данных:", error);
+          // Fallback данные
+          foldersCyrillic = [
+            "Документы",
+            "Загрузки",
+            "Избранное",
+            "Видео",
+            "Музыка",
+            "Фото",
+            "Работа",
+            "Учёба",
+          ];
+          foldersLatin = [
+            "Documents",
+            "Downloads",
+            "Videos",
+            "Music",
+            "Photos",
+            "Work",
+            "Study",
+            "Projects",
+          ];
+          filesCyrillic = ["задача.txt", "отчёт.docx", "документ.pdf"];
+          filesLatin = ["readme.txt", "index.html", "lesson.htm"];
+          startGame();
+        }
+      }
+
+      // Парсинг данных из файла
+      function parseData(text) {
+        const lines = text.split("\n");
+        let currentSection = "";
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("# Имена папок (кириллица)")) {
+            currentSection = "foldersCyr";
+          } else if (line.startsWith("# Имена папок (латиница)")) {
+            currentSection = "foldersLat";
+          } else if (line.startsWith("# Имена файлов (кириллица)")) {
+            currentSection = "filesCyr";
+          } else if (line.startsWith("# Имена файлов (латиница)")) {
+            currentSection = "filesLat";
+          } else if (line && !line.startsWith("#")) {
+            if (currentSection === "foldersCyr") foldersCyrillic.push(line);
+            else if (currentSection === "foldersLat") foldersLatin.push(line);
+            else if (currentSection === "filesCyr") filesCyrillic.push(line);
+            else if (currentSection === "filesLat") filesLatin.push(line);
+          }
+        });
+      }
+
+      // Начало игры
+      function startGame() {
+        generateTask();
+      }
+
+      // Генерация задания
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("resultDisplay").textContent =
+          "Перетащите элементы для сборки пути";
+        document.getElementById("resultDisplay").className = "result-display";
+
+        // Выбираем тип задания
+        const taskTypes = [
+          "navigateUpDown",
+          "navigateUpDown",
+          "createAndMove",
+          "simpleNavigate",
+        ];
+        const taskType =
+          taskTypes[Math.floor(Math.random() * taskTypes.length)];
+
+        // Выбираем использование кириллицы или латиницы
+        const useCyrillic = Math.random() > 0.5;
+        const folders = useCyrillic ? foldersCyrillic : foldersLatin;
+        const files = useCyrillic ? filesCyrillic : filesLatin;
+
+        if (taskType === "navigateUpDown") {
+          currentTask = generateNavigateTask(folders);
+        } else if (taskType === "createAndMove") {
+          currentTask = generateCreateMoveTask(folders, files);
+        } else {
+          currentTask = generateSimpleNavigateTask(folders);
+        }
+
+        renderTask();
+      }
+
+      // Генерация задания на навигацию вверх/вниз
+      function generateNavigateTask(folders) {
+        const disk =
+          String.fromCharCode(67 + Math.floor(Math.random() * 3)) + ":";
+
+        // Создаём начальный путь (3-5 папок)
+        const depth = 3 + Math.floor(Math.random() * 3);
+        const pathParts = [];
+        const usedFolders = new Set();
+
+        for (let i = 0; i < depth; i++) {
+          let folder;
+          do {
+            folder = folders[Math.floor(Math.random() * folders.length)];
+          } while (usedFolders.has(folder));
+          usedFolders.add(folder);
+          pathParts.push(folder);
+        }
+
+        const startPath = disk + "\\" + pathParts.join("\\");
+
+        // Определяем действия навигации
+        const upLevels = Math.min(Math.floor(Math.random() * 3) + 1, depth);
+        const downLevels = Math.floor(Math.random() * 2) + 1;
+
+        // Конечный путь
+        let finalPathParts = [...pathParts];
+
+        // Поднимаемся вверх
+        for (let i = 0; i < upLevels; i++) {
+          finalPathParts.pop();
+        }
+
+        // Спускаемся вниз - запоминаем имена папок для условия
+        const newFolders = [];
+        for (let i = 0; i < downLevels; i++) {
+          let folder;
+          do {
+            folder = folders[Math.floor(Math.random() * folders.length)];
+          } while (usedFolders.has(folder));
+          usedFolders.add(folder);
+          newFolders.push(folder);
+          finalPathParts.push(folder);
+        }
+
+        const finalPath = disk + "\\" + finalPathParts.join("\\");
+
+        // Формируем текст задания - явно указываем папки для спуска
+        let taskText = `Пользователь работал с каталогом <span class="highlight">${startPath}</span>. `;
+        taskText += `Он поднялся на ${upLevels} ${getLevelWord(upLevels)} вверх`;
+
+        // Явно указываем каждую папку, в которую спустился пользователь
+        if (downLevels === 1) {
+          taskText += `, затем спустился в папку <span class="highlight">${newFolders[0]}</span>. `;
+        } else {
+          taskText += `, затем спустился в папку <span class="highlight">${newFolders[0]}</span>`;
+          for (let i = 1; i < downLevels; i++) {
+            taskText += `, а затем в папку <span class="highlight">${newFolders[i]}</span>`;
+          }
+          taskText += `. `;
+        }
+
+        taskText += `Запишите полный путь к папке, в которой оказался пользователь.`;
+
+        return {
+          text: taskText,
+          correctPath: finalPath,
+          pathParts: finalPathParts,
+          disk: disk,
+          hint: `Начальный путь: ${startPath}. После подъёма на ${upLevels} уровня(ей) вверх и спуска в папки получается путь: ${finalPath}`,
+        };
+      }
+
+      // Генерация задания на создание папок и перемещение файла
+      function generateCreateMoveTask(folders, files) {
+        const disk =
+          String.fromCharCode(67 + Math.floor(Math.random() * 3)) + ":";
+
+        // Создаём начальный путь к файлу (2-3 папки + файл)
+        const depth = 2 + Math.floor(Math.random() * 2);
+        const pathParts = [];
+        const usedFolders = new Set();
+
+        for (let i = 0; i < depth; i++) {
+          let folder;
+          do {
+            folder = folders[Math.floor(Math.random() * folders.length)];
+          } while (usedFolders.has(folder));
+          usedFolders.add(folder);
+          pathParts.push(folder);
+        }
+
+        const file = files[Math.floor(Math.random() * files.length)];
+        const startPath = disk + "\\" + pathParts.join("\\") + "\\" + file;
+
+        // Поднимаемся на 1 уровень вверх
+        const upPathParts = [...pathParts];
+        upPathParts.pop();
+
+        // Создаём новые папки
+        let newFolder1, newFolder2;
+        do {
+          newFolder1 = folders[Math.floor(Math.random() * folders.length)];
+        } while (usedFolders.has(newFolder1));
+        usedFolders.add(newFolder1);
+
+        do {
+          newFolder2 = folders[Math.floor(Math.random() * folders.length)];
+        } while (usedFolders.has(newFolder2));
+        usedFolders.add(newFolder2);
+
+        const finalPathParts = [...upPathParts, newFolder1, newFolder2];
+        const finalPath = disk + "\\" + finalPathParts.join("\\") + "\\" + file;
+
+        // Формируем текст задания
+        let taskText = `Пользователь работал с файлом <span class="highlight">${startPath}</span>. `;
+        taskText += `Затем он поднялся на один уровень вверх, создал там каталог <span class="highlight">${newFolder1}</span>, `;
+        taskText += `в нём создал ещё один каталог <span class="highlight">${newFolder2}</span> и переместил в него файл <span class="highlight">${file}</span>. `;
+        taskText += `Каким стало полное имя этого файла после перемещения?`;
+
+        return {
+          text: taskText,
+          correctPath: finalPath,
+          pathParts: [...finalPathParts, file],
+          disk: disk,
+          isFile: true,
+          hint: `Файл перемещён в новую папку: ${finalPath}`,
+        };
+      }
+
+      // Генерация простого задания на навигацию
+      function generateSimpleNavigateTask(folders) {
+        const disk =
+          String.fromCharCode(67 + Math.floor(Math.random() * 3)) + ":";
+
+        // Создаём начальный путь (3-4 папки)
+        const depth = 3 + Math.floor(Math.random() * 2);
+        const pathParts = [];
+        const usedFolders = new Set();
+
+        for (let i = 0; i < depth; i++) {
+          let folder;
+          do {
+            folder = folders[Math.floor(Math.random() * folders.length)];
+          } while (usedFolders.has(folder));
+          usedFolders.add(folder);
+          pathParts.push(folder);
+        }
+
+        const startPath = disk + "\\" + pathParts.join("\\");
+
+        // Последовательность навигации
+        const actions = [];
+        let currentParts = [...pathParts];
+
+        // Добавляем несколько действий
+        const numActions = 2 + Math.floor(Math.random() * 2);
+
+        for (let i = 0; i < numActions; i++) {
+          const goUp = currentParts.length > 1 && Math.random() > 0.4;
+
+          if (goUp) {
+            actions.push({
+              type: "up",
+              text: "поднялся на один уровень вверх",
+            });
+            currentParts.pop();
+          } else {
+            let folder;
+            do {
+              folder = folders[Math.floor(Math.random() * folders.length)];
+            } while (usedFolders.has(folder));
+            usedFolders.add(folder);
+            actions.push({
+              type: "down",
+              folder: folder,
+              text: `спустился в каталог <span class="highlight">${folder}</span>`,
+            });
+            currentParts.push(folder);
+          }
+        }
+
+        const finalPath = disk + "\\" + currentParts.join("\\");
+
+        // Формируем текст задания
+        let taskText = `Пользователь работал с каталогом <span class="highlight">${startPath}</span>. `;
+        taskText += "Сначала он ";
+
+        actions.forEach((action, index) => {
+          if (index === actions.length - 1) {
+            taskText += action.text + ". ";
+          } else if (index === actions.length - 2) {
+            taskText += action.text + ", затем ";
+          } else {
+            taskText += action.text + ", ";
+          }
+        });
+
+        taskText += `Укажите полный путь каталога, в котором оказался пользователь.`;
+
+        return {
+          text: taskText,
+          correctPath: finalPath,
+          pathParts: currentParts,
+          disk: disk,
+          hint: `После всех навигаций путь: ${finalPath}`,
+        };
+      }
+
+      // Склонение слова "уровень"
+      function getLevelWord(n) {
+        if (n === 1) return "уровень";
+        if (n >= 2 && n <= 4) return "уровня";
+        return "уровней";
+      }
+
+      // Счётчик для уникальных ID
+      let partIdCounter = 0;
+
+      // Генерация похожих, но неверных папок (только изменение регистра первой буквы)
+      function generateSimilarFolder(folder) {
+        // Изменяем регистр первой буквы
+        if (folder && folder.length > 0) {
+          const firstChar = folder[0];
+          let newFirstChar;
+
+          if (firstChar === firstChar.toUpperCase()) {
+            newFirstChar = firstChar.toLowerCase();
+          } else {
+            newFirstChar = firstChar.toUpperCase();
+          }
+
+          const variation = newFirstChar + folder.substring(1);
+          if (variation !== folder) {
+            return variation;
+          }
+        }
+        return null;
+      }
+
+      // Генерация похожих, но неверных файлов (только изменение регистра первой буквы)
+      function generateSimilarFile(file) {
+        // Изменяем регистр первой буквы имени файла
+        if (file && file.length > 0) {
+          const firstChar = file[0];
+          let newFirstChar;
+
+          if (firstChar === firstChar.toUpperCase()) {
+            newFirstChar = firstChar.toLowerCase();
+          } else {
+            newFirstChar = firstChar.toUpperCase();
+          }
+
+          const variation = newFirstChar + file.substring(1);
+          if (variation !== file) {
+            return variation;
+          }
+        }
+        return null;
+      }
+
+      // Отрисовка задания
+      function renderTask() {
+        document.getElementById("taskText").innerHTML = currentTask.text;
+
+        // Создаём части пути
+        const parts = [];
+        const usedTexts = new Set(); // Для отслеживания уникальных элементов
+
+        // Диск (правильный)
+        parts.push({ text: currentTask.disk, type: "disk" });
+        usedTexts.add(currentTask.disk);
+
+        // Добавляем 1-2 неверных диска
+        const allDisks = ["C:", "D:", "E:"];
+        const wrongDisks = allDisks.filter((d) => d !== currentTask.disk);
+        const numWrongDisks = 1 + Math.floor(Math.random() * 2); // 1 или 2 неверных дисков
+        for (let i = 0; i < numWrongDisks && i < wrongDisks.length; i++) {
+          parts.push({ text: wrongDisks[i], type: "disk" });
+          usedTexts.add(wrongDisks[i]);
+        }
+
+        // Папки и файлы (правильные)
+        currentTask.pathParts.forEach((part, index) => {
+          parts.push({ text: "\\", type: "separator" });
+          const isFile =
+            currentTask.isFile && index === currentTask.pathParts.length - 1;
+          parts.push({
+            text: part,
+            type: isFile ? "file" : "folder",
+          });
+          usedTexts.add(part);
+        });
+
+        // Добавляем похожие, но неверные папки и файлы
+        const wrongParts = [];
+        currentTask.pathParts.forEach((part, index) => {
+          const isFile =
+            currentTask.isFile && index === currentTask.pathParts.length - 1;
+
+          if (isFile) {
+            // Генерируем похожий, но неверный файл
+            const similarFile = generateSimilarFile(part);
+            if (similarFile && !usedTexts.has(similarFile)) {
+              wrongParts.push({ text: similarFile, type: "file" });
+              usedTexts.add(similarFile);
+            }
+          } else {
+            // Генерируем похожую, но неверную папку
+            const similarFolder = generateSimilarFolder(part);
+            if (similarFolder && !usedTexts.has(similarFolder)) {
+              wrongParts.push({ text: similarFolder, type: "folder" });
+              usedTexts.add(similarFolder);
+            }
+          }
+        });
+
+        // Добавляем 1-2 дополнительных неверных папки из списка
+        const useCyrillic = /[а-яё]/i.test(currentTask.pathParts[0]);
+        const folders = useCyrillic ? foldersCyrillic : foldersLatin;
+        const files = useCyrillic ? filesCyrillic : filesLatin;
+
+        // Добавляем неверные папки, которых нет в правильном пути
+        const wrongFolders = folders.filter((f) => !usedTexts.has(f));
+        const numWrongFolders = Math.min(
+          1 + Math.floor(Math.random() * 2),
+          wrongFolders.length,
+        );
+        for (let i = 0; i < numWrongFolders; i++) {
+          const idx = Math.floor(Math.random() * wrongFolders.length);
+          if (!usedTexts.has(wrongFolders[idx])) {
+            wrongParts.push({ text: wrongFolders[idx], type: "folder" });
+            usedTexts.add(wrongFolders[idx]);
+          }
+        }
+
+        // Добавляем неверные файлы, если задание с файлом
+        if (currentTask.isFile) {
+          const wrongFiles = files.filter((f) => !usedTexts.has(f));
+          const numWrongFiles = Math.min(1, wrongFiles.length);
+          for (let i = 0; i < numWrongFiles; i++) {
+            const idx = Math.floor(Math.random() * wrongFiles.length);
+            if (!usedTexts.has(wrongFiles[idx])) {
+              wrongParts.push({ text: wrongFiles[idx], type: "file" });
+              usedTexts.add(wrongFiles[idx]);
+            }
+          }
+        }
+
+        // Добавляем дополнительные разделители для неверных элементов
+        wrongParts.forEach((part) => {
+          parts.push({ text: "\\", type: "separator" });
+          parts.push(part);
+        });
+
+        // Перемешиваем все части
+        const shuffledParts = [...parts];
+
+        // Перемешиваем
+        for (let i = shuffledParts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledParts[i], shuffledParts[j]] = [
+            shuffledParts[j],
+            shuffledParts[i],
+          ];
+        }
+
+        // Отрисовываем пул частей
+        const pool = document.getElementById("partsPool");
+        pool.innerHTML = "";
+
+        shuffledParts.forEach((part) => {
+          const el = createPartElement(part);
+          pool.appendChild(el);
+        });
+
+        // Очищаем зону сборки
+        document.getElementById("assemblyZone").innerHTML = "";
+      }
+
+      // Создание элемента части пути
+      function createPartElement(part) {
+        const el = document.createElement("div");
+        el.className = `path-part ${part.type}`;
+        el.textContent = part.text;
+        el.draggable = true;
+        el.dataset.text = part.text;
+        el.dataset.type = part.type;
+        el.dataset.id = "part-" + partIdCounter++; // Уникальный ID
+
+        // Drag events
+        el.addEventListener("dragstart", handleDragStart);
+        el.addEventListener("dragend", handleDragEnd);
+
+        // Touch events
+        el.addEventListener("touchstart", handleTouchStart, { passive: false });
+        el.addEventListener("touchmove", handleTouchMove, { passive: false });
+        el.addEventListener("touchend", handleTouchEnd);
+
+        // Click event - перемещение по клику
+        el.addEventListener("click", handleClick);
+
+        return el;
+      }
+
+      // Обработка клика - перемещение между пулом и зоной сборки
+      function handleClick(e) {
+        const el = e.target;
+        const pool = document.getElementById("partsPool");
+        const zone = document.getElementById("assemblyZone");
+
+        if (el.parentElement === pool) {
+          // Из пула - в конец зоны сборки
+          zone.appendChild(el);
+        } else {
+          // Из зоны сборки - в пул
+          pool.appendChild(el);
+        }
+
+        updateResultDisplay();
+      }
+
+      // Настройка drop zones
+      const assemblyZone = document.getElementById("assemblyZone");
+      const partsPool = document.getElementById("partsPool");
+
+      // Перетаскивание над зоной сборки
+      assemblyZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        assemblyZone.classList.add("drag-over");
+
+        // Определяем позицию для вставки
+        const afterElement = getDragAfterElement(assemblyZone, e.clientX);
+        const draggingEl = document.querySelector(".dragging");
+
+        if (draggingEl) {
+          if (afterElement == null) {
+            assemblyZone.appendChild(draggingEl);
+          } else {
+            assemblyZone.insertBefore(draggingEl, afterElement);
+          }
+        }
+      });
+
+      assemblyZone.addEventListener("dragleave", (e) => {
+        // Проверяем, что мы действительно покинули зону
+        if (!assemblyZone.contains(e.relatedTarget)) {
+          assemblyZone.classList.remove("drag-over");
+        }
+      });
+
+      assemblyZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        assemblyZone.classList.remove("drag-over");
+        updateResultDisplay();
+      });
+
+      // Перетаскивание над пулом частей (для возврата)
+      partsPool.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        partsPool.classList.add("drag-over");
+
+        const draggingEl = document.querySelector(".dragging");
+        if (draggingEl) {
+          partsPool.appendChild(draggingEl);
+        }
+      });
+
+      partsPool.addEventListener("dragleave", (e) => {
+        if (!partsPool.contains(e.relatedTarget)) {
+          partsPool.classList.remove("drag-over");
+        }
+      });
+
+      partsPool.addEventListener("drop", (e) => {
+        e.preventDefault();
+        partsPool.classList.remove("drag-over");
+        updateResultDisplay();
+      });
+
+      // Функция для определения позиции вставки
+      function getDragAfterElement(container, x) {
+        const draggableElements = [
+          ...container.querySelectorAll(".path-part:not(.dragging)"),
+        ];
+
+        return draggableElements.reduce(
+          (closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = x - box.left - box.width / 2;
+
+            if (offset < 0 && offset > closest.offset) {
+              return { offset: offset, element: child };
+            } else {
+              return closest;
+            }
+          },
+          { offset: Number.NEGATIVE_INFINITY },
+        ).element;
+      }
+
+      // Drag handlers
+      let draggedElement = null;
+
+      function handleDragStart(e) {
+        draggedElement = e.target;
+        e.target.classList.add("dragging");
+        e.dataTransfer.setData("text/plain", e.target.dataset.text);
+        e.dataTransfer.setData("application/type", e.target.dataset.type);
+        e.dataTransfer.setData("application/id", e.target.dataset.id); // Уникальный ID
+      }
+
+      function handleDragEnd(e) {
+        e.target.classList.remove("dragging");
+        draggedElement = null;
+      }
+
+      // Touch handlers
+      let touchElement = null;
+      let touchClone = null;
+
+      function handleTouchStart(e) {
+        e.preventDefault();
+        touchElement = e.target;
+        const touch = e.touches[0];
+
+        touchClone = touchElement.cloneNode(true);
+        touchClone.style.position = "fixed";
+        touchClone.style.zIndex = "1000";
+        touchClone.style.pointerEvents = "none";
+        touchClone.style.opacity = "0.8";
+        touchClone.style.transform = "scale(1.1)";
+        document.body.appendChild(touchClone);
+
+        updateClonePosition(touch);
+        touchElement.classList.add("dragging");
+      }
+
+      function handleTouchMove(e) {
+        e.preventDefault();
+        if (!touchClone) return;
+
+        const touch = e.touches[0];
+        updateClonePosition(touch);
+
+        const zone = document.getElementById("assemblyZone");
+        const pool = document.getElementById("partsPool");
+        const zoneRect = zone.getBoundingClientRect();
+        const poolRect = pool.getBoundingClientRect();
+
+        // Подсвечиваем зоны при наведении
+        zone.classList.remove("drag-over");
+        pool.classList.remove("drag-over");
+
+        if (
+          touch.clientX >= zoneRect.left &&
+          touch.clientX <= zoneRect.right &&
+          touch.clientY >= zoneRect.top &&
+          touch.clientY <= zoneRect.bottom
+        ) {
+          zone.classList.add("drag-over");
+
+          // Определяем позицию для вставки в зоне сборки
+          const afterElement = getDragAfterElement(zone, touch.clientX);
+          if (touchElement.parentElement !== zone) {
+            if (afterElement == null) {
+              zone.appendChild(touchElement);
+            } else {
+              zone.insertBefore(touchElement, afterElement);
+            }
+          } else {
+            // Перемещение внутри зоны сборки
+            if (afterElement == null) {
+              zone.appendChild(touchElement);
+            } else if (afterElement !== touchElement) {
+              zone.insertBefore(touchElement, afterElement);
+            }
+          }
+        } else if (
+          touch.clientX >= poolRect.left &&
+          touch.clientX <= poolRect.right &&
+          touch.clientY >= poolRect.top &&
+          touch.clientY <= poolRect.bottom
+        ) {
+          pool.classList.add("drag-over");
+          // Возвращаем в пул
+          if (touchElement.parentElement !== pool) {
+            pool.appendChild(touchElement);
+          }
+        }
+      }
+
+      function handleTouchEnd(e) {
+        if (!touchElement || !touchClone) return;
+
+        const zone = document.getElementById("assemblyZone");
+        const pool = document.getElementById("partsPool");
+
+        zone.classList.remove("drag-over");
+        pool.classList.remove("drag-over");
+
+        touchElement.classList.remove("dragging");
+        touchClone.remove();
+        touchClone = null;
+        touchElement = null;
+
+        updateResultDisplay();
+      }
+
+      function updateClonePosition(touch) {
+        if (touchClone) {
+          touchClone.style.left =
+            touch.clientX - touchClone.offsetWidth / 2 + "px";
+          touchClone.style.top =
+            touch.clientY - touchClone.offsetHeight / 2 + "px";
+        }
+      }
+
+      // Обновление отображения результата
+      function updateResultDisplay() {
+        const zone = document.getElementById("assemblyZone");
+        const parts = zone.querySelectorAll(".path-part");
+
+        if (parts.length === 0) {
+          document.getElementById("resultDisplay").textContent =
+            "Перетащите элементы для сборки пути";
+        } else {
+          let path = "";
+          parts.forEach((part) => {
+            path += part.dataset.text;
+          });
+          document.getElementById("resultDisplay").textContent = path;
+        }
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const zone = document.getElementById("assemblyZone");
+        const parts = zone.querySelectorAll(".path-part");
+
+        if (parts.length === 0) {
+          alert("Соберите путь из предложенных элементов!");
+          return;
+        }
+
+        let userPath = "";
+        parts.forEach((part) => {
+          userPath += part.dataset.text;
+        });
+
+        answered = true;
+        const isCorrect =
+          userPath.toLowerCase() === currentTask.correctPath.toLowerCase();
+
+        const feedback = document.getElementById("feedback");
+        const resultDisplay = document.getElementById("resultDisplay");
+
+        if (isCorrect) {
+          feedback.className = "feedback correct";
+          document.getElementById("feedbackText").textContent = "🎉 Правильно!";
+          resultDisplay.className = "result-display correct";
+        } else {
+          feedback.className = "feedback incorrect";
+          document.getElementById("feedbackText").textContent =
+            "❌ Неправильно!";
+          document.getElementById("correctAnswer").textContent =
+            `Правильный ответ: ${currentTask.correctPath}`;
+          resultDisplay.className = "result-display incorrect";
+        }
+
+        feedback.style.display = "block";
+      }
+
+      // Очистка зоны сборки
+      function clearAssembly() {
+        const zone = document.getElementById("assemblyZone");
+        const pool = document.getElementById("partsPool");
+
+        while (zone.firstChild) {
+          pool.appendChild(zone.firstChild);
+        }
+
+        updateResultDisplay();
+      }
+
+      // Сброс игры
+      function resetGame() {
+        startGame();
+      }
+
+      // Запуск
+      loadData();
+    </script>
+  </body>
+</html>
