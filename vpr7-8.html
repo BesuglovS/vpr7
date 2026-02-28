@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Определение объёма текстовой информации</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.6rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 25px;
+      }
+
+      .task-text .highlight {
+        background: linear-gradient(145deg, #134e5e 0%, #71b280 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .task-type {
+        display: inline-block;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+      }
+
+      .answer-section {
+        margin-top: 25px;
+        text-align: center;
+      }
+
+      .answer-label {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .answer-input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .answer-input {
+        width: 150px;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        border: 3px solid #e0e0e0;
+        border-radius: 10px;
+        text-align: center;
+        transition: border-color 0.3s;
+      }
+
+      .answer-input:focus {
+        outline: none;
+        border-color: #71b280;
+      }
+
+      .answer-input.correct {
+        border-color: #38ef7d;
+        background: rgba(56, 239, 125, 0.1);
+      }
+
+      .answer-input.incorrect {
+        border-color: #f45c43;
+        background: rgba(244, 92, 67, 0.1);
+      }
+
+      .answer-unit {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #134e5e;
+        min-width: 40px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-hint {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .hint-box {
+        background: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        padding: 15px 20px;
+        margin-top: 20px;
+        border-radius: 0 10px 10px 0;
+        display: none;
+      }
+
+      .hint-box h4 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .hint-step {
+        margin: 10px 0;
+        padding: 10px 15px;
+        background: rgba(76, 175, 80, 0.1);
+        border-radius: 8px;
+        line-height: 1.6;
+      }
+
+      .hint-step .formula {
+        font-family: "Courier New", monospace;
+        background: rgba(76, 175, 80, 0.2);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .hint-step .result {
+        color: #2e7d32;
+        font-weight: bold;
+      }
+
+      .formula-box {
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(76, 175, 80, 0.15);
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+
+      .formula-box h5 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .formula-box .formula-item {
+        margin: 8px 0;
+        font-family: "Courier New", monospace;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #134e5e;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          font-size: 1rem;
+        }
+
+        .answer-input {
+          width: 120px;
+          padding: 12px 15px;
+          font-size: 1rem;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+
+        .stats {
+          gap: 15px;
+        }
+
+        .stat-item {
+          padding: 8px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>📝 Определение объёма текстовой информации</h1>
+
+      <div class="instructions">
+        Решите задачу на определение информационного объёма сообщения при
+        кодировании символов. Введите числовой ответ в байтах.
+      </div>
+
+      <div class="task-card">
+        <div class="task-type" id="taskType">Задача на кодирование</div>
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="answer-section">
+          <label class="answer-label">Введите ответ:</label>
+          <div class="answer-input-group">
+            <input
+              type="number"
+              class="answer-input"
+              id="answerInput"
+              placeholder="Число"
+              step="any"
+              autocomplete="off"
+            />
+            <span class="answer-unit">байт</span>
+          </div>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+          <h4>💡 Подсказка — ход решения:</h4>
+          <div id="hintSteps"></div>
+          <div class="formula-box">
+            <h5>Формулы для решения:</h5>
+            <div class="formula-item">
+              N = 2<sup>i</sup> — мощность алфавита
+            </div>
+            <div class="formula-item">
+              i = log₂(N) — информационный вес символа
+            </div>
+            <div class="formula-item">
+              I = K × i — информационный объём сообщения
+            </div>
+            <div class="formula-item">1 байт = 8 бит</div>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div id="feedbackText"></div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-check" onclick="checkAnswer()">
+            ✓ Проверить
+          </button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
+          </button>
+          <button class="btn btn-reset" onclick="resetGame()">
+            🔄 Новая задача
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value" id="correctCount">0</div>
+            <div class="stat-label">Правильно</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="totalCount">0</div>
+            <div class="stat-label">Всего</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentTask = null;
+      let answered = false;
+      let stats = { correct: 0, total: 0 };
+
+      // Алфавиты с их мощностью и информационным весом символа
+      // N = 2^i, где N - мощность алфавита, i - информационный вес символа в битах
+      const alphabets = [
+        { N: 4, i: 2, name: "4-символьного" },
+        { N: 8, i: 3, name: "8-символьного" },
+        { N: 16, i: 4, name: "16-символьного" },
+        { N: 32, i: 5, name: "32-символьного" },
+        { N: 64, i: 6, name: "64-символьного" },
+        { N: 128, i: 7, name: "128-символьного" },
+        { N: 256, i: 8, name: "256-символьного" },
+        { N: 512, i: 9, name: "512-символьного" },
+        { N: 1024, i: 10, name: "1024-символьного" },
+      ];
+
+      // Генерация случайного числа
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // Выбор случайного элемента
+      function randomChoice(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      // Генерация задачи
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+
+        // Выбираем случайный алфавит
+        const alphabet = randomChoice(alphabets);
+
+        // Генерируем количество символов в сообщении
+        // Подбираем так, чтобы ответ в байтах был целым числом
+        // I = K * i бит = K * i / 8 байт
+        // Для целого ответа K * i должно делиться на 8
+
+        let K;
+        if (alphabet.i === 8) {
+          // При i=8 любой K даст целый ответ
+          K = randomInt(10, 100);
+        } else if (alphabet.i === 4) {
+          // i=4: K должно быть чётным для целого ответа
+          K = randomInt(5, 50) * 2;
+        } else if (alphabet.i === 6) {
+          // i=6: K должно делиться на 4 для целого ответа
+          K = randomInt(3, 25) * 4;
+        } else if (alphabet.i === 5) {
+          // i=5: K должно делиться на 8 для целого ответа
+          K = randomInt(1, 12) * 8;
+        } else if (alphabet.i === 7) {
+          // i=7: K должно делиться на 8 для целого ответа
+          K = randomInt(1, 12) * 8;
+        } else if (alphabet.i === 9) {
+          // i=9: K должно делиться на 8 для целого ответа
+          K = randomInt(1, 10) * 8;
+        } else if (alphabet.i === 10) {
+          // i=10: K должно делиться на 4 для целого ответа
+          K = randomInt(2, 20) * 4;
+        } else if (alphabet.i === 3) {
+          // i=3: K должно делиться на 8 для целого ответа
+          K = randomInt(1, 12) * 8;
+        } else if (alphabet.i === 2) {
+          // i=2: K должно делиться на 4 для целого ответа
+          K = randomInt(2, 25) * 4;
+        } else {
+          K = randomInt(10, 80);
+        }
+
+        // Вычисляем информационный объём
+        const bitsTotal = K * alphabet.i;
+        const bytesTotal = bitsTotal / 8;
+
+        // Формируем текст задачи
+        const taskText = `Сообщение, записанное буквами <span class="highlight">${alphabet.N}-символьного алфавита</span>, содержит <span class="highlight">${K} символов</span>. Чему равен информационный объём этого сообщения в байтах?`;
+
+        // Формируем подсказку
+        const hintSteps = [
+          `<div class="hint-step">1. Определим информационный вес одного символа (i):</div>`,
+          `<div class="hint-step">   По формуле N = 2<sup>i</sup>:</div>`,
+          `<div class="hint-step">   ${alphabet.N} = 2<sup>${alphabet.i}</sup>, значит <span class="formula">i = ${alphabet.i} бит</span></div>`,
+          `<div class="hint-step">2. Вычислим информационный объём сообщения в битах:</div>`,
+          `<div class="hint-step">   <span class="formula">I = K × i = ${K} × ${alphabet.i} = ${bitsTotal} бит</span></div>`,
+          `<div class="hint-step">3. Переведём биты в байты:</div>`,
+          `<div class="hint-step">   <span class="formula">${bitsTotal} бит ÷ 8 = ${bytesTotal} байт</span></div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${bytesTotal} байт</span></div>`,
+        ];
+
+        currentTask = {
+          type: "📝 Кодирование символов",
+          text: taskText,
+          answer: bytesTotal,
+          alphabet: alphabet,
+          K: K,
+          bitsTotal: bitsTotal,
+          hintSteps: hintSteps,
+        };
+
+        document.getElementById("taskType").textContent = currentTask.type;
+        document.getElementById("taskText").innerHTML = currentTask.text;
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        const hintSteps = document.getElementById("hintSteps");
+
+        hintSteps.innerHTML = currentTask.hintSteps.join("");
+        hintBox.style.display = "block";
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const userAnswer = parseFloat(
+          document.getElementById("answerInput").value.replace(",", "."),
+        );
+
+        if (isNaN(userAnswer)) {
+          alert("Введите числовой ответ!");
+          return;
+        }
+
+        answered = true;
+        stats.total++;
+
+        const input = document.getElementById("answerInput");
+        const feedback = document.getElementById("feedback");
+        const feedbackText = document.getElementById("feedbackText");
+
+        // Сравниваем ответ
+        const isCorrect = Math.abs(userAnswer - currentTask.answer) < 0.01;
+
+        if (isCorrect) {
+          stats.correct++;
+          input.className = "answer-input correct";
+          feedback.className = "feedback correct";
+          feedbackText.textContent = "🎉 Правильно! Отличная работа!";
+        } else {
+          input.className = "answer-input incorrect";
+          feedback.className = "feedback incorrect";
+          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${currentTask.answer} байт</strong>`;
+        }
+
+        feedback.style.display = "block";
+        updateStats();
+      }
+
+      // Обновление статистики
+      function updateStats() {
+        document.getElementById("correctCount").textContent = stats.correct;
+        document.getElementById("totalCount").textContent = stats.total;
+      }
+
+      // Сброс игры
+      function resetGame() {
+        generateTask();
+      }
+
+      // Обработка Enter
+      document
+        .getElementById("answerInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            checkAnswer();
+          }
+        });
+
+      // Запуск
+      generateTask();
+    </script>
+  </body>
+</html>
