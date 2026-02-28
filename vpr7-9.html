@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Передача информации</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f2027 0%,
+          #203a43 50%,
+          #2c5364 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.6rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 25px;
+      }
+
+      .task-text .highlight {
+        background: linear-gradient(145deg, #0f2027 0%, #2c5364 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .task-type {
+        display: inline-block;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+      }
+
+      .answer-section {
+        margin-top: 25px;
+        text-align: center;
+      }
+
+      .answer-label {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .answer-input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .answer-input {
+        width: 150px;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        border: 3px solid #e0e0e0;
+        border-radius: 10px;
+        text-align: center;
+        transition: border-color 0.3s;
+      }
+
+      .answer-input:focus {
+        outline: none;
+        border-color: #2c5364;
+      }
+
+      .answer-input.correct {
+        border-color: #38ef7d;
+        background: rgba(56, 239, 125, 0.1);
+      }
+
+      .answer-input.incorrect {
+        border-color: #f45c43;
+        background: rgba(244, 92, 67, 0.1);
+      }
+
+      .answer-unit {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #0f2027;
+        min-width: 40px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-hint {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .hint-box {
+        background: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        padding: 15px 20px;
+        margin-top: 20px;
+        border-radius: 0 10px 10px 0;
+        display: none;
+      }
+
+      .hint-box h4 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .hint-step {
+        margin: 10px 0;
+        padding: 10px 15px;
+        background: rgba(76, 175, 80, 0.1);
+        border-radius: 8px;
+        line-height: 1.6;
+      }
+
+      .hint-step .formula {
+        font-family: "Courier New", monospace;
+        background: rgba(76, 175, 80, 0.2);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .hint-step .result {
+        color: #2e7d32;
+        font-weight: bold;
+      }
+
+      .formula-box {
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(76, 175, 80, 0.15);
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+
+      .formula-box h5 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .formula-box .formula-item {
+        margin: 8px 0;
+        font-family: "Courier New", monospace;
+      }
+
+      .conversion-table {
+        margin-top: 15px;
+        padding: 10px;
+        background: rgba(76, 175, 80, 0.1);
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+
+      .conversion-table h5 {
+        color: #2e7d32;
+        margin-bottom: 8px;
+      }
+
+      .conversion-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .conversion-table td {
+        padding: 5px 10px;
+        border: 1px solid rgba(76, 175, 80, 0.3);
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #0f2027;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          font-size: 1rem;
+        }
+
+        .answer-input {
+          width: 120px;
+          padding: 12px 15px;
+          font-size: 1rem;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+
+        .stats {
+          gap: 15px;
+        }
+
+        .stat-item {
+          padding: 8px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>📡 Передача информации</h1>
+
+      <div class="instructions">
+        Решите задачу на передачу информации. Из трёх величин (скорость, время,
+        объём) известны две. Найдите третью.
+      </div>
+
+      <div class="task-card">
+        <div class="task-type" id="taskType">Тип задачи</div>
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="answer-section">
+          <label class="answer-label" id="answerLabel">Введите ответ:</label>
+          <div class="answer-input-group">
+            <input
+              type="number"
+              class="answer-input"
+              id="answerInput"
+              placeholder="Число"
+              step="any"
+              autocomplete="off"
+            />
+            <span class="answer-unit" id="answerUnit"></span>
+          </div>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+          <h4>💡 Подсказка — ход решения:</h4>
+          <div id="hintSteps"></div>
+          <div class="formula-box">
+            <h5>Формулы для решения:</h5>
+            <div class="formula-item">I = v × t — объём информации</div>
+            <div class="formula-item">v = I / t — скорость передачи</div>
+            <div class="formula-item">t = I / v — время передачи</div>
+          </div>
+          <div class="conversion-table">
+            <h5>Перевод единиц:</h5>
+            <table>
+              <tr>
+                <td>1 байт = 8 бит</td>
+                <td>1 Кбит = 1024 бит</td>
+              </tr>
+              <tr>
+                <td>1 КБ = 1024 байт</td>
+                <td>1 Мбит = 1024 Кбит</td>
+              </tr>
+              <tr>
+                <td>1 МБ = 1024 КБ</td>
+                <td>1 Гбит = 1024 Мбит</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div id="feedbackText"></div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-check" onclick="checkAnswer()">
+            ✓ Проверить
+          </button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
+          </button>
+          <button class="btn btn-reset" onclick="resetGame()">
+            🔄 Новая задача
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value" id="correctCount">0</div>
+            <div class="stat-label">Правильно</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="totalCount">0</div>
+            <div class="stat-label">Всего</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentTask = null;
+      let answered = false;
+      let stats = { correct: 0, total: 0 };
+
+      // Единицы измерения скорости
+      const speedUnits = {
+        bps: { name: "бит/с", nameFull: "бит в секунду", factor: 1 },
+        Kbps: { name: "Кбит/с", nameFull: "килобит в секунду", factor: 1024 },
+        Mbps: {
+          name: "Мбит/с",
+          nameFull: "мегабит в секунду",
+          factor: 1024 * 1024,
+        },
+      };
+
+      // Единицы измерения объёма
+      const volumeUnits = {
+        bit: { name: "бит", nameFull: "бит", factor: 1 },
+        byte: { name: "байт", nameFull: "байт", factor: 8 },
+        KB: { name: "КБ", nameFull: "килобайт", factor: 8 * 1024 },
+        MB: { name: "МБ", nameFull: "мегабайт", factor: 8 * 1024 * 1024 },
+      };
+
+      // Единицы измерения времени
+      const timeUnits = {
+        s: { name: "с", nameFull: "секунд", factor: 1 },
+        min: { name: "мин", nameFull: "минут", factor: 60 },
+      };
+
+      // Округление до разумного числа знаков
+      function roundValue(val) {
+        if (Number.isInteger(val)) return val;
+        return Math.round(val * 1000) / 1000;
+      }
+
+      // Генерация случайного числа
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // Выбор случайного элемента
+      function randomChoice(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      // Конвертация скорости в бит/с
+      function speedToBps(value, unit) {
+        return value * speedUnits[unit].factor;
+      }
+
+      // Конвертация объёма в биты
+      function volumeToBits(value, unit) {
+        return value * volumeUnits[unit].factor;
+      }
+
+      // Конвертация времени в секунды
+      function timeToSeconds(value, unit) {
+        return value * timeUnits[unit].factor;
+      }
+
+      // Типы задач
+      const taskTypes = [
+        generateFindVolume, // Найти объём
+        generateFindSpeed, // Найти скорость
+        generateFindTime, // Найти время
+        generateFindVolumeComplex, // Найти объём с переводом единиц
+        generateFindSpeedComplex, // Найти скорость с переводом единиц
+        generateFindTimeComplex, // Найти время с переводом единиц
+      ];
+
+      // Задача: Найти объём файла (простая)
+      function generateFindVolume() {
+        const sets = [
+          {
+            speed: 2048,
+            speedUnit: "bps",
+            time: 16,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 4096,
+            speedUnit: "bps",
+            time: 8,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 8192,
+            speedUnit: "bps",
+            time: 4,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 1024,
+            speedUnit: "bps",
+            time: 32,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 512,
+            speedUnit: "bps",
+            time: 64,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 256,
+            speedUnit: "bps",
+            time: 128,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const speedBps = speedToBps(set.speed, set.speedUnit);
+        const timeSec = timeToSeconds(set.time, set.timeUnit);
+        const bitsTotal = speedBps * timeSec;
+        const answer = roundValue(
+          bitsTotal / volumeUnits[set.answerUnit].factor,
+        );
+
+        const taskText = `Скорость передачи данных по сети составляет <span class="highlight">${set.speed} ${speedUnits[set.speedUnit].name}</span>. Передача заняла <span class="highlight">${set.time} ${timeUnits[set.timeUnit].name}</span>. Определите размер переданного файла в ${volumeUnits[set.answerUnit].nameFull}.`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Используем формулу: <span class="formula">I = v × t</span></div>`,
+          `<div class="hint-step">2. Вычислим объём в битах:</div>`,
+          `<div class="hint-step">   <span class="formula">${set.speed} ${speedUnits[set.speedUnit].name} × ${set.time} ${timeUnits[set.timeUnit].name} = ${bitsTotal} бит</span></div>`,
+          `<div class="hint-step">3. Переведём в ${volumeUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${bitsTotal} бит ÷ ${volumeUnits[set.answerUnit].factor} = ${answer} ${volumeUnits[set.answerUnit].name}</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${volumeUnits[set.answerUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "📦 Найти объём файла",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.answerUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Найти объём файла (сложная)
+      function generateFindVolumeComplex() {
+        const sets = [
+          {
+            speed: 20,
+            speedUnit: "Kbps",
+            time: 32,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 64,
+            speedUnit: "Kbps",
+            time: 16,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 128,
+            speedUnit: "Kbps",
+            time: 8,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 2,
+            speedUnit: "Mbps",
+            time: 4,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 1,
+            speedUnit: "Mbps",
+            time: 8,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+          {
+            speed: 256,
+            speedUnit: "Kbps",
+            time: 1,
+            timeUnit: "min",
+            answerUnit: "KB",
+          },
+          {
+            speed: 512,
+            speedUnit: "Kbps",
+            time: 30,
+            timeUnit: "s",
+            answerUnit: "KB",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const speedBps = speedToBps(set.speed, set.speedUnit);
+        const timeSec = timeToSeconds(set.time, set.timeUnit);
+        const bitsTotal = speedBps * timeSec;
+        const answer = roundValue(
+          bitsTotal / volumeUnits[set.answerUnit].factor,
+        );
+
+        const taskText = `Скорость передачи данных по сети составляет <span class="highlight">${set.speed} ${speedUnits[set.speedUnit].name}</span>. Передача заняла <span class="highlight">${set.time} ${timeUnits[set.timeUnit].name}</span>. Определите размер переданного файла в ${volumeUnits[set.answerUnit].nameFull}.`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём скорость в бит/с:</div>`,
+          `<div class="hint-step">   ${set.speed} ${speedUnits[set.speedUnit].name} = ${speedBps} бит/с</div>`,
+          `<div class="hint-step">2. ${set.timeUnit === "min" ? "Переведём время в секунды:" : "Время уже в секундах:"}</div>`,
+          `<div class="hint-step">   ${set.time} ${timeUnits[set.timeUnit].name} = ${timeSec} с</div>`,
+          `<div class="hint-step">3. Вычислим объём по формуле <span class="formula">I = v × t</span>:</div>`,
+          `<div class="hint-step">   <span class="formula">${speedBps} бит/с × ${timeSec} с = ${bitsTotal} бит</span></div>`,
+          `<div class="hint-step">4. Переведём в ${volumeUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${bitsTotal} бит ÷ ${volumeUnits[set.answerUnit].factor} = ${answer} ${volumeUnits[set.answerUnit].name}</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${volumeUnits[set.answerUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "📦 Найти объём файла",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.answerUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Найти скорость передачи (простая)
+      function generateFindSpeed() {
+        const sets = [
+          {
+            volume: 16,
+            volumeUnit: "KB",
+            time: 16,
+            timeUnit: "s",
+            answerUnit: "bps",
+          },
+          {
+            volume: 8,
+            volumeUnit: "KB",
+            time: 8,
+            timeUnit: "s",
+            answerUnit: "bps",
+          },
+          {
+            volume: 32,
+            volumeUnit: "KB",
+            time: 32,
+            timeUnit: "s",
+            answerUnit: "bps",
+          },
+          {
+            volume: 4,
+            volumeUnit: "KB",
+            time: 4,
+            timeUnit: "s",
+            answerUnit: "bps",
+          },
+          {
+            volume: 2,
+            volumeUnit: "KB",
+            time: 2,
+            timeUnit: "s",
+            answerUnit: "bps",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const bitsTotal = volumeToBits(set.volume, set.volumeUnit);
+        const timeSec = timeToSeconds(set.time, set.timeUnit);
+        const speedBps = bitsTotal / timeSec;
+        const answer = roundValue(speedBps / speedUnits[set.answerUnit].factor);
+
+        const taskText = `Файл размером <span class="highlight">${set.volume} ${volumeUnits[set.volumeUnit].name}</span> был передан за <span class="highlight">${set.time} ${timeUnits[set.timeUnit].name}</span>. Определите скорость передачи данных в ${speedUnits[set.answerUnit].nameFull}.`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Используем формулу: <span class="formula">v = I / t</span></div>`,
+          `<div class="hint-step">2. Вычислим скорость в бит/с:</div>`,
+          `<div class="hint-step">   ${bitsTotal} бит ÷ ${timeSec} с = ${speedBps} бит/с</div>`,
+          `<div class="hint-step">3. Переведём в ${speedUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${speedBps} бит/с = ${answer} ${speedUnits[set.answerUnit].name}</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${speedUnits[set.answerUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "🚀 Найти скорость передачи",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.answerUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Найти скорость передачи (сложная)
+      function generateFindSpeedComplex() {
+        const sets = [
+          {
+            volume: 64,
+            volumeUnit: "KB",
+            time: 8,
+            timeUnit: "s",
+            answerUnit: "Kbps",
+          },
+          {
+            volume: 128,
+            volumeUnit: "KB",
+            time: 4,
+            timeUnit: "s",
+            answerUnit: "Kbps",
+          },
+          {
+            volume: 256,
+            volumeUnit: "KB",
+            time: 2,
+            timeUnit: "s",
+            answerUnit: "Kbps",
+          },
+          {
+            volume: 512,
+            volumeUnit: "KB",
+            time: 1,
+            timeUnit: "min",
+            answerUnit: "Kbps",
+          },
+          {
+            volume: 1,
+            volumeUnit: "MB",
+            time: 8,
+            timeUnit: "s",
+            answerUnit: "Kbps",
+          },
+          {
+            volume: 2,
+            volumeUnit: "MB",
+            time: 16,
+            timeUnit: "s",
+            answerUnit: "Kbps",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const bitsTotal = volumeToBits(set.volume, set.volumeUnit);
+        const timeSec = timeToSeconds(set.time, set.timeUnit);
+        const speedBps = bitsTotal / timeSec;
+        const answer = roundValue(speedBps / speedUnits[set.answerUnit].factor);
+
+        const taskText = `Файл размером <span class="highlight">${set.volume} ${volumeUnits[set.volumeUnit].name}</span> был передан за <span class="highlight">${set.time} ${timeUnits[set.timeUnit].name}</span>. Определите скорость передачи данных в ${speedUnits[set.answerUnit].nameFull}.`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём объём файла в биты:</div>`,
+          `<div class="hint-step">   ${set.volume} ${volumeUnits[set.volumeUnit].name} = ${bitsTotal} бит</div>`,
+          `<div class="hint-step">2. ${set.timeUnit === "min" ? "Переведём время в секунды:" : "Время уже в секундах:"}</div>`,
+          `<div class="hint-step">   ${set.time} ${timeUnits[set.timeUnit].name} = ${timeSec} с</div>`,
+          `<div class="hint-step">3. Вычислим скорость по формуле <span class="formula">v = I / t</span>:</div>`,
+          `<div class="hint-step">   <span class="formula">${bitsTotal} бит ÷ ${timeSec} с = ${speedBps} бит/с</span></div>`,
+          `<div class="hint-step">4. Переведём в ${speedUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${speedBps} бит/с ÷ ${speedUnits[set.answerUnit].factor} = ${answer} ${speedUnits[set.answerUnit].name}</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${speedUnits[set.answerUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "🚀 Найти скорость передачи",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.answerUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Найти время передачи (простая)
+      function generateFindTime() {
+        const sets = [
+          {
+            volume: 16,
+            volumeUnit: "KB",
+            speed: 1024,
+            speedUnit: "bps",
+            answerUnit: "s",
+          },
+          {
+            volume: 8,
+            volumeUnit: "KB",
+            speed: 512,
+            speedUnit: "bps",
+            answerUnit: "s",
+          },
+          {
+            volume: 32,
+            volumeUnit: "KB",
+            speed: 2048,
+            speedUnit: "bps",
+            answerUnit: "s",
+          },
+          {
+            volume: 4,
+            volumeUnit: "KB",
+            speed: 256,
+            speedUnit: "bps",
+            answerUnit: "s",
+          },
+          {
+            volume: 64,
+            volumeUnit: "KB",
+            speed: 4096,
+            speedUnit: "bps",
+            answerUnit: "s",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const bitsTotal = volumeToBits(set.volume, set.volumeUnit);
+        const speedBps = speedToBps(set.speed, set.speedUnit);
+        const timeSec = bitsTotal / speedBps;
+        const answer = roundValue(timeSec / timeUnits[set.answerUnit].factor);
+
+        const taskText = `Файл размером <span class="highlight">${set.volume} ${volumeUnits[set.volumeUnit].name}</span> передаётся со скоростью <span class="highlight">${set.speed} ${speedUnits[set.speedUnit].name}</span>. Определите время передачи в ${timeUnits[set.answerUnit].nameFull}.`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Используем формулу: <span class="formula">t = I / v</span></div>`,
+          `<div class="hint-step">2. Вычислим время в секундах:</div>`,
+          `<div class="hint-step">   ${bitsTotal} бит ÷ ${speedBps} бит/с = ${timeSec} с</div>`,
+          `<div class="hint-step">3. Ответ в ${timeUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${timeUnits[set.answerUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "⏱️ Найти время передачи",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.answerUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Найти время передачи (сложная)
+      function generateFindTimeComplex() {
+        const sets = [
+          {
+            volume: 128,
+            volumeUnit: "KB",
+            speed: 32,
+            speedUnit: "Kbps",
+            answerUnit: "s",
+          },
+          {
+            volume: 256,
+            volumeUnit: "KB",
+            speed: 64,
+            speedUnit: "Kbps",
+            answerUnit: "s",
+          },
+          {
+            volume: 512,
+            volumeUnit: "KB",
+            speed: 128,
+            speedUnit: "Kbps",
+            answerUnit: "s",
+          },
+          {
+            volume: 1,
+            volumeUnit: "MB",
+            speed: 256,
+            speedUnit: "Kbps",
+            answerUnit: "s",
+          },
+          {
+            volume: 2,
+            volumeUnit: "MB",
+            speed: 512,
+            speedUnit: "Kbps",
+            answerUnit: "s",
+          },
+          {
+            volume: 5,
+            volumeUnit: "MB",
+            speed: 1,
+            speedUnit: "Mbps",
+            answerUnit: "s",
+          },
+          {
+            volume: 10,
+            volumeUnit: "MB",
+            speed: 2,
+            speedUnit: "Mbps",
+            answerUnit: "s",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const bitsTotal = volumeToBits(set.volume, set.volumeUnit);
+        const speedBps = speedToBps(set.speed, set.speedUnit);
+        const timeSec = bitsTotal / speedBps;
+        const answer = roundValue(timeSec / timeUnits[set.answerUnit].factor);
+
+        const taskText = `Файл размером <span class="highlight">${set.volume} ${volumeUnits[set.volumeUnit].name}</span> передаётся со скоростью <span class="highlight">${set.speed} ${speedUnits[set.speedUnit].name}</span>. Определите время передачи в ${timeUnits[set.answerUnit].nameFull}.`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём объём файла в биты:</div>`,
+          `<div class="hint-step">   ${set.volume} ${volumeUnits[set.volumeUnit].name} = ${bitsTotal} бит</div>`,
+          `<div class="hint-step">2. Переведём скорость в бит/с:</div>`,
+          `<div class="hint-step">   ${set.speed} ${speedUnits[set.speedUnit].name} = ${speedBps} бит/с</div>`,
+          `<div class="hint-step">3. Вычислим время по формуле <span class="formula">t = I / v</span>:</div>`,
+          `<div class="hint-step">   <span class="formula">${bitsTotal} бит ÷ ${speedBps} бит/с = ${timeSec} с</span></div>`,
+          `<div class="hint-step">4. Ответ в ${timeUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${timeUnits[set.answerUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "⏱️ Найти время передачи",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.answerUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Генерация задания
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+
+        const generator = randomChoice(taskTypes);
+        currentTask = generator();
+
+        document.getElementById("taskType").textContent = currentTask.type;
+        document.getElementById("taskText").innerHTML = currentTask.text;
+
+        // Определяем единицу измерения ответа
+        let unitName = currentTask.answerUnit;
+        if (speedUnits[unitName]) {
+          unitName = speedUnits[unitName].name;
+        } else if (volumeUnits[unitName]) {
+          unitName = volumeUnits[unitName].name;
+        } else if (timeUnits[unitName]) {
+          unitName = timeUnits[unitName].name;
+        }
+
+        document.getElementById("answerUnit").textContent = unitName;
+        document.getElementById("answerLabel").textContent =
+          "Введите ответ (" + unitName + "):";
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        const hintSteps = document.getElementById("hintSteps");
+
+        hintSteps.innerHTML = currentTask.hintSteps.join("");
+        hintBox.style.display = "block";
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const userAnswer = parseFloat(
+          document.getElementById("answerInput").value.replace(",", "."),
+        );
+
+        if (isNaN(userAnswer)) {
+          alert("Введите числовой ответ!");
+          return;
+        }
+
+        answered = true;
+        stats.total++;
+
+        const input = document.getElementById("answerInput");
+        const feedback = document.getElementById("feedback");
+        const feedbackText = document.getElementById("feedbackText");
+
+        // Сравниваем ответ
+        const isCorrect = Math.abs(userAnswer - currentTask.answer) < 0.01;
+
+        // Получаем название единицы
+        let unitName = currentTask.answerUnit;
+        if (speedUnits[unitName]) {
+          unitName = speedUnits[unitName].name;
+        } else if (volumeUnits[unitName]) {
+          unitName = volumeUnits[unitName].name;
+        } else if (timeUnits[unitName]) {
+          unitName = timeUnits[unitName].name;
+        }
+
+        if (isCorrect) {
+          stats.correct++;
+          input.className = "answer-input correct";
+          feedback.className = "feedback correct";
+          feedbackText.textContent = "🎉 Правильно! Отличная работа!";
+        } else {
+          input.className = "answer-input incorrect";
+          feedback.className = "feedback incorrect";
+          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${currentTask.answer} ${unitName}</strong>`;
+        }
+
+        feedback.style.display = "block";
+        updateStats();
+      }
+
+      // Обновление статистики
+      function updateStats() {
+        document.getElementById("correctCount").textContent = stats.correct;
+        document.getElementById("totalCount").textContent = stats.total;
+      }
+
+      // Сброс игры
+      function resetGame() {
+        generateTask();
+      }
+
+      // Обработка Enter
+      document
+        .getElementById("answerInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            checkAnswer();
+          }
+        });
+
+      // Запуск
+      generateTask();
+    </script>
+  </body>
+</html>

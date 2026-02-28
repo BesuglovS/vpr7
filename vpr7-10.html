@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Объём информации в предложении</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.6rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 25px;
+      }
+
+      .task-text .highlight {
+        background: linear-gradient(145deg, #1a1a2e 0%, #0f3460 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .task-text .sentence {
+        background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-style: italic;
+      }
+
+      .task-type {
+        display: inline-block;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+      }
+
+      .answer-section {
+        margin-top: 25px;
+        text-align: center;
+      }
+
+      .answer-label {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .answer-input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .answer-input {
+        width: 150px;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        border: 3px solid #e0e0e0;
+        border-radius: 10px;
+        text-align: center;
+        transition: border-color 0.3s;
+      }
+
+      .answer-input:focus {
+        outline: none;
+        border-color: #0f3460;
+      }
+
+      .answer-input.correct {
+        border-color: #38ef7d;
+        background: rgba(56, 239, 125, 0.1);
+      }
+
+      .answer-input.incorrect {
+        border-color: #f45c43;
+        background: rgba(244, 92, 67, 0.1);
+      }
+
+      .answer-unit {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #1a1a2e;
+        min-width: 40px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-hint {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .hint-box {
+        background: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        padding: 15px 20px;
+        margin-top: 20px;
+        border-radius: 0 10px 10px 0;
+        display: none;
+      }
+
+      .hint-box h4 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .hint-step {
+        margin: 10px 0;
+        padding: 10px 15px;
+        background: rgba(76, 175, 80, 0.1);
+        border-radius: 8px;
+        line-height: 1.6;
+      }
+
+      .hint-step .formula {
+        font-family: "Courier New", monospace;
+        background: rgba(76, 175, 80, 0.2);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .hint-step .result {
+        color: #2e7d32;
+        font-weight: bold;
+      }
+
+      .hint-step .char-count {
+        background: rgba(233, 69, 96, 0.2);
+        color: #c62828;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+
+      .formula-box {
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(76, 175, 80, 0.15);
+        border-radius: 8px;
+        font-size: 0.95rem;
+      }
+
+      .formula-box h5 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .formula-box .formula-item {
+        margin: 8px 0;
+        font-family: "Courier New", monospace;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1a1a2e;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          font-size: 1rem;
+        }
+
+        .answer-input {
+          width: 120px;
+          padding: 12px 15px;
+          font-size: 1rem;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+
+        .stats {
+          gap: 15px;
+        }
+
+        .stat-item {
+          padding: 8px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>📊 Объём информации в предложении</h1>
+
+      <div class="instructions">
+        Определите информационный объём предложения в байтах. Каждый символ
+        кодируется указанным количеством бит. Не забывайте считать пробелы и
+        знаки препинания!
+      </div>
+
+      <div class="task-card">
+        <div class="task-type" id="taskType">Задача на кодирование текста</div>
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="answer-section">
+          <label class="answer-label">Введите ответ:</label>
+          <div class="answer-input-group">
+            <input
+              type="number"
+              class="answer-input"
+              id="answerInput"
+              placeholder="Число"
+              step="any"
+              autocomplete="off"
+            />
+            <span class="answer-unit">байт</span>
+          </div>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+          <h4>💡 Подсказка — ход решения:</h4>
+          <div id="hintSteps"></div>
+          <div class="formula-box">
+            <h5>Формулы для решения:</h5>
+            <div class="formula-item">
+              I = K × i — информационный объём сообщения
+            </div>
+            <div class="formula-item">K — количество символов в тексте</div>
+            <div class="formula-item">
+              i — информационный вес одного символа (в битах)
+            </div>
+            <div class="formula-item">1 байт = 8 бит</div>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div id="feedbackText"></div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-check" onclick="checkAnswer()">
+            ✓ Проверить
+          </button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
+          </button>
+          <button class="btn btn-reset" onclick="resetGame()">
+            🔄 Новая задача
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value" id="correctCount">0</div>
+            <div class="stat-label">Правильно</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="totalCount">0</div>
+            <div class="stat-label">Всего</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentTask = null;
+      let answered = false;
+      let stats = { correct: 0, total: 0 };
+
+      // Кодировки Unicode
+      const encodings = [
+        { bits: 8, name: "8 битами" },
+        { bits: 16, name: "16 битами" },
+        { bits: 24, name: "24 битами" },
+        { bits: 32, name: "32 битами" },
+      ];
+
+      // Предложения для задач
+      const sentences = [
+        "Молчание — сила.",
+        "Простота — вершина сложности.",
+        "Знание — сила.",
+        "Время — деньги.",
+        "Практика — путь к успеху.",
+        "Терпение — ключ к мудрости.",
+        "Опыт — лучший учитель.",
+        "Правда — в деле.",
+        "Учение — свет.",
+        "Дисциплина — основа успеха.",
+        "Мудрость — в простоте.",
+        "Действие — лучше слов.",
+        "Жизнь — это движение.",
+        "Успех — это труд.",
+        "Вера — это сила.",
+        "Надежда — вечна.",
+        "Любовь — это жизнь.",
+        "Дружба — это богатство.",
+        "Честь — превыше всего.",
+        "Правда — глаза колет.",
+        "Добро — всегда возвращается.",
+        "Счастье — в простоте.",
+        "Мир — в душе.",
+        "Семья — это опора.",
+        "Радость — в мелочах.",
+        "Солнце — светит всем.",
+        "Мечта — это начало.",
+        "Цель — это путь.",
+        "Победа — за нами.",
+        "Улыбка — это здоровье.",
+      ];
+
+      // Генерация случайного числа
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // Выбор случайного элемента
+      function randomChoice(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      // Подсчёт символов в строке (включая пробелы и знаки препинания)
+      function countCharacters(str) {
+        return str.length;
+      }
+
+      // Генерация задачи
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+
+        // Выбираем случайную кодировку
+        const encoding = randomChoice(encodings);
+
+        // Выбираем случайное предложение
+        const sentence = randomChoice(sentences);
+
+        // Подсчитываем количество символов
+        const charCount = countCharacters(sentence);
+
+        // Вычисляем информационный объём
+        const bitsTotal = charCount * encoding.bits;
+        const bytesTotal = bitsTotal / 8;
+
+        // Формируем текст задачи
+        const taskText = `В одной из кодировок Unicode каждый символ кодируется <span class="highlight">${encoding.name}</span>. Определите информационный объём следующего предложения в байтах.<br><br><span class="sentence">${sentence}</span>`;
+
+        // Формируем подсказку
+        const hintSteps = [
+          `<div class="hint-step">1. Посчитаем количество символов в предложении:</div>`,
+          `<div class="hint-step">   «${sentence}»</div>`,
+          `<div class="hint-step">   Считаем все символы: буквы, пробелы, знаки препинания и тире.</div>`,
+          `<div class="hint-step">   <span class="char-count">K = ${charCount} символов</span></div>`,
+          `<div class="hint-step">2. Вычислим информационный объём в битах:</div>`,
+          `<div class="hint-step">   <span class="formula">I = K × i = ${charCount} × ${encoding.bits} = ${bitsTotal} бит</span></div>`,
+          `<div class="hint-step">3. Переведём биты в байты:</div>`,
+          `<div class="hint-step">   <span class="formula">${bitsTotal} бит ÷ 8 = ${bytesTotal} байт</span></div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${bytesTotal} байт</span></div>`,
+        ];
+
+        currentTask = {
+          type: "📊 Объём информации в предложении",
+          text: taskText,
+          answer: bytesTotal,
+          encoding: encoding,
+          sentence: sentence,
+          charCount: charCount,
+          bitsTotal: bitsTotal,
+          hintSteps: hintSteps,
+        };
+
+        document.getElementById("taskType").textContent = currentTask.type;
+        document.getElementById("taskText").innerHTML = currentTask.text;
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        const hintSteps = document.getElementById("hintSteps");
+
+        hintSteps.innerHTML = currentTask.hintSteps.join("");
+        hintBox.style.display = "block";
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const userAnswer = parseFloat(
+          document.getElementById("answerInput").value.replace(",", "."),
+        );
+
+        if (isNaN(userAnswer)) {
+          alert("Введите числовой ответ!");
+          return;
+        }
+
+        answered = true;
+        stats.total++;
+
+        const input = document.getElementById("answerInput");
+        const feedback = document.getElementById("feedback");
+        const feedbackText = document.getElementById("feedbackText");
+
+        // Сравниваем ответ
+        const isCorrect = Math.abs(userAnswer - currentTask.answer) < 0.01;
+
+        if (isCorrect) {
+          stats.correct++;
+          input.className = "answer-input correct";
+          feedback.className = "feedback correct";
+          feedbackText.textContent = "🎉 Правильно! Отличная работа!";
+        } else {
+          input.className = "answer-input incorrect";
+          feedback.className = "feedback incorrect";
+          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${currentTask.answer} байт</strong>`;
+        }
+
+        feedback.style.display = "block";
+        updateStats();
+      }
+
+      // Обновление статистики
+      function updateStats() {
+        document.getElementById("correctCount").textContent = stats.correct;
+        document.getElementById("totalCount").textContent = stats.total;
+      }
+
+      // Сброс игры
+      function resetGame() {
+        generateTask();
+      }
+
+      // Обработка Enter
+      document
+        .getElementById("answerInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            checkAnswer();
+          }
+        });
+
+      // Запуск
+      generateTask();
+    </script>
+  </body>
+</html>
