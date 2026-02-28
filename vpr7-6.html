@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Декодирование сообщений</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.6rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 25px;
+      }
+
+      .task-text .highlight {
+        background: linear-gradient(145deg, #4ca1af 0%, #2c3e50 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .message-display {
+        background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+        color: #00ff88;
+        padding: 20px;
+        border-radius: 10px;
+        font-family: "Courier New", monospace;
+        font-size: 1.5rem;
+        text-align: center;
+        margin: 20px 0;
+        letter-spacing: 3px;
+        word-break: break-all;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .codes-table-container {
+        overflow-x: auto;
+        margin: 20px 0;
+      }
+
+      .codes-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .codes-table th {
+        background: linear-gradient(145deg, #4ca1af 0%, #2c3e50 100%);
+        color: white;
+        padding: 12px 15px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .codes-table td {
+        border: 1px solid #e0e0e0;
+        padding: 10px 15px;
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      .codes-table td.letter {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #2c3e50;
+        background: rgba(76, 161, 175, 0.1);
+      }
+
+      .codes-table td.code {
+        font-family: "Courier New", monospace;
+        color: #4ca1af;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+
+      .answer-section {
+        margin-top: 25px;
+        text-align: center;
+      }
+
+      .answer-label {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .answer-input {
+        width: 100%;
+        max-width: 300px;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        border: 3px solid #e0e0e0;
+        border-radius: 10px;
+        text-align: center;
+        text-transform: uppercase;
+        transition: border-color 0.3s;
+      }
+
+      .answer-input:focus {
+        outline: none;
+        border-color: #4ca1af;
+      }
+
+      .answer-input.correct {
+        border-color: #38ef7d;
+        background: rgba(56, 239, 125, 0.1);
+      }
+
+      .answer-input.incorrect {
+        border-color: #f45c43;
+        background: rgba(244, 92, 67, 0.1);
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-hint {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .hint-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin-top: 20px;
+        border-radius: 0 10px 10px 0;
+        display: none;
+      }
+
+      .hint-box h4 {
+        color: #856404;
+        margin-bottom: 10px;
+      }
+
+      .hint-step {
+        margin: 10px 0;
+        padding: 10px 15px;
+        background: rgba(255, 193, 7, 0.1);
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+      }
+
+      .hint-step .code-part {
+        color: #d63384;
+        font-weight: bold;
+      }
+
+      .hint-step .letter-part {
+        color: #198754;
+        font-weight: bold;
+      }
+
+      .hint-step .remaining {
+        color: #6c757d;
+      }
+
+      .direction-hint {
+        font-size: 0.9rem;
+        color: #856404;
+        margin-bottom: 15px;
+        padding: 8px 12px;
+        background: rgba(255, 193, 7, 0.2);
+        border-radius: 5px;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          font-size: 1rem;
+        }
+
+        .message-display {
+          font-size: 1.2rem;
+          padding: 15px;
+        }
+
+        .codes-table td {
+          padding: 8px 10px;
+          font-size: 0.9rem;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>📻 Декодирование сообщений</h1>
+
+      <div class="instructions">
+        Расшифруйте сообщение, используя таблицу кодов. Декодирование может быть
+        однозначным с начала или с конца.
+      </div>
+
+      <div class="task-card">
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="message-display" id="messageDisplay">...</div>
+
+        <div class="codes-table-container">
+          <table class="codes-table" id="codesTable">
+            <thead>
+              <tr id="codesHeader"></tr>
+            </thead>
+            <tbody>
+              <tr id="codesLetters"></tr>
+              <tr id="codesValues"></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="answer-section">
+          <label class="answer-label">Введите расшифрованное сообщение:</label>
+          <input
+            type="text"
+            class="answer-input"
+            id="answerInput"
+            placeholder="ВАШ ОТВЕТ"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="hint-box" id="hintBox">
+          <h4>💡 Подсказка — пошаговое декодирование:</h4>
+          <div class="direction-hint" id="directionHint"></div>
+          <div id="hintSteps"></div>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div id="feedbackText"></div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-check" onclick="checkAnswer()">
+            ✓ Проверить
+          </button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
+          </button>
+          <button class="btn btn-reset" onclick="resetGame()">
+            🔄 Новое задание
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let codeSets = {};
+      let currentTask = null;
+      let answered = false;
+
+      // Загрузка данных из файла
+      async function loadData() {
+        try {
+          const response = await fetch("vpr7-6.txt");
+          const text = await response.text();
+          parseData(text);
+          startGame();
+        } catch (error) {
+          console.error("Ошибка загрузки данных:", error);
+          // Fallback данные
+          codeSets = {
+            MORSE: {
+              symbols: ["•", "–"],
+              codes: {
+                А: "•–",
+                В: "•––",
+                Л: "•–••",
+                О: "–––",
+                П: "•––•",
+                Р: "•–•",
+              },
+            },
+          };
+          startGame();
+        }
+      }
+
+      // Парсинг данных из файла
+      function parseData(text) {
+        const lines = text.split("\n");
+        let currentSet = null;
+        let currentSymbols = [];
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("@")) {
+            // Новый набор кодов
+            const parts = line.substring(1).split(/\s+/);
+            const setName = parts[0];
+            currentSymbols = parts.slice(1);
+            currentSet = setName;
+            codeSets[setName] = {
+              symbols: currentSymbols,
+              codes: {},
+            };
+          } else if (line && currentSet && !line.startsWith("#")) {
+            // Буква и код
+            const parts = line.split(/\s+/);
+            if (parts.length >= 2) {
+              const letter = parts[0];
+              const code = parts[1];
+              codeSets[currentSet].codes[letter] = code;
+            }
+          }
+        });
+      }
+
+      // Начало игры
+      function startGame() {
+        generateTask();
+      }
+
+      // Проверка прямого условия Фано
+      function checkDirectFano(codes) {
+        const codeList = Object.values(codes);
+        for (let i = 0; i < codeList.length; i++) {
+          for (let j = 0; j < codeList.length; j++) {
+            if (i !== j && codeList[j].startsWith(codeList[i])) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+
+      // Проверка обратного условия Фано
+      function checkReverseFano(codes) {
+        const codeList = Object.values(codes);
+        for (let i = 0; i < codeList.length; i++) {
+          for (let j = 0; j < codeList.length; j++) {
+            if (i !== j && codeList[j].endsWith(codeList[i])) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+
+      // Декодирование сообщения с начала
+      function decodeFromStart(message, codes) {
+        let result = "";
+        let remaining = message;
+
+        while (remaining.length > 0) {
+          let found = false;
+          // Сортируем коды по длине (от коротких к длинным)
+          const sortedCodes = Object.entries(codes).sort(
+            (a, b) => a[1].length - b[1].length,
+          );
+
+          for (const [letter, code] of sortedCodes) {
+            if (remaining.startsWith(code)) {
+              result += letter;
+              remaining = remaining.substring(code.length);
+              found = true;
+              break;
+            }
+          }
+
+          if (!found) {
+            return null; // Не удалось декодировать
+          }
+        }
+
+        return result;
+      }
+
+      // Декодирование сообщения с конца
+      function decodeFromEnd(message, codes) {
+        let result = "";
+        let remaining = message;
+
+        while (remaining.length > 0) {
+          let found = false;
+          // Сортируем коды по длине (от коротких к длинным)
+          const sortedCodes = Object.entries(codes).sort(
+            (a, b) => a[1].length - b[1].length,
+          );
+
+          for (const [letter, code] of sortedCodes) {
+            if (remaining.endsWith(code)) {
+              result = letter + result;
+              remaining = remaining.substring(
+                0,
+                remaining.length - code.length,
+              );
+              found = true;
+              break;
+            }
+          }
+
+          if (!found) {
+            return null; // Не удалось декодировать
+          }
+        }
+
+        return result;
+      }
+
+      // Генерация задания
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+
+        // Выбираем случайный набор кодов
+        const setNames = Object.keys(codeSets);
+        const randomSet = setNames[Math.floor(Math.random() * setNames.length)];
+        const codeSet = codeSets[randomSet];
+
+        // Выбираем подмножество букв (5-6 штук), удовлетворяющее условию Фано
+        const allLetters = Object.keys(codeSet.codes);
+        let selectedLetters = [];
+        let selectedCodes = {};
+
+        // Пробуем разные комбинации
+        const maxAttempts = 100;
+        let attempts = 0;
+
+        while (attempts < maxAttempts) {
+          attempts++;
+
+          // Случайно выбираем 5-6 букв
+          const shuffled = [...allLetters].sort(() => Math.random() - 0.5);
+          selectedLetters = shuffled.slice(
+            0,
+            5 + Math.floor(Math.random() * 2),
+          );
+          selectedCodes = {};
+          selectedLetters.forEach((letter) => {
+            selectedCodes[letter] = codeSet.codes[letter];
+          });
+
+          // Проверяем условия Фано
+          const directFano = checkDirectFano(selectedCodes);
+          const reverseFano = checkReverseFano(selectedCodes);
+
+          if (directFano || reverseFano) {
+            break;
+          }
+        }
+
+        // Если не нашли подходящую комбинацию, берём первые 5 букв
+        if (attempts >= maxAttempts) {
+          selectedLetters = allLetters.slice(0, 5);
+          selectedCodes = {};
+          selectedLetters.forEach((letter) => {
+            selectedCodes[letter] = codeSet.codes[letter];
+          });
+        }
+
+        // Генерируем слово из 4-5 букв
+        const wordLength = 4 + Math.floor(Math.random() * 2);
+        let word = "";
+        for (let i = 0; i < wordLength; i++) {
+          const randomLetter =
+            selectedLetters[Math.floor(Math.random() * selectedLetters.length)];
+          word += randomLetter;
+        }
+
+        // Кодируем слово
+        let encodedMessage = "";
+        for (const letter of word) {
+          encodedMessage += selectedCodes[letter];
+        }
+
+        // Определяем направление декодирования
+        const directFano = checkDirectFano(selectedCodes);
+        const reverseFano = checkReverseFano(selectedCodes);
+
+        currentTask = {
+          setType: randomSet,
+          symbols: codeSet.symbols,
+          letters: selectedLetters,
+          codes: selectedCodes,
+          word: word,
+          encodedMessage: encodedMessage,
+          decodeDirection: directFano ? "start" : "end",
+        };
+
+        renderTask();
+      }
+
+      // Отрисовка задания
+      function renderTask() {
+        // Текст задания
+        const symbolNames = {
+          MORSE: "азбуки Морзе (• — точка, – — тире)",
+          BINARY: "двоичного кода (0 и 1)",
+          PLUSMINUS: "кодирования (+ и –)",
+          HASHAT: "кодирования (# и @)",
+          STARCARAT: "кодирования (* и ^)",
+        };
+
+        const symbolName = symbolNames[currentTask.setType] || "кодирования";
+
+        let taskText = `От разведчика была получена следующая радиограмма, зашифрованная с использованием ${symbolName}:<br><br>`;
+        taskText += `При передаче радиограммы было потеряно разбиение на буквы, но известно, что в радиограмме использовались только следующие буквы:`;
+
+        document.getElementById("taskText").innerHTML = taskText;
+
+        // Закодированное сообщение
+        document.getElementById("messageDisplay").textContent =
+          currentTask.encodedMessage;
+
+        // Таблица кодов
+        const headerRow = document.getElementById("codesHeader");
+        const lettersRow = document.getElementById("codesLetters");
+        const valuesRow = document.getElementById("codesValues");
+
+        headerRow.innerHTML = "";
+        lettersRow.innerHTML = "";
+        valuesRow.innerHTML = "";
+
+        // Заголовок
+        const th = document.createElement("th");
+        th.textContent = "Буква / Код";
+        headerRow.appendChild(th);
+
+        // Ячейки для каждой буквы
+        currentTask.letters.forEach((letter) => {
+          // Заголовок (пустой, используем только одну строку заголовка)
+          // Буква
+          const letterTd = document.createElement("td");
+          letterTd.className = "letter";
+          letterTd.textContent = letter;
+          lettersRow.appendChild(letterTd);
+
+          // Код
+          const codeTd = document.createElement("td");
+          codeTd.className = "code";
+          codeTd.textContent = currentTask.codes[letter];
+          valuesRow.appendChild(codeTd);
+        });
+
+        // Добавляем заголовки для столбцов
+        currentTask.letters.forEach(() => {
+          const th = document.createElement("th");
+          th.textContent = "";
+          headerRow.appendChild(th);
+        });
+
+        // Обновляем заголовок таблицы
+        headerRow.innerHTML = "";
+        currentTask.letters.forEach((letter, index) => {
+          const th = document.createElement("th");
+          th.textContent = letter;
+          headerRow.appendChild(th);
+        });
+
+        // Перестраиваем строки
+        const tbody = document.querySelector("#codesTable tbody");
+        tbody.innerHTML = "";
+
+        // Строка с кодами
+        const codeRow = document.createElement("tr");
+        currentTask.letters.forEach((letter) => {
+          const td = document.createElement("td");
+          td.className = "code";
+          td.textContent = currentTask.codes[letter];
+          codeRow.appendChild(td);
+        });
+        tbody.appendChild(codeRow);
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        const directionHint = document.getElementById("directionHint");
+        const hintSteps = document.getElementById("hintSteps");
+
+        hintSteps.innerHTML = "";
+
+        // Определяем направление
+        const direction =
+          currentTask.decodeDirection === "start" ? "с начала" : "с конца";
+        directionHint.textContent = `💡 Декодируйте ${direction} сообщения. Найдите код, который соответствует началу (или концу) сообщения.`;
+
+        // Генерируем пошаговую подсказку
+        let remaining = currentTask.encodedMessage;
+        let stepNum = 1;
+
+        while (remaining.length > 0) {
+          let found = false;
+
+          // Сортируем коды по длине
+          const sortedCodes = Object.entries(currentTask.codes).sort(
+            (a, b) => a[1].length - b[1].length,
+          );
+
+          if (currentTask.decodeDirection === "start") {
+            // Декодирование с начала
+            for (const [letter, code] of sortedCodes) {
+              if (remaining.startsWith(code)) {
+                const stepDiv = document.createElement("div");
+                stepDiv.className = "hint-step";
+                stepDiv.innerHTML = `<span class="code-part">${code}</span> → <span class="letter-part">${letter}</span> | осталось: <span class="remaining">${remaining.substring(code.length)}</span>`;
+                hintSteps.appendChild(stepDiv);
+
+                remaining = remaining.substring(code.length);
+                found = true;
+                stepNum++;
+                break;
+              }
+            }
+          } else {
+            // Декодирование с конца
+            for (const [letter, code] of sortedCodes) {
+              if (remaining.endsWith(code)) {
+                const stepDiv = document.createElement("div");
+                stepDiv.className = "hint-step";
+                stepDiv.innerHTML = `<span class="code-part">${code}</span> → <span class="letter-part">${letter}</span> | осталось: <span class="remaining">${remaining.substring(0, remaining.length - code.length)}</span>`;
+                hintSteps.appendChild(stepDiv);
+
+                remaining = remaining.substring(
+                  0,
+                  remaining.length - code.length,
+                );
+                found = true;
+                stepNum++;
+                break;
+              }
+            }
+          }
+
+          if (!found) break;
+        }
+
+        // Показываем ответ
+        const answerDiv = document.createElement("div");
+        answerDiv.className = "hint-step";
+        answerDiv.style.background = "rgba(25, 135, 84, 0.2)";
+        answerDiv.innerHTML = `<strong>Ответ: <span class="letter-part">${currentTask.word}</span></strong>`;
+        hintSteps.appendChild(answerDiv);
+
+        hintBox.style.display = "block";
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const userAnswer = document
+          .getElementById("answerInput")
+          .value.toUpperCase()
+          .trim();
+        const correctAnswer = currentTask.word;
+
+        if (!userAnswer) {
+          alert("Введите ответ!");
+          return;
+        }
+
+        answered = true;
+
+        const input = document.getElementById("answerInput");
+        const feedback = document.getElementById("feedback");
+        const feedbackText = document.getElementById("feedbackText");
+
+        if (userAnswer === correctAnswer) {
+          input.className = "answer-input correct";
+          feedback.className = "feedback correct";
+          feedbackText.textContent = "🎉 Правильно! Сообщение расшифровано!";
+        } else {
+          input.className = "answer-input incorrect";
+          feedback.className = "feedback incorrect";
+          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${correctAnswer}</strong>`;
+        }
+
+        feedback.style.display = "block";
+      }
+
+      // Сброс игры
+      function resetGame() {
+        generateTask();
+      }
+
+      // Обработка Enter
+      document
+        .getElementById("answerInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            checkAnswer();
+          }
+        });
+
+      // Запуск
+      loadData();
+    </script>
+  </body>
+</html>

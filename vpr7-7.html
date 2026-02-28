@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вычисление объёма информации</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 1.6rem;
+      }
+
+      .back-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        margin-bottom: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .instructions {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #333;
+      }
+
+      .task-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .task-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 25px;
+      }
+
+      .task-text .highlight {
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .task-text .unit {
+        color: #2a5298;
+        font-weight: bold;
+      }
+
+      .task-type {
+        display: inline-block;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+      }
+
+      .answer-section {
+        margin-top: 25px;
+        text-align: center;
+      }
+
+      .answer-label {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .answer-input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .answer-input {
+        width: 150px;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        border: 3px solid #e0e0e0;
+        border-radius: 10px;
+        text-align: center;
+        transition: border-color 0.3s;
+      }
+
+      .answer-input:focus {
+        outline: none;
+        border-color: #2a5298;
+      }
+
+      .answer-input.correct {
+        border-color: #38ef7d;
+        background: rgba(56, 239, 125, 0.1);
+      }
+
+      .answer-input.incorrect {
+        border-color: #f45c43;
+        background: rgba(244, 92, 67, 0.1);
+      }
+
+      .unit-select {
+        padding: 15px 20px;
+        font-size: 1.1rem;
+        border: 3px solid #e0e0e0;
+        border-radius: 10px;
+        background: white;
+        cursor: pointer;
+        min-width: 100px;
+      }
+
+      .unit-select:focus {
+        outline: none;
+        border-color: #2a5298;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-check {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .btn-hint {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
+      .btn-reset {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+      }
+
+      .feedback.correct {
+        display: block;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .feedback.incorrect {
+        display: block;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .hint-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px 20px;
+        margin-top: 20px;
+        border-radius: 0 10px 10px 0;
+        display: none;
+      }
+
+      .hint-box h4 {
+        color: #1565c0;
+        margin-bottom: 10px;
+      }
+
+      .hint-step {
+        margin: 10px 0;
+        padding: 10px 15px;
+        background: rgba(33, 150, 243, 0.1);
+        border-radius: 8px;
+        line-height: 1.6;
+      }
+
+      .hint-step .formula {
+        font-family: "Courier New", monospace;
+        background: rgba(33, 150, 243, 0.2);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .hint-step .result {
+        color: #1565c0;
+        font-weight: bold;
+      }
+
+      .conversion-table {
+        margin-top: 15px;
+        padding: 10px;
+        background: rgba(33, 150, 243, 0.1);
+        border-radius: 8px;
+        font-size: 0.9rem;
+      }
+
+      .conversion-table h5 {
+        color: #1565c0;
+        margin-bottom: 8px;
+      }
+
+      .conversion-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .conversion-table td {
+        padding: 5px 10px;
+        border: 1px solid rgba(33, 150, 243, 0.3);
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1e3c72;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          font-size: 1rem;
+        }
+
+        .answer-input {
+          width: 120px;
+          padding: 12px 15px;
+          font-size: 1rem;
+        }
+
+        .btn {
+          padding: 10px 20px;
+          font-size: 0.9rem;
+        }
+
+        .stats {
+          gap: 15px;
+        }
+
+        .stat-item {
+          padding: 8px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr7.html" class="back-link">← На главную</a>
+      <h1>💾 Вычисление объёма информации</h1>
+
+      <div class="instructions">
+        Решите задачу на вычисление объёма информации. Введите числовой ответ в
+        указанных единицах.
+      </div>
+
+      <div class="task-card">
+        <div class="task-type" id="taskType">Тип задачи</div>
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="answer-section">
+          <label class="answer-label" id="answerLabel">Введите ответ:</label>
+          <div class="answer-input-group">
+            <input
+              type="number"
+              class="answer-input"
+              id="answerInput"
+              placeholder="Число"
+              step="any"
+              autocomplete="off"
+            />
+            <span
+              class="answer-unit"
+              id="answerUnit"
+              style="
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #1e3c72;
+                min-width: 40px;
+              "
+            ></span>
+          </div>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+          <h4>💡 Подсказка — ход решения:</h4>
+          <div id="hintSteps"></div>
+          <div class="conversion-table">
+            <h5>Таблица перевода единиц:</h5>
+            <table>
+              <tr>
+                <td>1 КБ = 1024 байт</td>
+                <td>1 МБ = 1024 КБ</td>
+              </tr>
+              <tr>
+                <td>1 ГБ = 1024 МБ</td>
+                <td>1 ТБ = 1024 ГБ</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div id="feedbackText"></div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-check" onclick="checkAnswer()">
+            ✓ Проверить
+          </button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
+          </button>
+          <button class="btn btn-reset" onclick="resetGame()">
+            🔄 Новая задача
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value" id="correctCount">0</div>
+            <div class="stat-label">Правильно</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="totalCount">0</div>
+            <div class="stat-label">Всего</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentTask = null;
+      let answered = false;
+      let stats = { correct: 0, total: 0 };
+
+      // Единицы измерения
+      const units = {
+        KB: { name: "КБ", nameFull: "килобайт", factor: 1024 },
+        MB: { name: "МБ", nameFull: "мегабайт", factor: 1024 * 1024 },
+        GB: { name: "ГБ", nameFull: "гигабайт", factor: 1024 * 1024 * 1024 },
+        TB: {
+          name: "ТБ",
+          nameFull: "терабайт",
+          factor: 1024 * 1024 * 1024 * 1024,
+        },
+      };
+
+      // Конвертация между единицами
+      function convert(value, fromUnit, toUnit) {
+        const fromFactor = units[fromUnit].factor;
+        const toFactor = units[toUnit].factor;
+        return (value * fromFactor) / toFactor;
+      }
+
+      // Округление до разумного числа знаков
+      function roundValue(val) {
+        if (Number.isInteger(val)) return val;
+        return Math.round(val * 1000) / 1000;
+      }
+
+      // Генерация случайного числа
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function randomFloat(min, max, decimals = 1) {
+        const val = Math.random() * (max - min) + min;
+        return parseFloat(val.toFixed(decimals));
+      }
+
+      // Выбор случайного элемента
+      function randomChoice(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      // Типы задач
+      const taskTypes = [
+        generateFilesOnDevice, // Сколько файлов поместится
+        generateAddition, // Сложение объёмов
+        generateSubtraction, // Вычитание объёмов
+        generateMultiFile, // Несколько файлов одного размера
+        generateComparison, // На сколько больше/меньше
+        generateTimeBased, // За определённое время
+        generateComplex, // Сложная задача с несколькими действиями
+        generateCloudStorage, // Облачное хранилище
+      ];
+
+      // Задача: Сколько файлов поместится на устройстве (с переводом единиц в ответе)
+      function generateFilesOnDevice() {
+        const sets = [
+          {
+            fileSize: 350,
+            fileUnit: "MB",
+            deviceSize: 2,
+            deviceUnit: "GB",
+            deviceName: "Flash-карта",
+            answerUnit: "MB",
+          },
+          {
+            fileSize: 700,
+            fileUnit: "MB",
+            deviceSize: 4,
+            deviceUnit: "GB",
+            deviceName: "USB-накопитель",
+            answerUnit: "MB",
+          },
+          {
+            fileSize: 1.5,
+            fileUnit: "GB",
+            deviceSize: 8,
+            deviceUnit: "GB",
+            deviceName: "SD-карта",
+            answerUnit: "MB",
+          },
+          {
+            fileSize: 256,
+            fileUnit: "MB",
+            deviceSize: 4,
+            deviceUnit: "GB",
+            deviceName: "Flash-карта",
+            answerUnit: "MB",
+          },
+          {
+            fileSize: 512,
+            fileUnit: "MB",
+            deviceSize: 8,
+            deviceUnit: "GB",
+            deviceName: "внешний диск",
+            answerUnit: "MB",
+          },
+        ];
+
+        const set = randomChoice(sets);
+
+        // Конвертируем в МБ для расчёта
+        const fileSizeMB = convert(set.fileSize, set.fileUnit, "MB");
+        const deviceSizeMB = convert(set.deviceSize, set.deviceUnit, "MB");
+
+        // Сколько файлов поместится
+        const filesCount = Math.floor(deviceSizeMB / fileSizeMB);
+
+        // Сколько места займут эти файлы
+        const usedSpaceMB = filesCount * fileSizeMB;
+
+        // Сколько свободного места останется (в указанных единицах)
+        const remainMB = deviceSizeMB - usedSpaceMB;
+        const answer = roundValue(convert(remainMB, "MB", set.answerUnit));
+
+        const taskText = `На ${set.deviceName} объёмом <span class="highlight">${set.deviceSize} ${units[set.deviceUnit].name}</span> записывают видеофайлы размером <span class="highlight">${set.fileSize} ${units[set.fileUnit].name}</span> каждый. Сколько <span class="highlight">${units[set.answerUnit].name.toLowerCase()}</span> свободного места останется после записи максимально возможного количества файлов?`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём все значения в одну единицу (МБ):</div>`,
+          `<div class="hint-step">   Размер файла: ${set.fileSize} ${units[set.fileUnit].name} = ${roundValue(fileSizeMB)} МБ</div>`,
+          `<div class="hint-step">   Размер ${set.deviceName}: ${set.deviceSize} ${units[set.deviceUnit].name} = ${roundValue(deviceSizeMB)} МБ</div>`,
+          `<div class="hint-step">2. Найдём, сколько файлов поместится:</div>`,
+          `<div class="hint-step">   <span class="formula">${roundValue(deviceSizeMB)} ÷ ${roundValue(fileSizeMB)} = ${roundValue(deviceSizeMB / fileSizeMB)} → ${filesCount} файлов</span></div>`,
+          `<div class="hint-step">3. Найдём, сколько места займут ${filesCount} файлов:</div>`,
+          `<div class="hint-step">   <span class="formula">${filesCount} × ${roundValue(fileSizeMB)} = ${roundValue(usedSpaceMB)} МБ</span></div>`,
+          `<div class="hint-step">4. Найдём свободное место:</div>`,
+          `<div class="hint-step">   <span class="formula">${roundValue(deviceSizeMB)} − ${roundValue(usedSpaceMB)} = ${roundValue(remainMB)} МБ</span></div>`,
+          `<div class="hint-step">5. Переведём в ${units[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${roundValue(remainMB)} МБ = ${answer} ${units[set.answerUnit].name}</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[set.answerUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "📂 Файлы на устройстве",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.answerUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Сложение объёмов
+      function generateAddition() {
+        const scenarios = [
+          {
+            text: (a, au, b, bu, sum) =>
+              `Игра занимает <span class="highlight">${a} ${units[au].name}</span>, а её обновление увеличивает объём игры на <span class="highlight">${b} ${units[bu].name}</span>. Сколько ${units[sum].name.toLowerCase()} будет весить игра после обновления?`,
+            context: "игра",
+          },
+          {
+            text: (a, au, b, bu, sum) =>
+              `Алексей скачал два фильма: первый весит <span class="highlight">${a} ${units[au].name}</span>, второй — <span class="highlight">${b} ${units[bu].name}</span>. Сколько всего ${units[sum].name.toLowerCase()} занимают оба фильма?`,
+            context: "фильмы",
+          },
+          {
+            text: (a, au, b, bu, sum) =>
+              `На диске записано <span class="highlight">${a} ${units[au].name}</span> видео и <span class="highlight">${b} ${units[bu].name}</span> фотографий. Какой общий объём в ${units[sum].name.toLowerCase()}?`,
+            context: "диск",
+          },
+        ];
+
+        const scenario = randomChoice(scenarios);
+        const unitPairs = [
+          {
+            a: { size: 25, unit: "GB" },
+            b: { size: 5120, unit: "MB" },
+            sum: "GB",
+          },
+          {
+            a: { size: 2.5, unit: "GB" },
+            b: { size: 2048, unit: "MB" },
+            sum: "GB",
+          },
+          {
+            a: { size: 1.5, unit: "GB" },
+            b: { size: 512, unit: "MB" },
+            sum: "MB",
+          },
+          {
+            a: { size: 3, unit: "GB" },
+            b: { size: 1024, unit: "MB" },
+            sum: "GB",
+          },
+          {
+            a: { size: 512, unit: "MB" },
+            b: { size: 2560, unit: "MB" },
+            sum: "MB",
+          },
+        ];
+
+        const pair = randomChoice(unitPairs);
+        const aMB = convert(pair.a.size, pair.a.unit, "MB");
+        const bMB = convert(pair.b.size, pair.b.unit, "MB");
+        const sumMB = aMB + bMB;
+        const answer = roundValue(convert(sumMB, "MB", pair.sum));
+
+        const taskText = scenario.text(
+          pair.a.size,
+          pair.a.unit,
+          pair.b.size,
+          pair.b.unit,
+          pair.sum,
+        );
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём все значения в ${units[pair.sum].nameFull}:</div>`,
+          `<div class="hint-step">   ${pair.a.size} ${units[pair.a.unit].name} = ${roundValue(convert(pair.a.size, pair.a.unit, pair.sum))} ${units[pair.sum].name}</div>`,
+          `<div class="hint-step">   ${pair.b.size} ${units[pair.b.unit].name} = ${roundValue(convert(pair.b.size, pair.b.unit, pair.sum))} ${units[pair.sum].name}</div>`,
+          `<div class="hint-step">2. Сложим полученные значения:</div>`,
+          `<div class="hint-step">   <span class="formula">${roundValue(convert(pair.a.size, pair.a.unit, pair.sum))} + ${roundValue(convert(pair.b.size, pair.b.unit, pair.sum))} = ${answer}</span></div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[pair.sum].name}</span></div>`,
+        ];
+
+        return {
+          type: "➕ Сложение объёмов",
+          text: taskText,
+          answer: answer,
+          answerUnit: pair.sum,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Вычитание объёмов
+      function generateSubtraction() {
+        const scenarios = [
+          {
+            text: (free, fu, file, fiu, remain, ru) =>
+              `На флешке <span class="highlight">${free} ${units[fu].name}</span> свободного места. Пользователь хочет записать файл размером <span class="highlight">${file} ${units[fiu].name}</span>. Сколько ${units[ru].name.toLowerCase()} останется после записи?`,
+          },
+        ];
+
+        const scenario = randomChoice(scenarios);
+        const unitSets = [
+          {
+            free: { size: 2, unit: "GB" },
+            file: { size: 1000, unit: "MB" },
+            remain: "MB",
+          },
+          {
+            free: { size: 4, unit: "GB" },
+            file: { size: 2560, unit: "MB" },
+            remain: "MB",
+          },
+          {
+            free: { size: 8, unit: "GB" },
+            file: { size: 1536, unit: "MB" },
+            remain: "GB",
+          },
+          {
+            free: { size: 16, unit: "GB" },
+            file: { size: 6144, unit: "MB" },
+            remain: "GB",
+          },
+          {
+            free: { size: 1, unit: "GB" },
+            file: { size: 256, unit: "MB" },
+            remain: "MB",
+          },
+        ];
+
+        const set = randomChoice(unitSets);
+        const freeMB = convert(set.free.size, set.free.unit, "MB");
+        const fileMB = convert(set.file.size, set.file.unit, "MB");
+        const remainMB = freeMB - fileMB;
+        const answer = roundValue(convert(remainMB, "MB", set.remain));
+
+        const taskText = scenario.text(
+          set.free.size,
+          set.free.unit,
+          set.file.size,
+          set.file.unit,
+          set.remain,
+          set.remain,
+        );
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём все значения в ${units[set.remain].nameFull}:</div>`,
+          `<div class="hint-step">   Свободное место: ${set.free.size} ${units[set.free.unit].name} = ${roundValue(convert(set.free.size, set.free.unit, set.remain))} ${units[set.remain].name}</div>`,
+          `<div class="hint-step">   Размер файла: ${set.file.size} ${units[set.file.unit].name} = ${roundValue(convert(set.file.size, set.file.unit, set.remain))} ${units[set.remain].name}</div>`,
+          `<div class="hint-step">2. Вычтем размер файла из свободного места:</div>`,
+          `<div class="hint-step">   <span class="formula">${roundValue(convert(set.free.size, set.free.unit, set.remain))} − ${roundValue(convert(set.file.size, set.file.unit, set.remain))} = ${answer}</span></div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[set.remain].name}</span></div>`,
+        ];
+
+        return {
+          type: "➖ Вычитание объёмов",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.remain,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Несколько файлов одного размера
+      function generateMultiFile() {
+        const scenarios = [
+          {
+            text: (count, item, size, su, total, tu) =>
+              `В папке <span class="highlight">${count} ${item}</span>, каждый размером <span class="highlight">${size} ${units[su].name}</span>. Какой общий объём в ${units[tu].name.toLowerCase()}?`,
+            items: ["фотографий", "документов", "музыкальных файлов"],
+          },
+          {
+            text: (count, item, size, su, total, tu) =>
+              `Пользователь скачал <span class="highlight">${count} ${item}</span> по <span class="highlight">${size} ${units[su].name}</span> каждый. Сколько всего ${units[tu].name.toLowerCase()} занято?`,
+            items: ["игр", "фильмов", "видеороликов"],
+          },
+        ];
+
+        const scenario = randomChoice(scenarios);
+        const item = randomChoice(scenario.items);
+
+        const sets = [
+          { count: 30, size: 4096, sizeUnit: "KB", totalUnit: "MB" },
+          { count: 25, size: 512, sizeUnit: "KB", totalUnit: "MB" },
+          { count: 50, size: 2, sizeUnit: "MB", totalUnit: "MB" },
+          { count: 20, size: 256, sizeUnit: "MB", totalUnit: "GB" },
+          { count: 40, size: 2048, sizeUnit: "KB", totalUnit: "MB" },
+        ];
+
+        const set = randomChoice(sets);
+        const sizeInTotalUnit = convert(set.size, set.sizeUnit, set.totalUnit);
+        const answer = roundValue(set.count * sizeInTotalUnit);
+
+        const taskText = scenario.text(
+          set.count,
+          item,
+          set.size,
+          set.sizeUnit,
+          answer,
+          set.totalUnit,
+        );
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём размер одного файла в ${units[set.totalUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${set.size} ${units[set.sizeUnit].name} = ${roundValue(sizeInTotalUnit)} ${units[set.totalUnit].name}</div>`,
+          `<div class="hint-step">2. Умножим на количество файлов:</div>`,
+          `<div class="hint-step">   <span class="formula">${set.count} × ${roundValue(sizeInTotalUnit)} = ${answer}</span></div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[set.totalUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "✖️ Умножение объёмов",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.totalUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Сравнение объёмов
+      function generateComparison() {
+        const scenarios = [
+          {
+            text: (a, au, b, bu, diff, du) =>
+              `Виктор скачал два файла: первый занимает <span class="highlight">${a} ${units[au].name}</span>, второй — <span class="highlight">${b} ${units[bu].name}</span>. На сколько ${units[du].name.toLowerCase()} второй файл больше первого?`,
+          },
+          {
+            text: (a, au, b, bu, diff, du) =>
+              `Диск C: занимает <span class="highlight">${a} ${units[au].name}</span>, а диск D: — <span class="highlight">${b} ${units[bu].name}</span>. На сколько ${units[du].name.toLowerCase()} диск D: больше диска C:?`,
+          },
+        ];
+
+        const scenario = randomChoice(scenarios);
+        const sets = [
+          {
+            a: { size: 750, unit: "MB" },
+            b: { size: 2.5, unit: "GB" },
+            diffUnit: "MB",
+          },
+          {
+            a: { size: 1.5, unit: "GB" },
+            b: { size: 3072, unit: "MB" },
+            diffUnit: "MB",
+          },
+          {
+            a: { size: 512, unit: "MB" },
+            b: { size: 2, unit: "GB" },
+            diffUnit: "MB",
+          },
+          {
+            a: { size: 256, unit: "MB" },
+            b: { size: 1, unit: "GB" },
+            diffUnit: "MB",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const aInDiff = convert(set.a.size, set.a.unit, set.diffUnit);
+        const bInDiff = convert(set.b.size, set.b.unit, set.diffUnit);
+        const answer = roundValue(Math.abs(bInDiff - aInDiff));
+
+        const taskText = scenario.text(
+          set.a.size,
+          set.a.unit,
+          set.b.size,
+          set.b.unit,
+          answer,
+          set.diffUnit,
+        );
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём все значения в ${units[set.diffUnit].nameFull}:</div>`,
+          `<div class="hint-step">   Первый файл: ${set.a.size} ${units[set.a.unit].name} = ${roundValue(aInDiff)} ${units[set.diffUnit].name}</div>`,
+          `<div class="hint-step">   Второй файл: ${set.b.size} ${units[set.b.unit].name} = ${roundValue(bInDiff)} ${units[set.diffUnit].name}</div>`,
+          `<div class="hint-step">2. Найдём разницу:</div>`,
+          `<div class="hint-step">   <span class="formula">${roundValue(bInDiff)} − ${roundValue(aInDiff)} = ${answer}</span></div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[set.diffUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "⚖️ Сравнение объёмов",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.diffUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: За определённое время
+      function generateTimeBased() {
+        const scenarios = [
+          {
+            text: (perDay, days, total, tu) =>
+              `За сутки камера записывает <span class="highlight">${perDay} ${units.GB.name}</span> видео. Сколько ${units[tu].name.toLowerCase()} запишется за <span class="highlight">${days} ${days === 1 ? "день" : days < 5 ? "дня" : "дней"}</span>?`,
+          },
+          {
+            text: (perDay, days, total, tu) =>
+              `Сервер создаёт резервную копию размером <span class="highlight">${perDay} ${units.GB.name}</span> каждый день. Сколько ${units[tu].name.toLowerCase()} займут копии за <span class="highlight">${days} ${days === 1 ? "день" : days < 5 ? "дня" : "дней"}</span>?`,
+          },
+        ];
+
+        const scenario = randomChoice(scenarios);
+        const perDay = randomChoice([2, 3, 4, 5]);
+        const days = randomChoice([2, 3, 4, 5, 7]);
+        // Ответ всегда в МБ — требуется перевод из ГБ
+        const totalUnit = "MB";
+        const answer = roundValue(convert(perDay * days, "GB", totalUnit));
+
+        const taskText = scenario.text(perDay, days, answer, totalUnit);
+
+        const hintSteps = [
+          `<div class="hint-step">1. Найдём общий объём за ${days} ${days === 1 ? "день" : days < 5 ? "дня" : "дней"}:</div>`,
+          `<div class="hint-step">   <span class="formula">${perDay} ${units.GB.name} × ${days} = ${perDay * days} ${units.GB.name}</span></div>`,
+          `<div class="hint-step">2. Переведём в ${units[totalUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${perDay * days} ${units.GB.name} = ${answer} ${units[totalUnit].name}</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[totalUnit].name}</span></div>`,
+        ];
+
+        return {
+          type: "📅 Задача на время",
+          text: taskText,
+          answer: answer,
+          answerUnit: totalUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Сложная задача с несколькими действиями
+      function generateComplex() {
+        const scenarios = [
+          {
+            text: (
+              initial,
+              iu,
+              deleted,
+              du,
+              added,
+              au,
+              capacity,
+              cu,
+              remain,
+              ru,
+            ) =>
+              `На диске записано <span class="highlight">${initial} ${units[iu].name}</span> данных. Пользователь удалил <span class="highlight">${deleted} ${units[du].name}</span>, а затем добавил новый файл размером <span class="highlight">${added} ${units[au].name}</span>. Сколько ${units[ru].name.toLowerCase()} свободного места осталось на диске, если его ёмкость <span class="highlight">${capacity} ${units[cu].name}</span>?`,
+          },
+        ];
+
+        const scenario = scenarios[0];
+        const sets = [
+          {
+            initial: { size: 12, unit: "GB" },
+            deleted: { size: 2048, unit: "MB" },
+            added: { size: 0.5, unit: "TB" },
+            capacity: { size: 1, unit: "TB" },
+            remainUnit: "GB",
+          },
+          {
+            initial: { size: 8, unit: "GB" },
+            deleted: { size: 1024, unit: "MB" },
+            added: { size: 2, unit: "GB" },
+            capacity: { size: 16, unit: "GB" },
+            remainUnit: "GB",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        const initialGB = convert(set.initial.size, set.initial.unit, "GB");
+        const deletedGB = convert(set.deleted.size, set.deleted.unit, "GB");
+        const addedGB = convert(set.added.size, set.added.unit, "GB");
+        const capacityGB = convert(set.capacity.size, set.capacity.unit, "GB");
+
+        const usedAfterDelete = initialGB - deletedGB;
+        const usedFinal = usedAfterDelete + addedGB;
+        const remainGB = capacityGB - usedFinal;
+        const answer = roundValue(remainGB);
+
+        const taskText = scenario.text(
+          set.initial.size,
+          set.initial.unit,
+          set.deleted.size,
+          set.deleted.unit,
+          set.added.size,
+          set.added.unit,
+          set.capacity.size,
+          set.capacity.unit,
+          answer,
+          set.remainUnit,
+        );
+
+        const hintSteps = [
+          `<div class="hint-step">1. Переведём все значения в гигабайты:</div>`,
+          `<div class="hint-step">   Записано: ${set.initial.size} ${units[set.initial.unit].name} = ${initialGB} ГБ</div>`,
+          `<div class="hint-step">   Удалено: ${set.deleted.size} ${units[set.deleted.unit].name} = ${deletedGB} ГБ</div>`,
+          `<div class="hint-step">   Добавлено: ${set.added.size} ${units[set.added.unit].name} = ${addedGB} ГБ</div>`,
+          `<div class="hint-step">   Ёмкость диска: ${set.capacity.size} ${units[set.capacity.unit].name} = ${capacityGB} ГБ</div>`,
+          `<div class="hint-step">2. Найдём объём после удаления:</div>`,
+          `<div class="hint-step">   <span class="formula">${initialGB} − ${deletedGB} = ${usedAfterDelete} ГБ</span></div>`,
+          `<div class="hint-step">3. Найдём объём после добавления:</div>`,
+          `<div class="hint-step">   <span class="formula">${usedAfterDelete} + ${addedGB} = ${usedFinal} ГБ</span></div>`,
+          `<div class="hint-step">4. Найдём свободное место:</div>`,
+          `<div class="hint-step">   <span class="formula">${capacityGB} − ${usedFinal} = ${answer} ГБ</span></div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ГБ</span></div>`,
+        ];
+
+        return {
+          type: "🧮 Сложная задача",
+          text: taskText,
+          answer: answer,
+          answerUnit: "GB",
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Задача: Облачное хранилище
+      function generateCloudStorage() {
+        const sets = [
+          {
+            items: [
+              { count: 50, size: 6, unit: "MB" },
+              { count: 30, size: 4096, unit: "KB" },
+            ],
+            totalUnit: "MB",
+          },
+          {
+            items: [
+              { count: 100, size: 2, unit: "MB" },
+              { count: 25, size: 512, unit: "KB" },
+            ],
+            totalUnit: "MB",
+          },
+          {
+            items: [
+              { count: 512, size: 2, unit: "MB" },
+              { count: 10, size: 1, unit: "GB" },
+            ],
+            totalUnit: "GB",
+          },
+        ];
+
+        const set = randomChoice(sets);
+        let totalMB = 0;
+
+        const itemDescriptions = set.items.map((item) => {
+          const itemMB = item.count * convert(item.size, item.unit, "MB");
+          totalMB += itemMB;
+          return `${item.count} треков по ${item.size} ${units[item.unit].name}`;
+        });
+
+        const answer = roundValue(convert(totalMB, "MB", set.totalUnit));
+
+        const taskText = `В облачном хранилище лежат:<br>1) <span class="highlight">${itemDescriptions[0]}</span><br>2) <span class="highlight">${itemDescriptions[1]}</span><br><br>Какой общий объём в ${units[set.totalUnit].name.toLowerCase()}?`;
+
+        const hintSteps = [
+          `<div class="hint-step">1. Вычислим объём каждой группы файлов:</div>`,
+        ];
+
+        set.items.forEach((item, idx) => {
+          const itemTotalMB = item.count * convert(item.size, item.unit, "MB");
+          hintSteps.push(
+            `<div class="hint-step">   Группа ${idx + 1}: ${item.count} × ${convert(item.size, item.unit, "MB")} МБ = ${roundValue(itemTotalMB)} МБ</div>`,
+          );
+        });
+
+        hintSteps.push(
+          `<div class="hint-step">2. Сложим объёмы всех групп:</div>`,
+        );
+        hintSteps.push(
+          `<div class="hint-step">   <span class="formula">${set.items.map((i) => roundValue(i.count * convert(i.size, i.unit, "MB"))).join(" + ")} = ${roundValue(totalMB)} МБ</span></div>`,
+        );
+
+        if (set.totalUnit !== "MB") {
+          hintSteps.push(
+            `<div class="hint-step">3. Переведём в ${units[set.totalUnit].nameFull}:</div>`,
+            `<div class="hint-step">   ${roundValue(totalMB)} МБ = ${answer} ${units[set.totalUnit].name}</div>`,
+          );
+        }
+
+        hintSteps.push(
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[set.totalUnit].name}</span></div>`,
+        );
+
+        return {
+          type: "☁️ Облачное хранилище",
+          text: taskText,
+          answer: answer,
+          answerUnit: set.totalUnit,
+          hintSteps: hintSteps,
+        };
+      }
+
+      // Генерация задания
+      function generateTask() {
+        answered = false;
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+
+        const generator = randomChoice(taskTypes);
+        currentTask = generator();
+
+        document.getElementById("taskType").textContent = currentTask.type;
+        document.getElementById("taskText").innerHTML = currentTask.text;
+
+        // Показываем единицу измерения ответа
+        document.getElementById("answerUnit").textContent =
+          currentTask.answerUnit;
+        document.getElementById("answerLabel").textContent =
+          "Введите ответ (" + currentTask.answerUnit + "):";
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        const hintSteps = document.getElementById("hintSteps");
+
+        hintSteps.innerHTML = currentTask.hintSteps.join("");
+        hintBox.style.display = "block";
+      }
+
+      // Проверка ответа
+      function checkAnswer() {
+        if (answered) return;
+
+        const userAnswer = parseFloat(
+          document.getElementById("answerInput").value.replace(",", "."),
+        );
+
+        if (isNaN(userAnswer)) {
+          alert("Введите числовой ответ!");
+          return;
+        }
+
+        answered = true;
+        stats.total++;
+
+        const input = document.getElementById("answerInput");
+        const feedback = document.getElementById("feedback");
+        const feedbackText = document.getElementById("feedbackText");
+
+        // Проверяем ответ (единица уже задана в условии)
+        const correctAnswer = currentTask.answer;
+        const correctUnit = currentTask.answerUnit;
+
+        // Сравниваем только числовое значение
+        const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.01;
+
+        // Получаем название единицы для отображения
+        const unitName = units[correctUnit]
+          ? units[correctUnit].name
+          : correctUnit;
+
+        if (isCorrect) {
+          stats.correct++;
+          input.className = "answer-input correct";
+          feedback.className = "feedback correct";
+          feedbackText.textContent = "🎉 Правильно! Отличная работа!";
+        } else {
+          input.className = "answer-input incorrect";
+          feedback.className = "feedback incorrect";
+          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${correctAnswer} ${unitName}</strong>`;
+        }
+
+        feedback.style.display = "block";
+        updateStats();
+      }
+
+      // Обновление статистики
+      function updateStats() {
+        document.getElementById("correctCount").textContent = stats.correct;
+        document.getElementById("totalCount").textContent = stats.total;
+      }
+
+      // Сброс игры
+      function resetGame() {
+        generateTask();
+      }
+
+      // Обработка Enter
+      document
+        .getElementById("answerInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            checkAnswer();
+          }
+        });
+
+      // Запуск
+      generateTask();
+    </script>
+  </body>
+</html>
