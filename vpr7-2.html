@@ -509,6 +509,7 @@
         answered = false;
         document.getElementById("feedback").className = "feedback";
         document.getElementById("feedback").style.display = "none";
+        document.getElementById("correctAnswer").textContent = "";
         document.getElementById("hintBox").style.display = "none";
         document.getElementById("resultDisplay").textContent =
           "Перетащите элементы для сборки пути";
@@ -1202,6 +1203,7 @@
         if (isCorrect) {
           feedback.className = "feedback correct";
           document.getElementById("feedbackText").textContent = "🎉 Правильно!";
+          document.getElementById("correctAnswer").textContent = "";
           resultDisplay.className = "result-display correct";
         } else {
           feedback.className = "feedback incorrect";
