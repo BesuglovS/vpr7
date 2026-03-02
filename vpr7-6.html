@@ -970,8 +970,16 @@
 
       // Генерация подсказки
       function showHint() {
+        if (answered) return;
+
         const hintBox = document.getElementById("hintBox");
         const hintSteps = document.getElementById("hintSteps");
+
+        // Если подсказка уже видна - скрываем её
+        if (hintBox.style.display === "block") {
+          hintBox.style.display = "none";
+          return;
+        }
 
         let steps = [];
 

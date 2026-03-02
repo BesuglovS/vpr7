@@ -240,6 +240,26 @@
         box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
       }
 
+      .btn-hint {
+        background: linear-gradient(145deg, #ffc107 0%, #ff9800 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+      }
+
+      .hint-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.9rem;
+        display: none;
+      }
+
+      .hint-box strong {
+        color: #856404;
+      }
+
       .score-board {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
@@ -347,6 +367,10 @@
 
       <div class="categories-grid" id="categoriesGrid"></div>
 
+      <div class="hint-box" id="hintBox">
+        <strong>💡 Подсказка:</strong> <span id="hintText"></span>
+      </div>
+
       <div class="feedback" id="feedback">
         <div id="feedbackText"></div>
       </div>
@@ -361,6 +385,7 @@
           ✓ Проверить
         </button>
         <button class="btn btn-clear" onclick="clearAll()">✕ Очистить</button>
+        <button class="btn btn-hint" onclick="showHint()">💡 Подсказка</button>
         <button class="btn btn-reset" onclick="resetGame()">
           🔄 Новая игра
         </button>
@@ -425,6 +450,7 @@
         document.getElementById("feedback").className = "feedback";
         document.getElementById("feedback").style.display = "none";
         document.getElementById("resultsDetail").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
 
         // Собираем все расширения
         let allExtensions = [];
@@ -760,6 +786,25 @@
       // Сброс игры
       function resetGame() {
         startGame();
+      }
+
+      // Показать подсказку
+      function showHint() {
+        if (answered) return;
+
+        const hintBox = document.getElementById("hintBox");
+        const hintText = document.getElementById("hintText");
+
+        if (hintBox.style.display === "none") {
+          // Формируем подсказку с правильными категориями для текущих расширений
+          const hints = currentExtensions.map((ext) => {
+            return `${ext.extension} → ${ext.category}`;
+          });
+          hintText.textContent = hints.join("; ");
+          hintBox.style.display = "block";
+        } else {
+          hintBox.style.display = "none";
+        }
       }
 
       // Запуск

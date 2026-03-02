@@ -300,6 +300,12 @@
         box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
       }
 
+      .btn-hint {
+        background: linear-gradient(145deg, #ffc107 0%, #ff9800 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+      }
+
       .score-board {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
@@ -424,6 +430,9 @@
           </button>
           <button class="btn btn-clear" onclick="clearAssembly()">
             ✕ Очистить
+          </button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
           </button>
         </div>
       </div>
@@ -1105,6 +1114,21 @@
       // Сброс игры
       function resetGame() {
         startGame();
+      }
+
+      // Показать подсказку
+      function showHint() {
+        if (answered) return;
+
+        const hintBox = document.getElementById("hintBox");
+        const hintText = document.getElementById("hintText");
+
+        if (hintBox.style.display === "none") {
+          hintText.textContent = currentTask.hint;
+          hintBox.style.display = "block";
+        } else {
+          hintBox.style.display = "none";
+        }
       }
 
       // Запуск

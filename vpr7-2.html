@@ -295,6 +295,12 @@
         box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
       }
 
+      .btn-hint {
+        background: linear-gradient(145deg, #ffc107 0%, #ff9800 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+      }
+
       .score-board {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
@@ -419,6 +425,9 @@
           </button>
           <button class="btn btn-clear" onclick="clearAssembly()">
             ✕ Очистить
+          </button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
           </button>
         </div>
       </div>
@@ -611,6 +620,7 @@
           pathParts: finalPathParts,
           disk: disk,
           hint: `Начальный путь: ${startPath}. После подъёма на ${upLevels} уровня(ей) вверх и спуска в папки получается путь: ${finalPath}`,
+          informativeHint: `Путь начинается с диска ${disk}. При подъёме на ${upLevels} ${getLevelWord(upLevels)} вверх из начального каталога удаляются последние ${upLevels} папки(-ок). Затем нужно добавить новые папки: ${newFolders.join(" → ")}. Не забудьте разделители "\\" между элементами пути.`,
         };
       }
 
@@ -668,6 +678,7 @@
           disk: disk,
           isFile: true,
           hint: `Файл перемещён в новую папку: ${finalPath}`,
+          informativeHint: `Полное имя файла включает диск ${disk}, путь к папке и имя файла. После подъёма на один уровень вверх из начального пути удаляется последняя папка. Затем добавляются новые папки "${newFolder1}" и "${newFolder2}", и в конце — имя файла "${file}".`,
         };
       }
 
@@ -741,12 +752,29 @@
 
         taskText += `Укажите полный путь каталога, в котором оказался пользователь.`;
 
+        // Формируем информативную подсказку
+        let informativeHint = `Начальный путь: ${startPath}. `;
+        let tempParts = [...pathParts];
+
+        actions.forEach((action, index) => {
+          if (action.type === "up") {
+            const removedFolder = tempParts.pop();
+            informativeHint += `При подъёме вверх удаляется папка "${removedFolder}". `;
+          } else {
+            tempParts.push(action.folder);
+            informativeHint += `При спуске добавляется папка "${action.folder}". `;
+          }
+        });
+
+        informativeHint += `Путь начинается с диска ${disk}, затем разделитель "\\", и папки через разделители.`;
+
         return {
           text: taskText,
           correctPath: finalPath,
           pathParts: currentParts,
           disk: disk,
           hint: `После всех навигаций путь: ${finalPath}`,
+          informativeHint: informativeHint,
         };
       }
 
@@ -1232,6 +1260,21 @@
       // Сброс игры
       function resetGame() {
         startGame();
+      }
+
+      // Показать подсказку
+      function showHint() {
+        if (!currentTask || answered) return;
+
+        const hintBox = document.getElementById("hintBox");
+        const hintText = document.getElementById("hintText");
+
+        if (hintBox.style.display === "none") {
+          hintText.textContent = currentTask.informativeHint;
+          hintBox.style.display = "block";
+        } else {
+          hintBox.style.display = "none";
+        }
       }
 
       // Запуск

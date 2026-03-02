@@ -233,6 +233,98 @@
         animation: pulse 1s ease-in-out infinite;
       }
 
+      .hint-box {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: none;
+      }
+
+      .hint-box h4 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
+      .hint-category {
+        margin: 15px 0;
+        padding: 15px;
+        background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+      }
+
+      .hint-category h5 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      .hint-devices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .hint-device {
+        background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+      }
+
+      .hint-info {
+        margin-top: 15px;
+        padding: 15px;
+        background: #e8f5e9;
+        border-radius: 10px;
+        border-left: 4px solid #4caf50;
+      }
+
+      .hint-info h5 {
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
+
+      .hint-info ul {
+        margin-left: 20px;
+        color: #333;
+        line-height: 1.8;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-hint {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      }
+
       @keyframes pulse {
         0%,
         100% {
@@ -290,6 +382,35 @@
 
       <div class="success-message" id="successMessage">
         🎉 Поздравляем! Все устройства распределены правильно!
+      </div>
+
+      <div class="hint-box" id="hintBox">
+        <h4>💡 Подсказка — категории устройств:</h4>
+        <div class="hint-info">
+          <h5>📖 Как определить тип устройства:</h5>
+          <ul>
+            <li>
+              <strong>Устройства ввода</strong> — передают информацию ОТ
+              человека К компьютеру
+            </li>
+            <li>
+              <strong>Устройства вывода</strong> — передают информацию ОТ
+              компьютера К человеку
+            </li>
+            <li>
+              <strong>Устройства хранения</strong> — сохраняют информацию для
+              длительного использования
+            </li>
+            <li>
+              <strong>Устройства обработки</strong> — обрабатывают данные внутри
+              компьютера
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-hint" onclick="showHint()">💡 Подсказка</button>
       </div>
     </div>
 
@@ -620,10 +741,17 @@ USB-флеш-накопитель (Флешка)
       // Сброс игры
       function resetGame() {
         document.getElementById("successMessage").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
         categories = {};
         selectedDevices = [];
         correctAnswers = 0;
         loadData();
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        hintBox.style.display = "block";
       }
 
       // Запуск
