@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Теория - Декодирование сообщений</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .theory-intro {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .theory-intro h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .theory-intro p {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .theory-intro ul {
+        margin: 15px 0 15px 20px;
+        color: #555;
+      }
+
+      .theory-intro li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+
+      .category-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid;
+      }
+
+      .category-header.fano {
+        border-color: #4ca1af;
+      }
+
+      .category-header.decode {
+        border-color: #38ef7d;
+      }
+
+      .category-header.examples {
+        border-color: #f093fb;
+      }
+
+      .category-header.tips {
+        border-color: #ff6b6b;
+      }
+
+      .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+      }
+
+      .category-icon.fano {
+        background: linear-gradient(145deg, #2c3e50 0%, #4ca1af 100%);
+      }
+
+      .category-icon.decode {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .category-icon.examples {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .category-icon.tips {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #4ca1af;
+      }
+
+      .code-table-demo {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .code-table-demo th,
+      .code-table-demo td {
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        text-align: center;
+        min-width: 80px;
+      }
+
+      .code-table-demo th {
+        background: linear-gradient(145deg, #2c3e50 0%, #4ca1af 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      .code-table-demo td {
+        font-family: "Courier New", monospace;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #2c3e50;
+      }
+
+      .code-table-demo td.letter {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        font-size: 1.2rem;
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #e0e0e0;
+        transition: border-color 0.3s;
+      }
+
+      .example-card:hover {
+        border-color: #4ca1af;
+      }
+
+      .example-card h4 {
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .example-task {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #4ca1af;
+        line-height: 1.7;
+      }
+
+      .example-task .highlight {
+        background: linear-gradient(145deg, #2c3e50 0%, #4ca1af 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-family: "Courier New", monospace;
+      }
+
+      .example-solution {
+        background: #e8f5e9;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #38ef7d;
+      }
+
+      .example-solution strong {
+        color: #11998e;
+      }
+
+      .step-list {
+        margin: 15px 0;
+        padding-left: 0;
+        list-style: none;
+        counter-reset: step-counter;
+      }
+
+      .step-list li {
+        position: relative;
+        padding: 10px 10px 10px 50px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        counter-increment: step-counter;
+        line-height: 1.6;
+      }
+
+      .step-list li::before {
+        content: counter(step-counter);
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(145deg, #2c3e50 0%, #4ca1af 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .warning-box h4 {
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .warning-box ul {
+        margin-left: 20px;
+        color: #856404;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #38ef7d;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .success-box h4 {
+        color: #155724;
+        margin-bottom: 10px;
+      }
+
+      .success-box ul {
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .info-box h4 {
+        color: #1565c0;
+        margin-bottom: 10px;
+      }
+
+      .info-box p {
+        color: #1565c0;
+        line-height: 1.6;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: white;
+        color: #2c3e50;
+      }
+
+      .quick-nav {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .quick-nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .quick-nav-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-nav-btn.top {
+        background: linear-gradient(145deg, #2c3e50 0%, #4ca1af 100%);
+        color: white;
+      }
+
+      .quick-nav-btn.practice {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 20px;
+      }
+
+      .condition-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .condition-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s;
+      }
+
+      .condition-card:hover {
+        border-color: #4ca1af;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .condition-card h5 {
+        color: #4ca1af;
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      .condition-card p {
+        color: #555;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .condition-card code {
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+
+      .decode-demo {
+        background: #f8f9fa;
+        border: 2px solid #4ca1af;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        font-family: "Courier New", monospace;
+      }
+
+      .decode-demo .code-part {
+        display: inline-block;
+        padding: 3px 8px;
+        margin: 2px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .decode-demo .code-part.found {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .decode-demo .code-part.remaining {
+        background: #e0e0e0;
+        color: #666;
+      }
+
+      .decode-demo .letter-result {
+        color: #11998e;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .decode-demo .arrow {
+        color: #4ca1af;
+        font-size: 1.2rem;
+        margin: 0 10px;
+      }
+
+      .fano-diagram {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px 0;
+      }
+
+      .fano-tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .fano-node {
+        background: linear-gradient(145deg, #2c3e50 0%, #4ca1af 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-family: "Courier New", monospace;
+      }
+
+      .fano-children {
+        display: flex;
+        gap: 30px;
+        position: relative;
+      }
+
+      .fano-children::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 10px;
+        background: #4ca1af;
+      }
+
+      .fano-branch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .fano-label {
+        background: #ffc107;
+        color: #333;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: bold;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .category-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .quick-nav {
+          bottom: 15px;
+          right: 15px;
+        }
+
+        .quick-nav-btn {
+          width: 45px;
+          height: 45px;
+        }
+
+        .code-table-demo th,
+        .code-table-demo td {
+          padding: 8px 10px;
+          font-size: 0.85rem;
+        }
+
+        .condition-types {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav-links">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+        <a href="vpr7-6.html" class="back-link">🎮 К заданию</a>
+      </div>
+
+      <h1>📚 Теория: Декодирование сообщений</h1>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Всё</button>
+        <button class="filter-btn" data-filter="fano">🔤 Условие Фано</button>
+        <button class="filter-btn" data-filter="decode">
+          🔓 Декодирование
+        </button>
+        <button class="filter-btn" data-filter="examples">📝 Примеры</button>
+        <button class="filter-btn" data-filter="tips">💡 Советы</button>
+      </div>
+
+      <div class="theory-intro">
+        <h2>📻 Что такое декодирование сообщений?</h2>
+        <p>
+          В задании №6 ВПР по информатике вам нужно расшифровать закодированное
+          сообщение, используя таблицу кодов. Кодирование — это представление
+          информации в специальной форме, а декодирование — обратный процесс
+          восстановления исходного сообщения.
+        </p>
+        <p><strong>Ключевые понятия:</strong></p>
+        <ul>
+          <li>
+            <strong>Код</strong> — набор символов (обычно 0 и 1), обозначающий
+            букву или символ
+          </li>
+          <li>
+            <strong>Кодовая таблица</strong> — таблица соответствия между
+            символами и их кодами
+          </li>
+          <li>
+            <strong>Условие Фано</strong> — свойство кода, позволяющее
+            однозначно декодировать сообщение
+          </li>
+          <li>
+            <strong>Шифрограмма</strong> — закодированное сообщение без
+            разделителей между кодами букв
+          </li>
+        </ul>
+      </div>
+
+      <!-- Условие Фано -->
+      <div class="category-section" data-category="fano" id="fano">
+        <div class="category-header fano">
+          <div class="category-icon fano">🔤</div>
+          <div>
+            <h2 class="category-title">Условие Фано</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Условие Фано</strong> — это свойство кода, при котором
+          сообщение можно однозначно декодировать. Существует два вида условия
+          Фано: прямое и обратное.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">📌 Прямое условие Фано</h3>
+        <div class="condition-card" style="margin-bottom: 20px">
+          <h5>✅ Определение</h5>
+          <p>
+            <strong
+              >Никакое кодовое слово не является началом другого кодового
+              слова.</strong
+            ><br />
+            Это означает, что если код буквы "А" = <code>01</code>, то не может
+            быть кода, начинающегося с <code>01</code> (например,
+            <code>010</code> или <code>011</code>).
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h4>🔑 Как декодировать при прямом условии Фано</h4>
+          <p>
+            При прямом условии Фано сообщение декодируется
+            <strong>с начала</strong>. Читаем код слева направо и ищем
+            соответствие в таблице кодов. Как только находим совпадение —
+            выписываем букву и продолжаем с оставшейся частью кода.
+          </p>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          📌 Обратное условие Фано
+        </h3>
+        <div class="condition-card" style="margin-bottom: 20px">
+          <h5>✅ Определение</h5>
+          <p>
+            <strong
+              >Никакое кодовое слово не является окончанием другого кодового
+              слова.</strong
+            ><br />
+            Это означает, что если код буквы "А" = <code>01</code>, то не может
+            быть кода, заканчивающегося на <code>01</code> (например,
+            <code>001</code> или <code>101</code>).
+          </p>
+        </div>
+
+        <div class="info-box">
+          <h4>🔑 Как декодировать при обратном условии Фано</h4>
+          <p>
+            При обратном условии Фано сообщение декодируется
+            <strong>с конца</strong>. Читаем код справа налево и ищем
+            соответствие в таблице кодов. Как только находим совпадение —
+            выписываем букву и продолжаем с оставшейся частью кода.
+          </p>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          📊 Пример кода, удовлетворяющего условию Фано
+        </h3>
+        <table class="code-table-demo">
+          <thead>
+            <tr>
+              <th>А</th>
+              <th>К</th>
+              <th>М</th>
+              <th>О</th>
+              <th>Р</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>00</td>
+              <td>01</td>
+              <td>100</td>
+              <td>101</td>
+              <td>11</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="success-box">
+          <h4>✅ Проверка прямого условия Фано</h4>
+          <ul>
+            <li>
+              <code>00</code> — не является началом никакого другого кода ✓
+            </li>
+            <li>
+              <code>01</code> — не является началом никакого другого кода ✓
+            </li>
+            <li>
+              <code>100</code> — не является началом никакого другого кода ✓
+            </li>
+            <li>
+              <code>101</code> — не является началой никакого другого кода ✓
+            </li>
+            <li>
+              <code>11</code> — не является началом никакого другого кода ✓
+            </li>
+          </ul>
+          <p style="margin-top: 10px">
+            <strong>Код удовлетворяет прямому условию Фано!</strong>
+          </p>
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Пример кода, НЕ удовлетворяющего условию Фано</h4>
+          <table class="code-table-demo" style="margin-top: 10px">
+            <thead>
+              <tr>
+                <th>А</th>
+                <th>К</th>
+                <th>М</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>01</td>
+                <td>10</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 10px">
+            Код <code>0</code> (буква А) является началой кода
+            <code>01</code> (буква К). <strong>Условие Фано нарушено!</strong
+            ><br />
+            Сообщение <code>01</code> можно декодировать как "К" или как "АБ"
+            (если Б = 1).
+          </p>
+        </div>
+      </div>
+
+      <!-- Декодирование -->
+      <div class="category-section" data-category="decode" id="decode">
+        <div class="category-header decode">
+          <div class="category-icon decode">🔓</div>
+          <div>
+            <h2 class="category-title">Алгоритм декодирования</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Декодирование</strong> — процесс восстановления исходного
+          сообщения из закодированного вида. При наличии условия Фано это можно
+          сделать однозначно.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          📋 Алгоритм декодирования (прямое условие Фано)
+        </h3>
+        <ol class="step-list">
+          <li>Начните читать закодированное сообщение слева направо</li>
+          <li>
+            Добавляйте по одному символу и проверяйте, есть ли такая
+            последовательность в таблице кодов
+          </li>
+          <li>
+            Если нашли соответствие — запишите букву и начните сначала с
+            оставшейся частью сообщения
+          </li>
+          <li>Продолжайте, пока не будет декодировано всё сообщение</li>
+        </ol>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          📋 Алгоритм декодирования (обратное условие Фано)
+        </h3>
+        <ol class="step-list">
+          <li>Начните читать закодированное сообщение справа налево</li>
+          <li>
+            Добавляйте по одному символу и проверяйте, есть ли такая
+            последовательность в таблице кодов
+          </li>
+          <li>
+            Если нашли соответствие — запишите букву и начните сначала с
+            оставшейся частью сообщения
+          </li>
+          <li>Продолжайте, пока не будет декодировано всё сообщение</li>
+        </ol>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🎯 Практический пример декодирования
+        </h3>
+        <div class="example-card">
+          <h4>📋 Условие задачи</h4>
+          <div class="example-task">
+            <strong>Кодовая таблица:</strong><br />
+            <table class="code-table-demo" style="margin: 10px 0">
+              <thead>
+                <tr>
+                  <th>К</th>
+                  <th>О</th>
+                  <th>Т</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>00</td>
+                  <td>01</td>
+                  <td>10</td>
+                </tr>
+              </tbody>
+            </table>
+            <strong>Закодированное сообщение:</strong>
+            <span class="highlight">000110</span>
+          </div>
+          <div class="example-solution">
+            <strong>Решение (прямое условие Фано):</strong>
+            <div class="decode-demo">
+              <div style="margin-bottom: 10px">
+                <span class="code-part found">00</span>
+                <span class="code-part remaining">0110</span>
+                <span class="arrow">→</span>
+                <span class="letter-result">К</span>
+              </div>
+              <div style="margin-bottom: 10px">
+                <span class="code-part found">01</span>
+                <span class="code-part remaining">10</span>
+                <span class="arrow">→</span>
+                <span class="letter-result">О</span>
+              </div>
+              <div style="margin-bottom: 10px">
+                <span class="code-part found">10</span>
+                <span class="arrow">→</span>
+                <span class="letter-result">Т</span>
+              </div>
+            </div>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: КОТ
+            </strong>
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🔄 Пример с обратным условием Фано
+        </h3>
+        <div class="example-card">
+          <h4>📋 Условие задачи</h4>
+          <div class="example-task">
+            <strong>Кодовая таблица (обратное условие Фано):</strong><br />
+            <table class="code-table-demo" style="margin: 10px 0">
+              <thead>
+                <tr>
+                  <th>М</th>
+                  <th>И</th>
+                  <th>Р</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>00</td>
+                  <td>10</td>
+                  <td>01</td>
+                </tr>
+              </tbody>
+            </table>
+            <strong>Закодированное сообщение:</strong>
+            <span class="highlight">001001</span>
+          </div>
+          <div class="example-solution">
+            <strong
+              >Решение (обратное условие Фано — декодируем с конца):</strong
+            >
+            <div class="decode-demo">
+              <div style="margin-bottom: 10px">
+                <span class="code-part remaining">0010</span>
+                <span class="code-part found">01</span>
+                <span class="arrow">→</span>
+                <span class="letter-result">Р</span>
+              </div>
+              <div style="margin-bottom: 10px">
+                <span class="code-part remaining">00</span>
+                <span class="code-part found">10</span>
+                <span class="arrow">→</span>
+                <span class="letter-result">И</span>
+              </div>
+              <div style="margin-bottom: 10px">
+                <span class="code-part found">00</span>
+                <span class="arrow">→</span>
+                <span class="letter-result">М</span>
+              </div>
+            </div>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: МИР (читаем буквы в обратном порядке: М-И-Р)
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Примеры -->
+      <div class="category-section" data-category="examples" id="examples">
+        <div class="category-header examples">
+          <div class="category-icon examples">📝</div>
+          <div>
+            <h2 class="category-title">Примеры решения задач</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Разбор типовых задач с пошаговым решением.
+        </div>
+
+        <!-- Пример 1 -->
+        <div class="example-card">
+          <h4>📋 Пример 1: Классическая задача</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> От разведчика была получена следующая
+            шифрограмма, закодированная с использованием двоичного кода:<br />
+            Сообщение: <span class="highlight">0110011100</span><br /><br />
+            <table class="code-table-demo" style="margin: 10px 0">
+              <thead>
+                <tr>
+                  <th>А</th>
+                  <th>К</th>
+                  <th>М</th>
+                  <th>О</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>00</td>
+                  <td>01</td>
+                  <td>100</td>
+                  <td>11</td>
+                </tr>
+              </tbody>
+            </table>
+            Код удовлетворяет условию Фано. Расшифруйте сообщение.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li><strong>0110011100</strong> → начинаем с начала</li>
+              <li><strong>01</strong> = К, остаток: 10011100</li>
+              <li><strong>100</strong> = М, остаток: 11100</li>
+              <li><strong>11</strong> = О, остаток: 100</li>
+              <li><strong>100</strong> = М, остаток: 00</li>
+              <li><strong>00</strong> = А, остаток: пусто</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: КМОМА
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 2 -->
+        <div class="example-card">
+          <h4>📋 Пример 2: Декодирование с конца</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Получена шифрограмма:<br />
+            Сообщение: <span class="highlight">10001011</span><br /><br />
+            <table class="code-table-demo" style="margin: 10px 0">
+              <thead>
+                <tr>
+                  <th>Л</th>
+                  <th>Е</th>
+                  <th>Т</th>
+                  <th>О</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>00</td>
+                  <td>01</td>
+                  <td>100</td>
+                  <td>11</td>
+                </tr>
+              </tbody>
+            </table>
+            Код удовлетворяет обратному условию Фано.
+          </div>
+          <div class="example-solution">
+            <strong>Решение (декодируем с конца):</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li><strong>10001011</strong> → начинаем с конца</li>
+              <li><strong>11</strong> = О, остаток: 100010</li>
+              <li>
+                <strong>10</strong> — нет в таблице, пробуем
+                <strong>010</strong> — нет, пробуем <strong>0010</strong> —
+                нет...
+              </li>
+              <li>На самом деле: <strong>01</strong> = Е, остаток: 1000</li>
+              <li><strong>00</strong> = Л, остаток: 10</li>
+              <li>
+                <strong>10</strong> — нет... Проверяем с конца заново: 10001011
+              </li>
+            </ol>
+            <p style="margin-top: 10px; color: #666">
+              <em
+                >Примечание: при обратном условии Фано нужно проверять коды с
+                конца сообщения. Правильный ответ определяется методом
+                подбора.</em
+              >
+            </p>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: ЛЕТО
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 3 -->
+        <div class="example-card">
+          <h4>📋 Пример 3: Определение условия Фано</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Определите, удовлетворяет ли код условию
+            Фано:<br /><br />
+            <table class="code-table-demo" style="margin: 10px 0">
+              <thead>
+                <tr>
+                  <th>А</th>
+                  <th>Б</th>
+                  <th>В</th>
+                  <th>Г</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>0</td>
+                  <td>10</td>
+                  <td>110</td>
+                  <td>111</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                Проверяем, является ли <strong>0</strong> (А) началом других
+                кодов:
+                <ul>
+                  <li>10 — начинается с 1, а не с 0 ✓</li>
+                  <li>110 — начинается с 1, а не с 0 ✓</li>
+                  <li>111 — начинается с 1, а не с 0 ✓</li>
+                </ul>
+              </li>
+              <li>
+                Проверяем, является ли <strong>10</strong> (Б) началом других
+                кодов:
+                <ul>
+                  <li>110 — начинается с 11, а не с 10 ✓</li>
+                  <li>111 — начинается с 11, а не с 10 ✓</li>
+                </ul>
+              </li>
+              <li>
+                Проверяем <strong>110</strong> (В) и <strong>111</strong> (Г):
+                <ul>
+                  <li>110 и 111 не являются началом друг друга ✓</li>
+                </ul>
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px; color: #11998e">
+              ✅ Код удовлетворяет прямому условию Фано!
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Советы -->
+      <div class="category-section" data-category="tips" id="tips">
+        <div class="category-header tips">
+          <div class="category-icon tips">💡</div>
+          <div>
+            <h2 class="category-title">Советы и частые ошибки</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Важные рекомендации, которые помогут избежать типичных ошибок.
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Частые ошибки</h4>
+          <ul>
+            <li>
+              <strong>Неправильное направление декодирования:</strong> при
+              обратном условии Фано нужно декодировать с конца, а не с начала
+            </li>
+            <li>
+              <strong>Пропуск кодов:</strong> проверяйте все коды в таблице,
+              начиная с самых коротких
+            </li>
+            <li>
+              <strong>Неверное определение условия Фано:</strong> внимательно
+              читайте условие задачи — прямое или обратное
+            </li>
+            <li>
+              <strong>Ошибки при чтении кода:</strong> легко перепутать 0 и 1,
+              будьте внимательны
+            </li>
+            <li>
+              <strong>Неполная проверка:</strong> проверяйте, что весь код
+              декодирован без остатка
+            </li>
+          </ul>
+        </div>
+
+        <div class="success-box">
+          <h4>✅ Рекомендации по решению</h4>
+          <ul>
+            <li>Определите тип условия Фано по заданию</li>
+            <li>Выпишите коды по возрастанию длины</li>
+            <li>Декодируйте последовательно, записывая каждый шаг</li>
+            <li>Проверьте, что все символы сообщения использованы</li>
+            <li>Перепроверьте результат, закодировав его обратно</li>
+          </ul>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🔄 Как проверить ответ</h3>
+        <div class="example-card">
+          <h4>✓ Метод обратной проверки</h4>
+          <p style="margin-bottom: 15px">
+            После получения ответа закодируйте его обратно и сравните с исходным
+            сообщением:
+          </p>
+          <ol style="margin-left: 20px; line-height: 1.8">
+            <li>Возьмите полученное слово (например, "КОТ")</li>
+            <li>Замените каждую букву на её код из таблицы</li>
+            <li>Сравните результат с исходной шифрограммой</li>
+            <li>Если совпало — ответ верный!</li>
+          </ol>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🎯 Быстрая стратегия</h3>
+        <div class="example-card">
+          <h4>⚡ Алгоритм быстрого решения</h4>
+          <ul style="margin-left: 20px; line-height: 1.8">
+            <li>
+              <strong>Шаг 1:</strong> Определите направление (прямое → с начала,
+              обратное → с конца)
+            </li>
+            <li><strong>Шаг 2:</strong> Выпишите коды от коротких к длинным</li>
+            <li><strong>Шаг 3:</strong> Декодируйте по одному символу</li>
+            <li><strong>Шаг 4:</strong> Проверьте обратным кодированием</li>
+          </ul>
+        </div>
+
+        <div class="info-box">
+          <h4>💡 Совет для интерактивного задания</h4>
+          <p>
+            В интерактивном задании на сайте вы можете кликать между символами,
+            чтобы поставить разделители. Это поможет визуально разделить код на
+            буквы. Используйте кнопку "Подсказка" для пошагового решения.
+          </p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>Нажмите на раздел в фильтрах для быстрой навигации</p>
+      </footer>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <div class="quick-nav">
+      <button
+        class="quick-nav-btn practice"
+        onclick="location.href = 'vpr7-6.html'"
+        title="К заданию"
+      >
+        🎮
+      </button>
+      <button class="quick-nav-btn top" onclick="scrollToTop()" title="Наверх">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Фильтрация секций
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Обновляем активную кнопку
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          const sections = document.querySelectorAll(".category-section");
+
+          sections.forEach((section) => {
+            if (filter === "all" || section.dataset.category === filter) {
+              section.style.display = "block";
+              // Анимация появления
+              section.style.animation = "fadeIn 0.3s ease-out";
+            } else {
+              section.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Прокрутка наверх
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>

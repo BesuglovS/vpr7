@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Теория - Вычисление объёма информации</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .theory-intro {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .theory-intro h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .theory-intro p {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .theory-intro ul {
+        margin: 15px 0 15px 20px;
+        color: #555;
+      }
+
+      .theory-intro li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+
+      .category-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid;
+      }
+
+      .category-header.units {
+        border-color: #1e3c72;
+      }
+
+      .category-header.conversion {
+        border-color: #38ef7d;
+      }
+
+      .category-header.operations {
+        border-color: #f093fb;
+      }
+
+      .category-header.examples {
+        border-color: #ff6b6b;
+      }
+
+      .category-header.tips {
+        border-color: #ffc107;
+      }
+
+      .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+      }
+
+      .category-icon.units {
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+      }
+
+      .category-icon.conversion {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .category-icon.operations {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .category-icon.examples {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+      }
+
+      .category-icon.tips {
+        background: linear-gradient(145deg, #f7971e 0%, #ffd200 100%);
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #1e3c72;
+      }
+
+      .units-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .units-table th,
+      .units-table td {
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        text-align: center;
+      }
+
+      .units-table th {
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      .units-table td {
+        font-size: 1rem;
+        color: #333;
+      }
+
+      .units-table td:first-child {
+        font-weight: bold;
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #e0e0e0;
+        transition: border-color 0.3s;
+      }
+
+      .example-card:hover {
+        border-color: #2a5298;
+      }
+
+      .example-card h4 {
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .example-task {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #1e3c72;
+        line-height: 1.7;
+      }
+
+      .example-task .highlight {
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-family: "Courier New", monospace;
+      }
+
+      .example-solution {
+        background: #e8f5e9;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #38ef7d;
+      }
+
+      .example-solution strong {
+        color: #11998e;
+      }
+
+      .step-list {
+        margin: 15px 0;
+        padding-left: 0;
+        list-style: none;
+        counter-reset: step-counter;
+      }
+
+      .step-list li {
+        position: relative;
+        padding: 10px 10px 10px 50px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        counter-increment: step-counter;
+        line-height: 1.6;
+      }
+
+      .step-list li::before {
+        content: counter(step-counter);
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .warning-box h4 {
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .warning-box ul {
+        margin-left: 20px;
+        color: #856404;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #38ef7d;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .success-box h4 {
+        color: #155724;
+        margin-bottom: 10px;
+      }
+
+      .success-box ul {
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .info-box h4 {
+        color: #1565c0;
+        margin-bottom: 10px;
+      }
+
+      .info-box p {
+        color: #1565c0;
+        line-height: 1.6;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: white;
+        color: #1e3c72;
+      }
+
+      .quick-nav {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .quick-nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .quick-nav-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-nav-btn.top {
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+      }
+
+      .quick-nav-btn.practice {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 20px;
+      }
+
+      .formula-box {
+        background: #f0f4f8;
+        border: 2px solid #1e3c72;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      .formula-box .formula {
+        font-size: 1.3rem;
+        font-family: "Courier New", monospace;
+        color: #1e3c72;
+        font-weight: bold;
+      }
+
+      .formula-box .formula-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 10px;
+      }
+
+      .conversion-demo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin: 20px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .conversion-arrow {
+        font-size: 1.5rem;
+        color: #2a5298;
+      }
+
+      .conversion-value {
+        padding: 10px 20px;
+        background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      .conversion-unit {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .category-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .quick-nav {
+          bottom: 15px;
+          right: 15px;
+        }
+
+        .quick-nav-btn {
+          width: 45px;
+          height: 45px;
+        }
+
+        .units-table th,
+        .units-table td {
+          padding: 8px 10px;
+          font-size: 0.85rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav-links">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+        <a href="vpr7-7.html" class="back-link">🎮 К заданию</a>
+      </div>
+
+      <h1>📚 Теория: Вычисление объёма информации</h1>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Всё</button>
+        <button class="filter-btn" data-filter="units">📏 Единицы</button>
+        <button class="filter-btn" data-filter="conversion">🔄 Перевод</button>
+        <button class="filter-btn" data-filter="operations">➕ Операции</button>
+        <button class="filter-btn" data-filter="examples">📝 Примеры</button>
+        <button class="filter-btn" data-filter="tips">💡 Советы</button>
+      </div>
+
+      <div class="theory-intro">
+        <h2>💾 Что такое объём информации?</h2>
+        <p>
+          В задании №7 ВПР по информатике вам нужно решать задачи на вычисление
+          объёма информации: складывать, вычитать, сравнивать объёмы файлов и
+          устройств хранения, а также переводить между единицами измерения.
+        </p>
+        <p><strong>Ключевые понятия:</strong></p>
+        <ul>
+          <li>
+            <strong>Бит</strong> — минимальная единица информации (0 или 1)
+          </li>
+          <li>
+            <strong>Байт</strong> — 8 бит, основная единица измерения объёма
+            данных
+          </li>
+          <li>
+            <strong>Производные единицы</strong> — КБ, МБ, ГБ, ТБ — используются
+            для измерения больших объёмов
+          </li>
+          <li>
+            <strong>Двоичная система</strong> — все единицы кратны 1024 (2¹⁰)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Единицы измерения -->
+      <div class="category-section" data-category="units" id="units">
+        <div class="category-header units">
+          <div class="category-icon units">📏</div>
+          <div>
+            <h2 class="category-title">Единицы измерения информации</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Для измерения объёма информации используются биты, байты и их
+          производные. Важно помнить, что в информатике используется двоичная
+          система, поэтому все коэффициенты кратны степени двойки.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          📊 Таблица единиц измерения
+        </h3>
+        <table class="units-table">
+          <thead>
+            <tr>
+              <th>Единица</th>
+              <th>Название</th>
+              <th>Чему равно</th>
+              <th>В байтах</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>бит</td>
+              <td>бит</td>
+              <td>—</td>
+              <td>1/8 байта</td>
+            </tr>
+            <tr>
+              <td>Б</td>
+              <td>байт</td>
+              <td>8 бит</td>
+              <td>1 байт</td>
+            </tr>
+            <tr>
+              <td>КБ</td>
+              <td>килобайт</td>
+              <td>1024 байт</td>
+              <td>1024 байт</td>
+            </tr>
+            <tr>
+              <td>МБ</td>
+              <td>мегабайт</td>
+              <td>1024 КБ</td>
+              <td>1 048 576 байт</td>
+            </tr>
+            <tr>
+              <td>ГБ</td>
+              <td>гигабайт</td>
+              <td>1024 МБ</td>
+              <td>1 073 741 824 байт</td>
+            </tr>
+            <tr>
+              <td>ТБ</td>
+              <td>терабайт</td>
+              <td>1024 ГБ</td>
+              <td>1 099 511 627 776 байт</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-box">
+          <h4>ℹ️ Важно запомнить!</h4>
+          <p>
+            <strong>1024 = 2¹⁰ = 1024</strong><br />
+            Это ключевой коэффициент для перевода между единицами. Он связан с
+            двоичной системой счисления, используемой в компьютерах.
+          </p>
+        </div>
+
+        <div class="formula-box">
+          <div class="formula">1 КБ = 1024 Б = 2¹⁰ Б</div>
+          <div class="formula-label">Основная формула перевода</div>
+        </div>
+      </div>
+
+      <!-- Перевод единиц -->
+      <div class="category-section" data-category="conversion" id="conversion">
+        <div class="category-header conversion">
+          <div class="category-icon conversion">🔄</div>
+          <div>
+            <h2 class="category-title">Перевод единиц измерения</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          При решении задач часто требуется переводить одни единицы в другие.
+          Существуют простые правила для быстрого перевода.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">📐 Правила перевода</h3>
+
+        <div class="info-box">
+          <h4>⬆️ Перевод в большую единицу</h4>
+          <p>
+            <strong>Делим на 1024</strong><br />
+            При переводе из меньшей единицы в большую нужно разделить значение
+            на 1024.
+          </p>
+        </div>
+
+        <div class="conversion-demo">
+          <div>
+            <div class="conversion-value">2048 КБ</div>
+            <div class="conversion-unit">килобайты</div>
+          </div>
+          <div class="conversion-arrow">→ ÷ 1024 →</div>
+          <div>
+            <div class="conversion-value">2 МБ</div>
+            <div class="conversion-unit">мегабайты</div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>⬇️ Перевод в меньшую единицу</h4>
+          <p>
+            <strong>Умножаем на 1024</strong><br />
+            При переводе из большей единицы в меньшую нужно умножить значение на
+            1024.
+          </p>
+        </div>
+
+        <div class="conversion-demo">
+          <div>
+            <div class="conversion-value">3 МБ</div>
+            <div class="conversion-unit">мегабайты</div>
+          </div>
+          <div class="conversion-arrow">→ × 1024 →</div>
+          <div>
+            <div class="conversion-value">3072 КБ</div>
+            <div class="conversion-unit">килобайты</div>
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          📊 Таблица перевода между соседними единицами
+        </h3>
+        <table class="units-table">
+          <thead>
+            <tr>
+              <th>Из</th>
+              <th>В</th>
+              <th>Действие</th>
+              <th>Пример</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>КБ</td>
+              <td>Б</td>
+              <td>× 1024</td>
+              <td>2 КБ = 2048 Б</td>
+            </tr>
+            <tr>
+              <td>Б</td>
+              <td>КБ</td>
+              <td>÷ 1024</td>
+              <td>4096 Б = 4 КБ</td>
+            </tr>
+            <tr>
+              <td>МБ</td>
+              <td>КБ</td>
+              <td>× 1024</td>
+              <td>1.5 МБ = 1536 КБ</td>
+            </tr>
+            <tr>
+              <td>КБ</td>
+              <td>МБ</td>
+              <td>÷ 1024</td>
+              <td>5120 КБ = 5 МБ</td>
+            </tr>
+            <tr>
+              <td>ГБ</td>
+              <td>МБ</td>
+              <td>× 1024</td>
+              <td>2 ГБ = 2048 МБ</td>
+            </tr>
+            <tr>
+              <td>МБ</td>
+              <td>ГБ</td>
+              <td>÷ 1024</td>
+              <td>1024 МБ = 1 ГБ</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="success-box">
+          <h4>✅ Памятка для быстрого перевода</h4>
+          <ul>
+            <li>КБ → МБ → ГБ → ТБ : делим на 1024</li>
+            <li>ТБ → ГБ → МБ → КБ : умножаем на 1024</li>
+            <li>
+              Для «скачка» через единицу: делим/умножаем на 1024² = 1 048 576
+            </li>
+            <li>Для «скачка» через две единицы: делим/умножаем на 1024³</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Операции с объёмами -->
+      <div class="category-section" data-category="operations" id="operations">
+        <div class="category-header operations">
+          <div class="category-icon operations">➕</div>
+          <div>
+            <h2 class="category-title">Операции с объёмами</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          В задачах на объём информации часто требуется складывать, вычитать,
+          умножать и делить значения. Главное правило — все значения должны быть
+          в одних и тех же единицах!
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Главное правило</h4>
+          <p>
+            <strong
+              >Перед выполнением любой операции приведите все значения к одним
+              единицам!</strong
+            >
+          </p>
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">➕ Сложение объёмов</h3>
+        <div class="example-card">
+          <h4>Пример: Сложение</h4>
+          <div class="example-task">
+            Файл 1 занимает <span class="highlight">2 МБ</span>, файл 2 —
+            <span class="highlight">1024 КБ</span>. Какой общий объём в МБ?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Приведём к одной единице (МБ):</li>
+              <li>1024 КБ = 1024 ÷ 1024 = 1 МБ</li>
+              <li>2 МБ + 1 МБ = 3 МБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 3 МБ</strong
+            >
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">➖ Вычитание объёмов</h3>
+        <div class="example-card">
+          <h4>Пример: Вычитание</h4>
+          <div class="example-task">
+            На флешке <span class="highlight">4 ГБ</span> свободного места.
+            Пользователь скопировал файл размером
+            <span class="highlight">512 МБ</span>. Сколько МБ осталось?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переведём 4 ГБ в МБ:</li>
+              <li>4 ГБ = 4 × 1024 = 4096 МБ</li>
+              <li>4096 МБ − 512 МБ = 3584 МБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 3584 МБ</strong
+            >
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">✖️ Умножение</h3>
+        <div class="example-card">
+          <h4>Пример: Несколько файлов одного размера</h4>
+          <div class="example-task">
+            В папке <span class="highlight">50 фотографий</span>, каждая по
+            <span class="highlight">2 МБ</span>. Какой общий объём в ГБ?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Общий объём в МБ: 50 × 2 = 100 МБ</li>
+              <li>Переведём в ГБ: 100 ÷ 1024 ≈ 0.098 ГБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: ≈ 0.098 ГБ (или 100 МБ)</strong
+            >
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">➗ Деление</h3>
+        <div class="example-card">
+          <h4>Пример: Сколько файлов поместится</h4>
+          <div class="example-task">
+            Flash-карта имеет объём <span class="highlight">8 ГБ</span>. Сколько
+            файлов по <span class="highlight">350 МБ</span> поместится на неё?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переведём 8 ГБ в МБ: 8 × 1024 = 8192 МБ</li>
+              <li>Разделим на размер файла: 8192 ÷ 350 = 23.4...</li>
+              <li>Целая часть: 23 файла</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 23 файла</strong
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Примеры задач -->
+      <div class="category-section" data-category="examples" id="examples">
+        <div class="category-header examples">
+          <div class="category-icon examples">📝</div>
+          <div>
+            <h2 class="category-title">Примеры решения задач</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Разбор типовых задач с пошаговым решением.
+        </div>
+
+        <!-- Пример 1 -->
+        <div class="example-card">
+          <h4>📋 Пример 1: Файлы на устройстве</h4>
+          <div class="example-task">
+            На Flash-карте объёмом <span class="highlight">4 ГБ</span> записаны
+            видеофайлы по <span class="highlight">700 МБ</span> каждый. Сколько
+            <span class="highlight">МБ</span> свободного места останется после
+            записи максимально возможного количества файлов?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переведём объём карты в МБ: 4 × 1024 = 4096 МБ</li>
+              <li>
+                Найдём, сколько файлов поместится: 4096 ÷ 700 = 5.85 → 5 файлов
+              </li>
+              <li>Найдём, сколько места займут 5 файлов: 5 × 700 = 3500 МБ</li>
+              <li>Найдём свободное место: 4096 − 3500 = 596 МБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 596 МБ</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 2 -->
+        <div class="example-card">
+          <h4>📋 Пример 2: Сложение с разными единицами</h4>
+          <div class="example-task">
+            Игра занимает <span class="highlight">25 ГБ</span>, а её обновление
+            увеличивает объём на <span class="highlight">5120 МБ</span>. Сколько
+            <span class="highlight">ГБ</span> будет весить игра после
+            обновления?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переведём обновление в ГБ: 5120 ÷ 1024 = 5 ГБ</li>
+              <li>Сложим объёмы: 25 + 5 = 30 ГБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 30 ГБ</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 3 -->
+        <div class="example-card">
+          <h4>📋 Пример 3: Сравнение объёмов</h4>
+          <div class="example-task">
+            Первый файл занимает <span class="highlight">1.5 ГБ</span>, второй —
+            <span class="highlight">2048 МБ</span>. На сколько
+            <span class="highlight">МБ</span> второй файл больше первого?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переведём первый файл в МБ: 1.5 × 1024 = 1536 МБ</li>
+              <li>Найдём разницу: 2048 − 1536 = 512 МБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 512 МБ</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 4 -->
+        <div class="example-card">
+          <h4>📋 Пример 4: Задача на время</h4>
+          <div class="example-task">
+            За сутки камера видеонаблюдения записывает
+            <span class="highlight">3 ГБ</span> видео. Сколько
+            <span class="highlight">МБ</span> запишется за 5 дней?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Общий объём за 5 дней: 3 × 5 = 15 ГБ</li>
+              <li>Переведём в МБ: 15 × 1024 = 15360 МБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 15360 МБ</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 5 -->
+        <div class="example-card">
+          <h4>📋 Пример 5: Сложная задача</h4>
+          <div class="example-task">
+            На диске записано <span class="highlight">12 ГБ</span> данных.
+            Пользователь удалил <span class="highlight">2048 МБ</span>, а затем
+            добавил новый файл размером <span class="highlight">512 МБ</span>.
+            Сколько <span class="highlight">ГБ</span> данных стало на диске?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переведём все значения в ГБ:</li>
+              <li>2048 МБ = 2048 ÷ 1024 = 2 ГБ</li>
+              <li>512 МБ = 512 ÷ 1024 = 0.5 ГБ</li>
+              <li>После удаления: 12 − 2 = 10 ГБ</li>
+              <li>После добавления: 10 + 0.5 = 10.5 ГБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: 10.5 ГБ</strong
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Советы -->
+      <div class="category-section" data-category="tips" id="tips">
+        <div class="category-header tips">
+          <div class="category-icon tips">💡</div>
+          <div>
+            <h2 class="category-title">Советы и частые ошибки</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Важные рекомендации, которые помогут избежать типичных ошибок.
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Частые ошибки</h4>
+          <ul>
+            <li>
+              <strong>Забывают переводить единицы:</strong> нельзя складывать 2
+              МБ и 1024 КБ без приведения к одной единице
+            </li>
+            <li>
+              <strong>Путают направление перевода:</strong> МБ → КБ это
+              умножение, а не деление!
+            </li>
+            <li>
+              <strong>Округляют в середине решения:</strong> округлять можно
+              только конечный ответ
+            </li>
+            <li>
+              <strong>Используют 1000 вместо 1024:</strong> в информатике
+              коэффициент всегда 1024!
+            </li>
+            <li>
+              <strong>Не читают единицу ответа:</strong> ответ нужен в МБ, а
+              получен в КБ
+            </li>
+          </ul>
+        </div>
+
+        <div class="success-box">
+          <h4>✅ Рекомендации по решению</h4>
+          <ul>
+            <li>Внимательно прочитайте условие и определите единицу ответа</li>
+            <li>Переведите все значения в удобную единицу (обычно МБ)</li>
+            <li>Выполните вычисления без промежуточного округления</li>
+            <li>Переведите результат в требуемую единицу</li>
+            <li>Проверьте ответ на реалистичность</li>
+          </ul>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🎯 Алгоритм решения</h3>
+        <ol class="step-list">
+          <li>Определите, что нужно найти и в каких единицах</li>
+          <li>Выпишите все данные и переведите в одну единицу</li>
+          <li>
+            Составьте план решения (сложить, вычесть, умножить, разделить)
+          </li>
+          <li>Выполните вычисления</li>
+          <li>Переведите результат в требуемые единицы</li>
+          <li>Проверьте ответ</li>
+        </ol>
+
+        <div class="info-box">
+          <h4>💡 Совет для интерактивного задания</h4>
+          <p>
+            В интерактивном задании на сайте вы можете использовать кнопку
+            "Подсказка" для пошагового решения. Внимательно следите за единицами
+            измерения в условии и ответе. Используйте кнопку "Новая задача" для
+            тренировки разных типов задач.
+          </p>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          📊 Шпаргалка по типам задач
+        </h3>
+        <table class="units-table">
+          <thead>
+            <tr>
+              <th>Тип задачи</th>
+              <th>Что делать</th>
+              <th>Пример</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Сколько файлов поместится</td>
+              <td>Разделить и взять целую часть</td>
+              <td>4096 ÷ 700 = 5 файлов</td>
+            </tr>
+            <tr>
+              <td>Сколько места останется</td>
+              <td>Вычесть занятое из общего</td>
+              <td>4096 − 3500 = 596 МБ</td>
+            </tr>
+            <tr>
+              <td>Общий объём нескольких файлов</td>
+              <td>Умножить количество на размер</td>
+              <td>50 × 2 = 100 МБ</td>
+            </tr>
+            <tr>
+              <td>На сколько больше/меньше</td>
+              <td>Найти разницу</td>
+              <td>2048 − 1536 = 512 МБ</td>
+            </tr>
+            <tr>
+              <td>За несколько дней/часов</td>
+              <td>Умножить на время</td>
+              <td>3 × 5 = 15 ГБ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="footer">
+        <p>Нажмите на раздел в фильтрах для быстрой навигации</p>
+      </footer>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <div class="quick-nav">
+      <button
+        class="quick-nav-btn practice"
+        onclick="location.href = 'vpr7-7.html'"
+        title="К заданию"
+      >
+        🎮
+      </button>
+      <button class="quick-nav-btn top" onclick="scrollToTop()" title="Наверх">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Фильтрация секций
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Обновляем активную кнопку
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          const sections = document.querySelectorAll(".category-section");
+
+          sections.forEach((section) => {
+            if (filter === "all" || section.dataset.category === filter) {
+              section.style.display = "block";
+              // Анимация появления
+              section.style.animation = "fadeIn 0.3s ease-out";
+            } else {
+              section.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Прокрутка наверх
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>

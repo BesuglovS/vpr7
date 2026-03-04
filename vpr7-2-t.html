@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Теория - Пути к файлам и папкам в Windows</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .theory-intro {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .theory-intro h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .theory-intro p {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .theory-intro ul {
+        margin: 15px 0 15px 20px;
+        color: #555;
+      }
+
+      .theory-intro li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+
+      .category-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid;
+      }
+
+      .category-header.structure {
+        border-color: #4facfe;
+      }
+
+      .category-header.navigation {
+        border-color: #38ef7d;
+      }
+
+      .category-header.examples {
+        border-color: #f093fb;
+      }
+
+      .category-header.tips {
+        border-color: #ff6b6b;
+      }
+
+      .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+      }
+
+      .category-icon.structure {
+        background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .category-icon.navigation {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .category-icon.examples {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .category-icon.tips {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+      }
+
+      .path-example {
+        background: #263238;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 1.1rem;
+        color: #4fc3f7;
+        word-break: break-all;
+      }
+
+      .path-part {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 5px;
+        margin: 2px;
+        font-weight: 500;
+      }
+
+      .path-part.disk {
+        background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+        color: white;
+      }
+
+      .path-part.separator {
+        background: #607d8b;
+        color: white;
+      }
+
+      .path-part.folder {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .path-part.file {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+      }
+
+      .interactive-diagram {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .tree-structure {
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #333;
+      }
+
+      .tree-item {
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background 0.2s;
+      }
+
+      .tree-item:hover {
+        background: rgba(102, 126, 234, 0.1);
+      }
+
+      .tree-item.disk {
+        color: #e94560;
+        font-weight: bold;
+      }
+
+      .tree-item.folder {
+        color: #11998e;
+      }
+
+      .tree-item.file {
+        color: #f5576c;
+      }
+
+      .tree-item::before {
+        content: attr(data-prefix);
+        color: #607d8b;
+      }
+
+      .formula-box {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        color: white;
+        text-align: center;
+      }
+
+      .formula-box h3 {
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+
+      .formula {
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 1.2rem;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 15px 25px;
+        border-radius: 10px;
+        display: inline-block;
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #e0e0e0;
+        transition: border-color 0.3s;
+      }
+
+      .example-card:hover {
+        border-color: #667eea;
+      }
+
+      .example-card h4 {
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .example-task {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #667eea;
+      }
+
+      .example-solution {
+        background: #e8f5e9;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #38ef7d;
+      }
+
+      .example-solution strong {
+        color: #11998e;
+      }
+
+      .step-list {
+        margin: 15px 0;
+        padding-left: 0;
+        list-style: none;
+        counter-reset: step-counter;
+      }
+
+      .step-list li {
+        position: relative;
+        padding: 10px 10px 10px 50px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        counter-increment: step-counter;
+      }
+
+      .step-list li::before {
+        content: counter(step-counter);
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .warning-box h4 {
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .warning-box ul {
+        margin-left: 20px;
+        color: #856404;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #38ef7d;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .success-box h4 {
+        color: #155724;
+        margin-bottom: 10px;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: white;
+        color: #667eea;
+      }
+
+      .quick-nav {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .quick-nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .quick-nav-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-nav-btn.top {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .quick-nav-btn.practice {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 20px;
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .comparison-table th {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .comparison-table code {
+        background: #f0f0f0;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Consolas", monospace;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .category-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .quick-nav {
+          bottom: 15px;
+          right: 15px;
+        }
+
+        .quick-nav-btn {
+          width: 45px;
+          height: 45px;
+        }
+
+        .path-example {
+          font-size: 0.9rem;
+        }
+
+        .comparison-table {
+          font-size: 0.9rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+          padding: 8px 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav-links">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+        <a href="vpr7-2.html" class="back-link">🎮 К заданию</a>
+      </div>
+
+      <h1>📚 Теория: Пути к файлам и папкам в Windows</h1>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Всё</button>
+        <button class="filter-btn" data-filter="structure">📁 Структура</button>
+        <button class="filter-btn" data-filter="navigation">
+          🔄 Навигация
+        </button>
+        <button class="filter-btn" data-filter="examples">📝 Примеры</button>
+        <button class="filter-btn" data-filter="tips">💡 Советы</button>
+      </div>
+
+      <div class="theory-intro">
+        <h2>🔬 Что нужно знать о путях к файлам?</h2>
+        <p>
+          В задании №2 ВПР по информатике нужно уметь определять полный путь к
+          файлу или папке после навигации по файловой системе Windows.
+        </p>
+        <p><strong>Ключевые понятия:</strong></p>
+        <ul>
+          <li>
+            <strong>Путь к файлу</strong> — это адрес, по которому можно найти
+            файл или папку в файловой системе
+          </li>
+          <li>
+            <strong>Полный путь</strong> — начинается с буквы диска и содержит
+            все папки от корня до файла
+          </li>
+          <li>
+            <strong>Разделитель</strong> — в Windows используется обратный слеш
+            <code>\</code>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Структура пути -->
+      <div class="category-section" data-category="structure" id="structure">
+        <div class="category-header structure">
+          <div class="category-icon structure">📁</div>
+          <div>
+            <h2 class="category-title">Структура полного пути</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Полный путь</strong> — это уникальный адрес файла или папки,
+          который начинается с буквы диска и содержит все промежуточные папки.
+        </div>
+
+        <div class="formula-box">
+          <h3>📐 Формула полного пути</h3>
+          <div class="formula">
+            <span class="path-part disk">Диск:</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">Папка1</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">Папка2</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part file">Файл.расширение</span>
+          </div>
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          🔍 Разбор элементов пути
+        </h3>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Элемент</th>
+              <th>Описание</th>
+              <th>Пример</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Диск</strong></td>
+              <td>Буква логического диска с двоеточием</td>
+              <td><code>C:</code> <code>D:</code> <code>E:</code></td>
+            </tr>
+            <tr>
+              <td><strong>Корневой каталог</strong></td>
+              <td>Первый слеш после диска — начало файловой системы</td>
+              <td><code>C:\</code></td>
+            </tr>
+            <tr>
+              <td><strong>Папки (каталоги)</strong></td>
+              <td>Имена папок, разделённые слешами</td>
+              <td><code>Documents</code> <code>Work</code></td>
+            </tr>
+            <tr>
+              <td><strong>Разделитель</strong></td>
+              <td>Обратный слеш между элементами пути</td>
+              <td><code>\</code></td>
+            </tr>
+            <tr>
+              <td><strong>Имя файла</strong></td>
+              <td>Название файла с расширением (в конце пути)</td>
+              <td><code>отчёт.docx</code> <code>readme.txt</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="interactive-diagram">
+          <h3 style="margin-bottom: 15px; color: #333">
+            🌳 Дерево файловой системы
+          </h3>
+          <pre class="tree-structure">
+<span class="tree-item disk">C:</span>
+<span class="tree-item disk">└─ \ (корневой каталог)</span>
+<span class="tree-item folder">   ├─ Users</span>
+<span class="tree-item folder">   │  └─ Документы</span>
+<span class="tree-item folder">   │     └─ Работа</span>
+<span class="tree-item file">   │        └─ отчёт.docx</span>
+<span class="tree-item folder">   ├─ Загрузки</span>
+<span class="tree-item file">   │  └─ файл.zip</span>
+<span class="tree-item folder">   ├─ Windows</span>
+<span class="tree-item folder">   └─ Program Files</span>
+          </pre>
+        </div>
+
+        <div class="path-example">
+          <strong>Пример полного пути к файлу:</strong><br />
+          <span class="path-part disk">C:</span
+          ><span class="path-part separator">\</span
+          ><span class="path-part folder">Users</span
+          ><span class="path-part separator">\</span
+          ><span class="path-part folder">Документы</span
+          ><span class="path-part separator">\</span
+          ><span class="path-part folder">Работа</span
+          ><span class="path-part separator">\</span
+          ><span class="path-part file">отчёт.docx</span>
+        </div>
+      </div>
+
+      <!-- Навигация -->
+      <div class="category-section" data-category="navigation" id="navigation">
+        <div class="category-header navigation">
+          <div class="category-icon navigation">🔄</div>
+          <div>
+            <h2 class="category-title">Навигация по файловой системе</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Навигация</strong> — это перемещение между папками. В заданиях
+          ВПР встречаются два основных действия: подъём вверх и спуск вниз.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">⬆️ Подъём вверх</h3>
+        <div class="example-card">
+          <h4>📤 Что происходит при подъёме?</h4>
+          <p>
+            При подъёме на один уровень вверх мы перемещаемся в родительскую
+            папку. Последняя папка в пути <strong>удаляется</strong>.
+          </p>
+          <div class="path-example">
+            <strong>До:</strong> <span class="path-part disk">C:</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">Users</span
+            ><span class="path-part separator">\</span
+            ><span
+              class="path-part folder"
+              style="text-decoration: line-through; opacity: 0.6"
+              >Документы</span
+            ><br />
+            <strong>После:</strong> <span class="path-part disk">C:</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">Users</span>
+          </div>
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">⬇️ Спуск вниз</h3>
+        <div class="example-card">
+          <h4>📥 Что происходит при спуске?</h4>
+          <p>
+            При спуске в папку мы добавляем её имя в конец пути
+            <strong>после разделителя</strong>.
+          </p>
+          <div class="path-example">
+            <strong>До:</strong> <span class="path-part disk">C:</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">Users</span><br />
+            <strong>После:</strong> <span class="path-part disk">C:</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">Users</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">Документы</span>
+          </div>
+        </div>
+
+        <div class="success-box">
+          <h4>✅ Алгоритм решения задач на навигацию</h4>
+          <ol class="step-list">
+            <li>Запишите начальный путь</li>
+            <li>Для каждого действия определите тип: подъём или спуск</li>
+            <li>При подъёме — удалите последнюю папку из пути</li>
+            <li>При спуске — добавьте имя папки после слеша</li>
+            <li>Запишите полученный путь в ответ</li>
+          </ol>
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          📊 Сводная таблица действий
+        </h3>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Действие</th>
+              <th>Формулировка в задании</th>
+              <th>Изменение пути</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>⬆️ Подъём на 1 уровень</td>
+              <td>"поднялся на один уровень вверх"</td>
+              <td>Удалить последнюю папку</td>
+            </tr>
+            <tr>
+              <td>⬆️ Подъём на N уровней</td>
+              <td>"поднялся на N уровней вверх"</td>
+              <td>Удалить N последних папок</td>
+            </tr>
+            <tr>
+              <td>⬇️ Спуск в папку</td>
+              <td>"спустился в папку ИМЯ"</td>
+              <td>Добавить <code>\ИМЯ</code></td>
+            </tr>
+            <tr>
+              <td>➕ Создание папки</td>
+              <td>"создал папку ИМЯ"</td>
+              <td>Добавить <code>\ИМЯ</code> к текущему пути</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Примеры задач -->
+      <div class="category-section" data-category="examples" id="examples">
+        <div class="category-header examples">
+          <div class="category-icon examples">📝</div>
+          <div>
+            <h2 class="category-title">Примеры решения задач</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Разбор типовых задач, которые встречаются в ВПР по информатике.
+        </div>
+
+        <!-- Пример 1 -->
+        <div class="example-card">
+          <h4>📋 Пример 1: Простая навигация</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Пользователь работал с каталогом
+            <code>C:\Work\Documents\Projects</code>. Сначала он поднялся на один
+            уровень вверх, затем спустился в папку <code>Archive</code>. Укажите
+            полный путь каталога, в котором оказался пользователь.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Начальный путь:</strong>
+                <code>C:\Work\Documents\Projects</code>
+              </li>
+              <li>
+                <strong>Подъём на 1 уровень:</strong> удаляем
+                <code>Projects</code> → <code>C:\Work\Documents</code>
+              </li>
+              <li>
+                <strong>Спуск в Archive:</strong> добавляем
+                <code>\Archive</code> → <code>C:\Work\Documents\Archive</code>
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: C:\Work\Documents\Archive</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 2 -->
+        <div class="example-card">
+          <h4>📋 Пример 2: Навигация с несколькими подъёмами</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Пользователь работал с каталогом
+            <code>D:\Users\Ivan\Documents\Reports</code>. Он поднялся на 2
+            уровня вверх, затем спустился в папку <code>Photos</code>, а затем в
+            папку <code>2024</code>. Запишите полный путь к папке, в которой
+            оказался пользователь.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Начальный путь:</strong>
+                <code>D:\Users\Ivan\Documents\Reports</code>
+              </li>
+              <li>
+                <strong>Подъём на 2 уровня:</strong> удаляем
+                <code>Reports</code> и <code>Documents</code> →
+                <code>D:\Users\Ivan</code>
+              </li>
+              <li>
+                <strong>Спуск в Photos:</strong>
+                <code>D:\Users\Ivan\Photos</code>
+              </li>
+              <li>
+                <strong>Спуск в 2024:</strong>
+                <code>D:\Users\Ivan\Photos\2024</code>
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: D:\Users\Ivan\Photos\2024</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 3 -->
+        <div class="example-card">
+          <h4>📋 Пример 3: Создание папок и перемещение файла</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Пользователь работал с файлом
+            <code>C:\Study\Lessons\lesson.txt</code>. Затем он поднялся на один
+            уровень вверх, создал там каталог <code>Backup</code>, в нём создал
+            ещё один каталог <code>Old</code> и переместил в него файл
+            <code>lesson.txt</code>. Каким стало полное имя этого файла после
+            перемещения?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Начальный путь к файлу:</strong>
+                <code>C:\Study\Lessons\lesson.txt</code>
+              </li>
+              <li>
+                <strong>Подъём на 1 уровень:</strong>
+                <code>C:\Study</code> (папка <code>Lessons</code> удалена)
+              </li>
+              <li>
+                <strong>Создание Backup:</strong> <code>C:\Study\Backup</code>
+              </li>
+              <li>
+                <strong>Создание Old:</strong> <code>C:\Study\Backup\Old</code>
+              </li>
+              <li>
+                <strong>Перемещение файла:</strong> файл теперь в
+                <code>C:\Study\Backup\Old\lesson.txt</code>
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: C:\Study\Backup\Old\lesson.txt</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 4 -->
+        <div class="example-card">
+          <h4>📋 Пример 4: Последовательная навигация</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Пользователь работал с каталогом
+            <code>E:\Data\Projects\Alpha</code>. Сначала он спустился в папку
+            <code>Beta</code>, затем поднялся на 2 уровня вверх, потом спустился
+            в папку <code>Archive</code>. Укажите полный путь каталога, в
+            котором оказался пользователь.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Начальный путь:</strong>
+                <code>E:\Data\Projects\Alpha</code>
+              </li>
+              <li>
+                <strong>Спуск в Beta:</strong>
+                <code>E:\Data\Projects\Alpha\Beta</code>
+              </li>
+              <li>
+                <strong>Подъём на 2 уровня:</strong> удаляем <code>Beta</code> и
+                <code>Alpha</code> → <code>E:\Data\Projects</code>
+              </li>
+              <li>
+                <strong>Спуск в Archive:</strong>
+                <code>E:\Data\Projects\Archive</code>
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: E:\Data\Projects\Archive</strong
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Советы -->
+      <div class="category-section" data-category="tips" id="tips">
+        <div class="category-header tips">
+          <div class="category-icon tips">💡</div>
+          <div>
+            <h2 class="category-title">Советы и частые ошибки</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Важные моменты, на которые стоит обратить внимание при решении задач.
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Частые ошибки</h4>
+          <ul>
+            <li>
+              <strong>Забыть разделитель:</strong> между папками обязательно
+              должен быть <code>\</code>
+            </li>
+            <li>
+              <strong>Потерять букву диска:</strong> путь всегда начинается с
+              диска, например <code>C:</code>
+            </li>
+            <li>
+              <strong>Неправильный подсчёт уровней:</strong> внимательно
+              считайте, сколько папок нужно удалить
+            </li>
+            <li>
+              <strong>Перепутать направление:</strong> "поднялся" — удаляем
+              папку, "спустился" — добавляем
+            </li>
+            <li>
+              <strong>Забыть имя файла:</strong> если задание про файл, в конце
+              пути должно быть имя файла
+            </li>
+          </ul>
+        </div>
+
+        <div class="success-box">
+          <h4>✅ Как проверить ответ</h4>
+          <ul style="margin-left: 20px; line-height: 1.8">
+            <li>Путь начинается с буквы диска и двоеточия</li>
+            <li>После диска идёт <code>\</code></li>
+            <li>Все папки разделены <code>\</code></li>
+            <li>Нет лишних слешей подряд (кроме корня <code>C:\</code>)</li>
+            <li>Если вопрос про файл — путь заканчивается именем файла</li>
+            <li>
+              Если вопрос про папку — путь заканчивается именем папки (без слеша
+              в конце)
+            </li>
+          </ul>
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          🔢 Считаем уровни правильно
+        </h3>
+        <div class="example-card">
+          <h4>📊 Количество папок = количество уровней</h4>
+          <div class="path-example">
+            <span class="path-part disk">C:</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">A</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">B</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">C</span
+            ><span class="path-part separator">\</span
+            ><span class="path-part folder">D</span>
+          </div>
+          <p style="margin-top: 15px">
+            В пути <code>C:\A\B\C\D</code> —
+            <strong>4 уровня</strong> вложенности папок.<br />
+            Подъём на 4 уровня вверх приведёт в корень диска: <code>C:\</code>
+          </p>
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          🧮 Быстрый способ решения
+        </h3>
+        <div class="example-card">
+          <h4>📝 Записывайте путь как список</h4>
+          <p>Представьте путь как список папок, который легко редактировать:</p>
+          <div
+            style="
+              background: #f8f9fa;
+              padding: 15px;
+              border-radius: 8px;
+              margin-top: 10px;
+              font-family: Consolas, monospace;
+            "
+          >
+            [C:] → [Users] → [Documents] → [Work]
+          </div>
+          <ul style="margin: 15px 0 0 20px; line-height: 1.8">
+            <li>
+              <strong>Подъём:</strong> удаляем последний элемент → [C:] →
+              [Users] → [Documents]
+            </li>
+            <li>
+              <strong>Спуск в Archive:</strong> добавляем → [C:] → [Users] →
+              [Documents] → [Archive]
+            </li>
+          </ul>
+          <p style="margin-top: 15px">
+            Затем собираем путь обратно: <code>C:\Users\Documents\Archive</code>
+          </p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>Нажмите на раздел в фильтрах для быстрой навигации</p>
+      </footer>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <div class="quick-nav">
+      <button
+        class="quick-nav-btn practice"
+        onclick="location.href = 'vpr7-2.html'"
+        title="К заданию"
+      >
+        🎮
+      </button>
+      <button class="quick-nav-btn top" onclick="scrollToTop()" title="Наверх">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Фильтрация секций
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Обновляем активную кнопку
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          const sections = document.querySelectorAll(".category-section");
+
+          sections.forEach((section) => {
+            if (filter === "all" || section.dataset.category === filter) {
+              section.style.display = "block";
+              // Анимация появления
+              section.style.animation = "fadeIn 0.3s ease-out";
+            } else {
+              section.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Прокрутка наверх
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Добавляем стиль для анимации
+      const style = document.createElement("style");
+      style.textContent = `
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Подсветка элементов дерева при наведении
+      document.querySelectorAll(".tree-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          // Снимаем выделение со всех
+          document.querySelectorAll(".tree-item").forEach((i) => {
+            i.style.background = "";
+          });
+          // Выделяем текущий
+          item.style.background = "rgba(102, 126, 234, 0.2)";
+        });
+      });
+    </script>
+  </body>
+</html>

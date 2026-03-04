@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Теория - Форматирование текста</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f4c75 0%,
+          #1e3c72 50%,
+          #2a5298 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .theory-intro {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .theory-intro h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .theory-intro p {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .theory-intro ul {
+        margin: 15px 0 15px 20px;
+        color: #555;
+      }
+
+      .theory-intro li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+
+      .category-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid;
+      }
+
+      .category-header.indents {
+        border-color: #0f4c75;
+      }
+
+      .category-header.alignment {
+        border-color: #38ef7d;
+      }
+
+      .category-header.ruler {
+        border-color: #f093fb;
+      }
+
+      .category-header.examples {
+        border-color: #667eea;
+      }
+
+      .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+      }
+
+      .category-icon.indents {
+        background: linear-gradient(145deg, #0f4c75 0%, #3282b8 100%);
+      }
+
+      .category-icon.alignment {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .category-icon.ruler {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .category-icon.examples {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #0f4c75;
+      }
+
+      .format-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .format-table th,
+      .format-table td {
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        text-align: left;
+      }
+
+      .format-table th {
+        background: linear-gradient(145deg, #0f4c75 0%, #3282b8 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      .format-table td {
+        font-size: 0.95rem;
+        vertical-align: top;
+      }
+
+      .format-table tr:nth-child(even) {
+        background: #f8f9fa;
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #e0e0e0;
+        transition: border-color 0.3s;
+      }
+
+      .example-card:hover {
+        border-color: #0f4c75;
+      }
+
+      .example-card h4 {
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .example-task {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #0f4c75;
+        line-height: 1.7;
+      }
+
+      .example-task .highlight {
+        background: linear-gradient(145deg, #0f4c75 0%, #3282b8 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .example-solution {
+        background: #e8f5e9;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #38ef7d;
+      }
+
+      .example-solution strong {
+        color: #11998e;
+      }
+
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .info-box h4 {
+        color: #1565c0;
+        margin-bottom: 10px;
+      }
+
+      .info-box p {
+        color: #1565c0;
+        line-height: 1.6;
+      }
+
+      .info-box ul {
+        margin-left: 20px;
+        color: #1565c0;
+        line-height: 1.8;
+      }
+
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .warning-box h4 {
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .warning-box ul {
+        margin-left: 20px;
+        color: #856404;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #38ef7d;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .success-box h4 {
+        color: #155724;
+        margin-bottom: 10px;
+      }
+
+      .success-box ul {
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: white;
+        color: #0f4c75;
+      }
+
+      .quick-nav {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .quick-nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .quick-nav-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-nav-btn.top {
+        background: linear-gradient(145deg, #0f4c75 0%, #3282b8 100%);
+        color: white;
+      }
+
+      .quick-nav-btn.practice {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 20px;
+      }
+
+      /* Word-подобный интерфейс для примеров */
+      .word-demo {
+        border: 2px solid #d1d5db;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+        margin: 20px 0;
+      }
+
+      .word-toolbar {
+        background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+        padding: 8px 15px;
+        border-bottom: 1px solid #d1d5db;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: #374151;
+      }
+
+      .word-ruler {
+        background: #f9fafb;
+        height: 25px;
+        border-bottom: 1px solid #d1d5db;
+        position: relative;
+        margin-left: 40px;
+      }
+
+      .ruler-indent-marker {
+        position: absolute;
+        top: 0;
+        font-size: 1.2rem;
+      }
+
+      .indent-marker-left {
+        left: 50px;
+        color: #4b5563;
+      }
+
+      .indent-marker-first {
+        left: 80px;
+        top: 5px;
+        color: #3b82f6;
+      }
+
+      .indent-marker-hanging {
+        left: 30px;
+        color: #ef4444;
+      }
+
+      .indent-marker-right {
+        right: 30px;
+        color: #4b5563;
+      }
+
+      .document-area {
+        padding: 20px 40px;
+        min-height: 80px;
+        background: white;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 14pt;
+        line-height: 1.8;
+      }
+
+      .doc-para {
+        margin-bottom: 10px;
+        color: #1f2937;
+      }
+
+      /* Визуальные примеры форматирования */
+      .format-demo {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin: 15px 0;
+        border: 1px solid #e0e0e0;
+      }
+
+      .format-demo-label {
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      .demo-first-indent {
+        text-indent: 1.5cm;
+      }
+
+      .demo-hanging-indent {
+        text-indent: -1cm;
+        margin-left: 2cm;
+      }
+
+      .demo-left-indent {
+        margin-left: 2cm;
+      }
+
+      .demo-right-indent {
+        margin-right: 2cm;
+        text-align: right;
+      }
+
+      .demo-align-left {
+        text-align: left;
+      }
+
+      .demo-align-right {
+        text-align: right;
+      }
+
+      .demo-align-center {
+        text-align: center;
+      }
+
+      .demo-align-justify {
+        text-align: justify;
+      }
+
+      /* Диаграмма маркеров линейки */
+      .ruler-diagram {
+        display: flex;
+        justify-content: center;
+        margin: 30px 0;
+      }
+
+      .ruler-visual {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        background: #f9fafb;
+        border: 2px solid #d1d5db;
+        border-radius: 8px;
+        padding: 40px 20px 20px;
+      }
+
+      .ruler-line {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        right: 20px;
+        height: 2px;
+        background: #9ca3af;
+      }
+
+      .marker-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 15px 0;
+        padding: 12px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+      }
+
+      .marker-symbol {
+        font-size: 1.5rem;
+        width: 40px;
+        text-align: center;
+      }
+
+      .marker-desc {
+        flex: 1;
+      }
+
+      .marker-desc strong {
+        color: #333;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .marker-desc span {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .category-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .quick-nav {
+          bottom: 15px;
+          right: 15px;
+        }
+
+        .quick-nav-btn {
+          width: 45px;
+          height: 45px;
+        }
+
+        .format-table th,
+        .format-table td {
+          padding: 8px 10px;
+          font-size: 0.85rem;
+        }
+
+        .document-area {
+          padding: 15px 20px;
+        }
+
+        .word-ruler {
+          margin-left: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav-links">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+        <a href="vpr7-12.html" class="back-link">📄 К заданию</a>
+      </div>
+
+      <h1>📚 Теория: Форматирование текста</h1>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Всё</button>
+        <button class="filter-btn" data-filter="indents">📐 Отступы</button>
+        <button class="filter-btn" data-filter="alignment">
+          📏 Выравнивание
+        </button>
+        <button class="filter-btn" data-filter="ruler">📊 Линейка</button>
+        <button class="filter-btn" data-filter="examples">📝 Примеры</button>
+      </div>
+
+      <div class="theory-intro">
+        <h2>📄 Что такое форматирование текста?</h2>
+        <p>
+          <strong>Форматирование текста</strong> — это изменение внешнего вида
+          документа с помощью настройки параметров абзацев и символов. В
+          текстовых редакторах (например, Microsoft Word) форматирование
+          позволяет сделать документ более читаемым и структурированным.
+        </p>
+        <p><strong>Основные элементы форматирования абзаца:</strong></p>
+        <ul>
+          <li>
+            <strong>Отступы</strong> — смещение текста относительно полей
+            страницы
+          </li>
+          <li>
+            <strong>Выравнивание</strong> — распределение текста между полями
+            страницы
+          </li>
+          <li>
+            <strong>Межстрочный интервал</strong> — расстояние между строками
+            внутри абзаца
+          </li>
+          <li>
+            <strong>Интервалы до и после абзаца</strong> — отступы между
+            абзацами
+          </li>
+        </ul>
+      </div>
+
+      <!-- Отступы -->
+      <div class="category-section" data-category="indents" id="indents">
+        <div class="category-header indents">
+          <div class="category-icon indents">📐</div>
+          <div>
+            <h2 class="category-title">Отступы в тексте</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Отступы определяют положение текста относительно границ страницы. В
+          текстовом редакторе они отображаются на горизонтальной линейке в
+          верхней части окна.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">📊 Виды отступов</h3>
+        <table class="format-table">
+          <thead>
+            <tr>
+              <th>Вид отступа</th>
+              <th>Описание</th>
+              <th>Маркер на линейке</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Отступ слева</strong></td>
+              <td>Смещение всего абзаца вправо от левого поля</td>
+              <td>▼ Треугольник внизу слева</td>
+            </tr>
+            <tr>
+              <td><strong>Отступ справа</strong></td>
+              <td>Смещение всего абзаца влево от правого поля</td>
+              <td>▼ Треугольник справа</td>
+            </tr>
+            <tr>
+              <td><strong>Отступ первой строки</strong></td>
+              <td>
+                Смещение только первой строки абзаца вправо (красная строка)
+              </td>
+              <td>▼ Треугольник вверху слева</td>
+            </tr>
+            <tr>
+              <td><strong>Выступ первой строки</strong></td>
+              <td>
+                Смещение первой строки влево относительно остальных строк абзаца
+              </td>
+              <td>▲ Треугольник вверху слева (перевёрнутый)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🔍 Визуальные примеры</h3>
+
+        <div class="format-demo">
+          <div class="format-demo-label">
+            Отступ первой строки (красная строка):
+          </div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="word-ruler">
+              <span class="ruler-indent-marker indent-marker-first">▼</span>
+            </div>
+            <div class="document-area">
+              <p class="doc-para demo-first-indent">
+                Первая строка этого абзаца сдвинута вправо относительно
+                остальных строк. Это классический способ оформления абзацев в
+                книгах и документах.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="format-demo">
+          <div class="format-demo-label">Выступ первой строки:</div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="word-ruler">
+              <span class="ruler-indent-marker indent-marker-hanging">▲</span>
+            </div>
+            <div class="document-area">
+              <p class="doc-para demo-hanging-indent">
+                1. Первый пункт списка содержит важную информацию о
+                форматировании документов. Обратите внимание, что первая строка
+                с номером выступает влево, а все последующие строки этого пункта
+                сдвинуты вправо относительно неё. Это позволяет чётко выделить
+                номер или маркер списка.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="format-demo">
+          <div class="format-demo-label">Отступ слева:</div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="word-ruler">
+              <span class="ruler-indent-marker indent-marker-left">▼</span>
+            </div>
+            <div class="document-area">
+              <p class="doc-para demo-left-indent">
+                Весь абзац сдвинут вправо от левого поля. Используется для
+                выделения цитат или создания визуальной иерархии.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="format-demo">
+          <div class="format-demo-label">Отступ справа:</div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="word-ruler">
+              <span class="ruler-indent-marker indent-marker-right">▼</span>
+            </div>
+            <div class="document-area">
+              <p class="doc-para demo-right-indent">
+                Весь абзац сдвинут влево от правого поля страницы.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>💡 Как отличить отступ первой строки от выступа?</h4>
+          <p>
+            <strong>Отступ первой строки</strong> — первая строка сдвинута
+            вправо относительно остальных (маркер ▼ сверху слева).
+          </p>
+          <p>
+            <strong>Выступ</strong> — первая строка выступает влево, остальные
+            сдвинуты вправо (маркер ▲ сверху слева).
+          </p>
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Важно!</h4>
+          <ul>
+            <li>Отступ первой строки и выступ — взаимоисключающие параметры</li>
+            <li>Отступы слева и справа могут применяться одновременно</li>
+            <li>Стандартный отступ первой строки — 1,25 см</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Выравнивание -->
+      <div class="category-section" data-category="alignment" id="alignment">
+        <div class="category-header alignment">
+          <div class="category-icon alignment">📏</div>
+          <div>
+            <h2 class="category-title">Выравнивание текста</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Выравнивание определяет, как текст распределяется между левым и правым
+          полями страницы. В текстовом редакторе есть четыре основных типа
+          выравнивания.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">📊 Типы выравнивания</h3>
+        <table class="format-table">
+          <thead>
+            <tr>
+              <th>Тип выравнивания</th>
+              <th>Описание</th>
+              <th>Когда используется</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>По левому краю</strong></td>
+              <td>Текст выровнен по левому краю, правый край неровный</td>
+              <td>Основной текст документов, письма</td>
+            </tr>
+            <tr>
+              <td><strong>По правому краю</strong></td>
+              <td>Текст выровнен по правому краю, левый край неровный</td>
+              <td>Дата, подпись в конце документа</td>
+            </tr>
+            <tr>
+              <td><strong>По центру</strong></td>
+              <td>Каждая строка центрирована относительно страницы</td>
+              <td>Заголовки, титульные страницы</td>
+            </tr>
+            <tr>
+              <td><strong>По ширине</strong></td>
+              <td>Текст выровнен по обоим краям одновременно</td>
+              <td>Основной текст книг, статей</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🔍 Визуальные примеры</h3>
+
+        <div class="format-demo">
+          <div class="format-demo-label">Выравнивание по левому краю:</div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="document-area">
+              <p class="doc-para demo-align-left">
+                Текст выровнен по левому краю.<br />
+                Правый край остаётся неровным.<br />
+                Каждая строка заканчивается в разном месте.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="format-demo">
+          <div class="format-demo-label">Выравнивание по правому краю:</div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="document-area">
+              <p class="doc-para demo-align-right">
+                Текст выровнен по правому краю.<br />
+                Левый край остаётся неровным.<br />
+                Каждая строка начинается в разном месте.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="format-demo">
+          <div class="format-demo-label">Выравнивание по центру:</div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="document-area">
+              <p class="doc-para demo-align-center">
+                Текст выровнен по центру.<br />
+                Каждая строка расположена посередине.<br />
+                Используется для заголовков.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="format-demo">
+          <div class="format-demo-label">Выравнивание по ширине:</div>
+          <div class="word-demo">
+            <div class="word-toolbar">Microsoft Word</div>
+            <div class="document-area">
+              <p class="doc-para demo-align-justify">
+                Текст выровнен по ширине страницы. Оба края ровные. Пробелы
+                между словами растягиваются, чтобы заполнить всю строку. Это
+                стандартный способ оформления книг и газет. При таком
+                выравнивании текст выглядит аккуратно и профессионально. Левый и
+                правый края абзаца образуют прямые вертикальные линии. Такой
+                способ форматирования часто используется в печатных изданиях,
+                научных работах и официальных документах.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="success-box">
+          <h4>✅ Как определить тип выравнивания</h4>
+          <ul>
+            <li>
+              <strong>Левый край ровный, правый неровный</strong> → выравнивание
+              по левому краю
+            </li>
+            <li>
+              <strong>Правый край ровный, левый неровный</strong> → выравнивание
+              по правому краю
+            </li>
+            <li><strong>Оба края ровные</strong> → выравнивание по ширине</li>
+            <li><strong>Строки по центру</strong> → выравнивание по центру</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Линейка -->
+      <div class="category-section" data-category="ruler" id="ruler">
+        <div class="category-header ruler">
+          <div class="category-icon ruler">📊</div>
+          <div>
+            <h2 class="category-title">Работа с линейкой в Word</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Горизонтальная линейка в Microsoft Word позволяет визуально определять
+          и настраивать отступы абзаца. Маркеры на линейке показывают
+          установленные параметры форматирования.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">📐 Маркеры на линейке</h3>
+
+        <div class="ruler-diagram">
+          <div class="ruler-visual">
+            <div class="ruler-line"></div>
+            <div class="marker-item">
+              <div class="marker-symbol">▼</div>
+              <div class="marker-desc">
+                <strong>Отступ первой строки</strong>
+                <span
+                  >Треугольник вершиной вниз в верхней части слева. Сдвигает
+                  первую строку вправо.</span
+                >
+              </div>
+            </div>
+            <div class="marker-item">
+              <div class="marker-symbol">▲</div>
+              <div class="marker-desc">
+                <strong>Выступ первой строки</strong>
+                <span
+                  >Треугольник вершиной вверх в верхней части слева. Сдвигает
+                  все строки, кроме первой, вправо.</span
+                >
+              </div>
+            </div>
+            <div class="marker-item">
+              <div class="marker-symbol">⬛</div>
+              <div class="marker-desc">
+                <strong>Отступ слева</strong>
+                <span
+                  >Прямоугольник или треугольник внизу слева. Сдвигает весь
+                  абзац вправо.</span
+                >
+              </div>
+            </div>
+            <div class="marker-item">
+              <div class="marker-symbol">▼</div>
+              <div class="marker-desc">
+                <strong>Отступ справа</strong>
+                <span
+                  >Треугольник справа на линейке. Сдвигает весь абзац влево от
+                  правого поля.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>💡 Совет по определению форматирования</h4>
+          <p>При решении задач ВПР внимательно смотрите на:</p>
+          <ul>
+            <li>Положение первой строки относительно остальных</li>
+            <li>Положение всего абзаца относительно полей</li>
+            <li>Ровность левого и правого краёв текста</li>
+            <li>Маркеры на линейке (если они показаны)</li>
+          </ul>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🎯 Алгоритм анализа абзаца
+        </h3>
+        <ol style="margin-left: 20px; color: #555; line-height: 2">
+          <li>
+            <strong>Проверьте положение первой строки:</strong> если она
+            сдвинута вправо — отступ первой строки, если влево — выступ
+          </li>
+          <li>
+            <strong>Проверьте положение левого края:</strong> если весь абзац
+            сдвинут вправо — отступ слева
+          </li>
+          <li>
+            <strong>Проверьте положение правого края:</strong> если абзац не
+            доходит до правого поля — отступ справа
+          </li>
+          <li>
+            <strong>Определите выравнивание:</strong> по ровным и неровным краям
+          </li>
+        </ol>
+
+        <div class="warning-box">
+          <h4>⚠️ Частые ошибки</h4>
+          <ul>
+            <li>Путают отступ первой строки и отступ слева</li>
+            <li>Не замечают выступ (первая строка влево, остальные вправо)</li>
+            <li>Путают выравнивание по левому краю и по ширине</li>
+            <li>Забывают проверить все параметры</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Примеры -->
+      <div class="category-section" data-category="examples" id="examples">
+        <div class="category-header examples">
+          <div class="category-icon examples">📝</div>
+          <div>
+            <h2 class="category-title">Примеры решения задач</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Разбор типовых задач из ВПР по информатике на тему форматирования
+          текста.
+        </div>
+
+        <!-- Пример 1 -->
+        <div class="example-card">
+          <h4>📋 Пример 1: Определение форматирования абзаца</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Проанализируйте абзац текста. Определите,
+            какие элементы форматирования применены.
+            <div class="word-demo" style="margin-top: 15px">
+              <div class="word-toolbar">Microsoft Word</div>
+              <div class="word-ruler">
+                <span
+                  class="ruler-indent-marker indent-marker-first"
+                  style="left: 60px"
+                  >▼</span
+                >
+              </div>
+              <div class="document-area">
+                <p class="doc-para demo-first-indent demo-align-justify">
+                  Информатика изучает методы и средства работы с информацией. В
+                  современном мире компьютерные технологии применяются
+                  повсеместно. Эта наука охватывает широкий спектр вопросов,
+                  связанных с обработкой, хранением и передачей данных.
+                  Информационные технологии стали неотъемлемой частью нашей
+                  жизни, проникнув во все сферы человеческой деятельности.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Первая строка:</strong> сдвинута вправо относительно
+                остальных → отступ первой строки
+              </li>
+              <li>
+                <strong>Левый край абзаца:</strong> на одном уровне с полем →
+                нет отступа слева
+              </li>
+              <li>
+                <strong>Правый край:</strong> ровный → возможно выравнивание по
+                ширине
+              </li>
+              <li>
+                <strong>Левый край:</strong> тоже ровный → выравнивание по
+                ширине
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Отступ первой строки, выравнивание по ширине
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 2 -->
+        <div class="example-card">
+          <h4>📋 Пример 2: Заголовок документа</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Определите форматирование заголовка.
+            <div class="word-demo" style="margin-top: 15px">
+              <div class="word-toolbar">Microsoft Word</div>
+              <div class="document-area">
+                <p class="doc-para demo-align-center" style="font-weight: bold">
+                  АКТ<br />ПЕРЕДАЧИ ДОКУМЕНТОВ
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Каждая строка расположена посередине страницы</li>
+              <li>Нет отступов первой строки или выступов</li>
+              <li>Нет смещения абзаца влево или вправо</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Выравнивание по центру
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 3 -->
+        <div class="example-card">
+          <h4>📋 Пример 3: Элемент списка</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Определите форматирование элемента списка.
+            <div class="word-demo" style="margin-top: 15px">
+              <div class="word-toolbar">Microsoft Word</div>
+              <div class="word-ruler">
+                <span class="ruler-indent-marker indent-marker-hanging">▲</span>
+                <span
+                  class="ruler-indent-marker indent-marker-left"
+                  style="left: 80px"
+                  >▼</span
+                >
+              </div>
+              <div class="document-area">
+                <p class="doc-para demo-hanging-indent demo-align-left">
+                  1. Первый пункт списка содержит важную информацию о
+                  требованиях к оформлению документов, которые необходимо
+                  соблюдать при подготовке официальных материалов. Обратите
+                  внимание на положение первой строки относительно остальных.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                Первая строка (номер) выступает влево → выступ первой строки
+              </li>
+              <li>Остальные строки сдвинуты вправо → отступ слева</li>
+              <li>Правый край неровный → выравнивание по левому краю</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Выступ первой строки, отступ слева, выравнивание по левому
+              краю
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 4 -->
+        <div class="example-card">
+          <h4>📋 Пример 4: Подпись в документе</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Определите форматирование подписи.
+            <div class="word-demo" style="margin-top: 15px">
+              <div class="word-toolbar">Microsoft Word</div>
+              <div class="word-ruler">
+                <span class="ruler-indent-marker indent-marker-right">▼</span>
+              </div>
+              <div class="document-area">
+                <p class="doc-para demo-align-right demo-right-indent">
+                  Директор школы<br />Петров А.Б.<br />15 марта 2026 г.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                Левый край неровный, правый ровный → выравнивание по правому
+                краю
+              </li>
+              <li>Текст не доходит до правого поля → отступ справа</li>
+              <li>Нет отступа первой строки или выступа</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Выравнивание по правому краю, отступ справа
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 5 -->
+        <div class="example-card">
+          <h4>📋 Пример 5: Цитата в документе</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Определите форматирование цитаты.
+            <div class="word-demo" style="margin-top: 15px">
+              <div class="word-toolbar">Microsoft Word</div>
+              <div class="word-ruler">
+                <span class="ruler-indent-marker indent-marker-left">▼</span>
+                <span class="ruler-indent-marker indent-marker-right">▼</span>
+              </div>
+              <div class="document-area">
+                <p
+                  class="doc-para demo-left-indent demo-align-justify"
+                  style="margin-right: 2cm"
+                >
+                  «Информация — это сведения об объектах и явлениях окружающей
+                  среды, их параметрах, свойствах и состояниях, которые
+                  уменьшают имеющуюся степень неопределённости. В современном
+                  мире работа с информацией стала важнейшим навыком для каждого
+                  человека. Умение искать, анализировать и использовать
+                  информацию определяет успех в большинстве сфер деятельности.»
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Весь абзац сдвинут вправо → отступ слева</li>
+              <li>Абзац не доходит до правого поля → отступ справа</li>
+              <li>Оба края ровные → выравнивание по ширине</li>
+              <li>
+                Первая строка не выделена → нет отступа первой строки или
+                выступа
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Отступ слева, отступ справа, выравнивание по ширине
+            </strong>
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">💡 Памятка для решения</h3>
+        <div class="success-box">
+          <h4>✅ Пошаговый алгоритм</h4>
+          <ul>
+            <li>
+              <strong>Шаг 1:</strong> Сравните первую строку с остальными →
+              определите отступ/выступ
+            </li>
+            <li>
+              <strong>Шаг 2:</strong> Проверьте положение левого края абзаца →
+              отступ слева
+            </li>
+            <li>
+              <strong>Шаг 3:</strong> Проверьте положение правого края абзаца →
+              отступ справа
+            </li>
+            <li>
+              <strong>Шаг 4:</strong> Определите выравнивание по краям текста
+            </li>
+            <li>
+              <strong>Шаг 5:</strong> Проверьте маркеры на линейке (если
+              показаны)
+            </li>
+          </ul>
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Важно помнить</h4>
+          <ul>
+            <li>Отступ первой строки и выступ — взаимоисключающие параметры</li>
+            <li>Выравнивание по ширине делает оба края ровными</li>
+            <li>Выравнивание по левому краю оставляет правый край неровным</li>
+            <li>Маркер ▼ сверху = отступ первой строки</li>
+            <li>Маркер ▲ сверху = выступ</li>
+          </ul>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>Используйте эти знания для успешного решения заданий!</p>
+      </footer>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <div class="quick-nav">
+      <button
+        class="quick-nav-btn practice"
+        onclick="location.href = 'vpr7-12.html'"
+        title="К заданию"
+      >
+        📄
+      </button>
+      <button class="quick-nav-btn top" onclick="scrollToTop()" title="Наверх">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Фильтрация секций
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Обновляем активную кнопку
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          const sections = document.querySelectorAll(".category-section");
+
+          sections.forEach((section) => {
+            if (filter === "all" || section.dataset.category === filter) {
+              section.style.display = "block";
+              // Анимация появления
+              section.style.animation = "fadeIn 0.3s ease-out";
+            } else {
+              section.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Прокрутка наверх
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>

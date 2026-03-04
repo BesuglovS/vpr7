@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Теория - Устройства компьютера</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .theory-intro {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .theory-intro h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .theory-intro p {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .category-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid;
+      }
+
+      .category-header.input {
+        border-color: #4facfe;
+      }
+
+      .category-header.output {
+        border-color: #38ef7d;
+      }
+
+      .category-header.storage {
+        border-color: #f093fb;
+      }
+
+      .category-header.processing {
+        border-color: #ff6b6b;
+      }
+
+      .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+      }
+
+      .category-icon.input {
+        background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .category-icon.output {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .category-icon.storage {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .category-icon.processing {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+      }
+
+      .devices-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .device-card {
+        background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+        border-radius: 12px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .device-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .device-card.active {
+        border-color: #667eea;
+        background: white;
+      }
+
+      .device-image {
+        width: 100%;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin-bottom: 10px;
+        background: white;
+        border-radius: 10px;
+      }
+
+      .device-name {
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      .device-detail {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .device-detail.show {
+        display: flex;
+      }
+
+      .device-detail-content {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 500px;
+        width: 100%;
+        position: relative;
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .device-detail-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        border: none;
+        background: #f0f0f0;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .device-detail-close:hover {
+        background: #e0e0e0;
+      }
+
+      .device-detail-image {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+        border-radius: 15px;
+      }
+
+      .device-detail-name {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .device-detail-category {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .device-detail-category span {
+        display: inline-block;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: white;
+      }
+
+      .device-detail-category span.input {
+        background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .device-detail-category span.output {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .device-detail-category span.storage {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .device-detail-category span.processing {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+      }
+
+      .device-detail-description {
+        color: #555;
+        line-height: 1.7;
+        text-align: center;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: white;
+        color: #667eea;
+      }
+
+      .quick-nav {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .quick-nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .quick-nav-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-nav-btn.top {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .quick-nav-btn.practice {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 20px;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .devices-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .device-image {
+          height: 60px;
+          font-size: 2.5rem;
+        }
+
+        .category-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .quick-nav {
+          bottom: 15px;
+          right: 15px;
+        }
+
+        .quick-nav-btn {
+          width: 45px;
+          height: 45px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav-links">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+        <a href="vpr7-1.html" class="back-link">🎮 К заданию</a>
+      </div>
+
+      <h1>📚 Теория: Устройства компьютера</h1>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">
+          Все устройства
+        </button>
+        <button class="filter-btn" data-filter="input">⌨️ Ввода</button>
+        <button class="filter-btn" data-filter="output">🖥️ Вывода</button>
+        <button class="filter-btn" data-filter="storage">💾 Хранения</button>
+        <button class="filter-btn" data-filter="processing">
+          ⚡ Обработки
+        </button>
+      </div>
+
+      <div class="theory-intro">
+        <h2>🔬 Что нужно знать о устройствах компьютера?</h2>
+        <p>
+          Все устройства компьютера можно разделить на четыре основные категории
+          по их назначению. Понимание этих категорий важно для решения задания
+          №1 ВПР по информатике.
+        </p>
+        <p>
+          <strong>💡 Совет:</strong> Нажмите на любое устройство ниже, чтобы
+          узнать больше информации о нём!
+        </p>
+      </div>
+
+      <!-- Категория: Устройства ввода -->
+      <div class="category-section" data-category="input" id="input">
+        <div class="category-header input">
+          <div class="category-icon input">⌨️</div>
+          <div>
+            <h2 class="category-title">Устройства ввода</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Устройства ввода</strong> — передают информацию от человека к
+          компьютеру. Они позволяют вводить текст, изображения, звук, видео и
+          другие данные для обработки.
+        </div>
+        <div class="devices-grid" id="inputGrid"></div>
+      </div>
+
+      <!-- Категория: Устройства вывода -->
+      <div class="category-section" data-category="output" id="output">
+        <div class="category-header output">
+          <div class="category-icon output">🖥️</div>
+          <div>
+            <h2 class="category-title">Устройства вывода</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Устройства вывода</strong> — передают информацию от компьютера
+          к человеку. Они отображают результаты обработки данных в понятном для
+          человека виде: на экране, на бумаге, через звук.
+        </div>
+        <div class="devices-grid" id="outputGrid"></div>
+      </div>
+
+      <!-- Категория: Устройства хранения -->
+      <div class="category-section" data-category="storage" id="storage">
+        <div class="category-header storage">
+          <div class="category-icon storage">💾</div>
+          <div>
+            <h2 class="category-title">Устройства хранения</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Устройства хранения</strong> — сохраняют информацию для
+          длительного использования. Они позволяют записывать данные и считывать
+          их даже после выключения компьютера.
+        </div>
+        <div class="devices-grid" id="storageGrid"></div>
+      </div>
+
+      <!-- Категория: Устройства обработки -->
+      <div class="category-section" data-category="processing" id="processing">
+        <div class="category-header processing">
+          <div class="category-icon processing">⚡</div>
+          <div>
+            <h2 class="category-title">Устройства обработки</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Устройства обработки</strong> — обрабатывают данные внутри
+          компьютера. Они выполняют вычисления, преобразования и операции над
+          информацией.
+        </div>
+        <div class="devices-grid" id="processingGrid"></div>
+      </div>
+
+      <footer class="footer">
+        <p>Нажмите на устройство, чтобы увидеть подробное описание</p>
+      </footer>
+    </div>
+
+    <!-- Модальное окно с деталями -->
+    <div class="device-detail" id="deviceDetail">
+      <div class="device-detail-content">
+        <button class="device-detail-close" onclick="closeDetail()">✕</button>
+        <div class="device-detail-image" id="detailImage"></div>
+        <h3 class="device-detail-name" id="detailName"></h3>
+        <div class="device-detail-category">
+          <span id="detailCategory"></span>
+        </div>
+        <p class="device-detail-description" id="detailDescription"></p>
+      </div>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <div class="quick-nav">
+      <button
+        class="quick-nav-btn practice"
+        onclick="location.href = 'vpr7-1.html'"
+        title="К заданию"
+      >
+        🎮
+      </button>
+      <button class="quick-nav-btn top" onclick="scrollToTop()" title="Наверх">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Данные об устройствах с картинками и описаниями
+      const devicesData = {
+        input: [
+          {
+            name: "Клавиатура",
+            icon: "⌨️",
+            description:
+              "Основное устройство ввода текстовой информации. Содержит клавиши для ввода букв, цифр, знаков препинания и специальных команд.",
+          },
+          {
+            name: "Мышь",
+            icon: "🖱️",
+            description:
+              "Устройство для управления курсором на экране. Позволяет выбирать объекты, открывать файлы и взаимодействовать с интерфейсом.",
+          },
+          {
+            name: "Тачпад",
+            icon: "👆",
+            description:
+              "Сенсорная панель на ноутбуках. Заменяет мышь — управление происходит движениями пальцев по поверхности.",
+          },
+          {
+            name: "Трекбол",
+            icon: "🎱",
+            description:
+              "Устройство, похожее на перевёрнутую мышь. Управление курсором происходит вращением шара пальцами.",
+          },
+          {
+            name: "Джойстик",
+            icon: "🕹️",
+            description:
+              "Устройство ввода для игр. Состоит из ручки, которую можно наклонять в разные стороны для управления.",
+          },
+          {
+            name: "Веб-камера",
+            icon: "📷",
+            description:
+              "Цифровая камера для захвата видео и фото. Передаёт изображение в компьютер в реальном времени.",
+          },
+          {
+            name: "Микрофон",
+            icon: "🎤",
+            description:
+              "Устройство для ввода звука. Преобразует звуковые волны в электрический сигнал для компьютера.",
+          },
+          {
+            name: "Сканер документов",
+            icon: "📠",
+            description:
+              "Устройство для оцифровки бумажных документов. Создаёт цифровую копию изображения на бумаге.",
+          },
+          {
+            name: "Сканер штрих-кодов / QR-кодов",
+            icon: "📱",
+            description:
+              "Устройство для считывания штрих-кодов и QR-кодов. Используется в магазинах и на складах.",
+          },
+          {
+            name: "Биометрические сканеры",
+            icon: "🔐",
+            description:
+              "Сканеры отпечатка пальца или распознавания лица для идентификации пользователя. Используются для защиты данных.",
+          },
+          {
+            name: "MIDI-клавиатура",
+            icon: "🎹",
+            description:
+              "Музыкальная клавиатура для ввода музыкальной информации. Позволяет записывать и воспроизводить ноты.",
+          },
+          {
+            name: "Графический планшет",
+            icon: "✏️",
+            description:
+              "Устройство для рисования цифровых изображений. Состоит из сенсорной панели и специального пера (стилуса).",
+          },
+        ],
+        output: [
+          {
+            name: "Bluetooth-динамик",
+            icon: "🔊",
+            description:
+              "Беспроводной динамик, подключаемый по технологии Bluetooth. Позволяет выводить звук без проводов.",
+          },
+          {
+            name: "Динамики",
+            icon: "🔈",
+            description:
+              "Устройство вывода звука, встроенное в компьютер или подключаемое отдельно. Воспроизводит аудиосигнал.",
+          },
+          {
+            name: "Колонки",
+            icon: "🔉",
+            description:
+              "Внешние акустические системы для качественного воспроизведения звука. Могут состоять из нескольких динамиков.",
+          },
+          {
+            name: "Монитор",
+            icon: "🖥️",
+            description:
+              "Основное устройство вывода визуальной информации. Отображает изображение на экране.",
+          },
+          {
+            name: "Наушники",
+            icon: "🎧",
+            description:
+              "Устройство для индивидуального прослушивания звука. Позволяет не мешать окружающим.",
+          },
+          {
+            name: "Принтер",
+            icon: "🖨️",
+            description:
+              "Устройство для вывода информации на бумагу. Печатает текст и изображения на бумажных носителях.",
+          },
+          {
+            name: "3D-принтер",
+            icon: "🧊",
+            description:
+              "Устройство для создания трёхмерных объектов. Печатает послойно из пластика или других материалов.",
+          },
+          {
+            name: "Плоттер",
+            icon: "📊",
+            description:
+              "Устройство для вывода графической информации на большие форматы бумаги. Используется для чертежей и плакатов.",
+          },
+          {
+            name: "Проектор",
+            icon: "📽️",
+            description:
+              "Устройство для проецирования изображения на большой экран или стену. Используется для презентаций.",
+          },
+          {
+            name: "Саундбар",
+            icon: "🎼",
+            description:
+              "Длинная акустическая система для улучшения качества звука. Часто используется с телевизорами.",
+          },
+          {
+            name: "Телевизор",
+            icon: "📺",
+            description:
+              "Устройство для отображения видео и звука. Может использоваться как монитор для компьютера.",
+          },
+        ],
+        storage: [
+          {
+            name: "HDD / Жёсткий диск",
+            icon: "💿",
+            description:
+              "Магнитный накопитель для хранения данных. Состоит из вращающихся дисков и считывающих головок.",
+          },
+          {
+            name: "SSD (твердотельный накопитель)",
+            icon: "💾",
+            description:
+              "Современный накопитель без движущихся частей. Работает быстрее и тише HDD, но дороже.",
+          },
+          {
+            name: "USB-флеш-накопитель (Флешка)",
+            icon: "🔌",
+            description:
+              "Портативное устройство хранения данных. Подключается через USB-порт, удобно для переноса файлов.",
+          },
+          {
+            name: "Дискета 3.5",
+            icon: "📀",
+            description:
+              "Устаревший магнитный носитель информации. Имел маленький объём (1.44 МБ), сейчас практически не используется.",
+          },
+          {
+            name: "CD-R (компакт-диск)",
+            icon: "💿",
+            description:
+              "Оптический диск для однократной записи. Объём около 700 МБ. Использовался для музыки и программ.",
+          },
+          {
+            name: "DVD (цифровой диск)",
+            icon: "📀",
+            description:
+              "Оптический диск с большим объёмом (4.7 ГБ). Использовался для фильмов и больших программ.",
+          },
+          {
+            name: "Blu-Ray Disc (оптический диск)",
+            icon: "🔵",
+            description:
+              "Современный оптический диск с большим объёмом (до 50 ГБ). Используется для HD-видео.",
+          },
+          {
+            name: "Карты памяти (SD / microSD)",
+            icon: "🎴",
+            description:
+              "Портативные носители информации для фотоаппаратов, телефонов и других устройств. Компактные и надёжные.",
+          },
+        ],
+        processing: [
+          {
+            name: "Процессор (CPU)",
+            icon: "🧠",
+            description:
+              "Центральное устройство обработки данных. Выполняет все вычисления и управляет работой компьютера.",
+          },
+          {
+            name: "Видеокарта (GPU)",
+            icon: "🎮",
+            description:
+              "Устройство для обработки графики. Ускоряет вывод изображений, особенно важно для игр и видеомонтажа.",
+          },
+          {
+            name: "NPU / TPU — нейронные процессоры",
+            icon: "🤖",
+            description:
+              "Специализированные процессоры для работы с искусственным интеллектом и нейросетями. Ускоряют машинное обучение.",
+          },
+          {
+            name: "Суперкомпьютер",
+            icon: "🖥️",
+            description:
+              "Комплексная система из множества процессоров для сложных вычислений. Используется в науке и исследованиях.",
+          },
+        ],
+      };
+
+      const categoryNames = {
+        input: "Устройство ввода",
+        output: "Устройство вывода",
+        storage: "Устройство хранения",
+        processing: "Устройство обработки",
+      };
+
+      // Отрисовка устройств
+      function renderDevices() {
+        Object.keys(devicesData).forEach((category) => {
+          const grid = document.getElementById(`${category}Grid`);
+          grid.innerHTML = "";
+
+          devicesData[category].forEach((device) => {
+            const card = document.createElement("div");
+            card.className = "device-card";
+            card.dataset.category = category;
+            card.innerHTML = `
+              <div class="device-image">${device.icon}</div>
+              <div class="device-name">${device.name}</div>
+            `;
+            card.addEventListener("click", () => showDetail(device, category));
+            grid.appendChild(card);
+          });
+        });
+      }
+
+      // Показать детали устройства
+      function showDetail(device, category) {
+        document.getElementById("detailImage").textContent = device.icon;
+        document.getElementById("detailName").textContent = device.name;
+        document.getElementById("detailDescription").textContent =
+          device.description;
+
+        const categoryBadge = document.getElementById("detailCategory");
+        categoryBadge.textContent = categoryNames[category];
+        categoryBadge.className = category;
+
+        document.getElementById("deviceDetail").classList.add("show");
+      }
+
+      // Закрыть детали
+      function closeDetail() {
+        document.getElementById("deviceDetail").classList.remove("show");
+      }
+
+      // Закрытие по клику вне модального окна
+      document.getElementById("deviceDetail").addEventListener("click", (e) => {
+        if (e.target.id === "deviceDetail") {
+          closeDetail();
+        }
+      });
+
+      // Закрытие по Escape
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeDetail();
+        }
+      });
+
+      // Фильтрация категорий
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Обновляем активную кнопку
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          const sections = document.querySelectorAll(".category-section");
+
+          sections.forEach((section) => {
+            if (filter === "all" || section.dataset.category === filter) {
+              section.style.display = "block";
+              // Анимация появления
+              section.style.animation = "fadeIn 0.3s ease-out";
+            } else {
+              section.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Прокрутка наверх
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Добавляем стиль для анимации
+      const style = document.createElement("style");
+      style.textContent = `
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Инициализация
+      renderDevices();
+    </script>
+  </body>
+</html>

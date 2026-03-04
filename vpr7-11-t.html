@@ -1,0 +1,1416 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Теория - Цветовая модель RGB</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .theory-intro {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .theory-intro h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .theory-intro p {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .theory-intro ul {
+        margin: 15px 0 15px 20px;
+        color: #555;
+      }
+
+      .theory-intro li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+
+      .category-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid;
+      }
+
+      .category-header.basics {
+        border-color: #e53935;
+      }
+
+      .category-header.colors {
+        border-color: #38ef7d;
+      }
+
+      .category-header.mixer {
+        border-color: #f093fb;
+      }
+
+      .category-header.examples {
+        border-color: #667eea;
+      }
+
+      .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+      }
+
+      .category-icon.basics {
+        background: linear-gradient(145deg, #e53935 0%, #ff6f00 100%);
+      }
+
+      .category-icon.colors {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .category-icon.mixer {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .category-icon.examples {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #e53935;
+      }
+
+      .color-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .color-table th,
+      .color-table td {
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        text-align: center;
+      }
+
+      .color-table th {
+        background: linear-gradient(145deg, #e53935 0%, #ff6f00 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      .color-table td {
+        font-size: 1rem;
+      }
+
+      .color-cell {
+        width: 40px;
+        height: 30px;
+        border-radius: 5px;
+        display: inline-block;
+        border: 2px solid #333;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #e0e0e0;
+        transition: border-color 0.3s;
+      }
+
+      .example-card:hover {
+        border-color: #e53935;
+      }
+
+      .example-card h4 {
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .example-task {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #e53935;
+        line-height: 1.7;
+      }
+
+      .example-task .highlight {
+        background: linear-gradient(145deg, #e53935 0%, #ff6f00 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-family: "Courier New", monospace;
+      }
+
+      .example-solution {
+        background: #e8f5e9;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #38ef7d;
+      }
+
+      .example-solution strong {
+        color: #11998e;
+      }
+
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .info-box h4 {
+        color: #1565c0;
+        margin-bottom: 10px;
+      }
+
+      .info-box p {
+        color: #1565c0;
+        line-height: 1.6;
+      }
+
+      .info-box ul {
+        margin-left: 20px;
+        color: #1565c0;
+        line-height: 1.8;
+      }
+
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .warning-box h4 {
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .warning-box ul {
+        margin-left: 20px;
+        color: #856404;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #38ef7d;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .success-box h4 {
+        color: #155724;
+        margin-bottom: 10px;
+      }
+
+      .success-box ul {
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: white;
+        color: #1a1a2e;
+      }
+
+      .quick-nav {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .quick-nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .quick-nav-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-nav-btn.top {
+        background: linear-gradient(145deg, #e53935 0%, #ff6f00 100%);
+        color: white;
+      }
+
+      .quick-nav-btn.practice {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 20px;
+      }
+
+      /* Интерактивный цветовой миксер */
+      .color-mixer-demo {
+        background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 20px 0;
+        border: 2px solid #e0e0e0;
+      }
+
+      .mixer-display {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .mixer-color-box {
+        width: 120px;
+        height: 120px;
+        border-radius: 15px;
+        border: 4px solid #333;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .mixer-sliders {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 450px;
+        margin: 0 auto;
+      }
+
+      .slider-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .slider-label {
+        width: 100px;
+        font-weight: bold;
+        font-size: 0.95rem;
+      }
+
+      .slider-label.red {
+        color: #e53935;
+      }
+      .slider-label.green {
+        color: #43a047;
+      }
+      .slider-label.blue {
+        color: #1e88e5;
+      }
+
+      .slider-input {
+        flex: 1;
+        height: 10px;
+        -webkit-appearance: none;
+        appearance: none;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .slider-input.red {
+        background: linear-gradient(to right, #000, #ff0000);
+      }
+
+      .slider-input.green {
+        background: linear-gradient(to right, #000, #00ff00);
+      }
+
+      .slider-input.blue {
+        background: linear-gradient(to right, #000, #0000ff);
+      }
+
+      .slider-input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid #333;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .slider-input::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid #333;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .slider-value {
+        width: 50px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1rem;
+        font-family: "Courier New", monospace;
+      }
+
+      .mixer-info {
+        text-align: center;
+        margin-top: 20px;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+      }
+
+      .mixer-info .rgb-value {
+        font-family: "Courier New", monospace;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .mixer-info .color-name {
+        margin-top: 8px;
+        font-size: 1rem;
+        color: #666;
+      }
+
+      /* Диаграмма смешения цветов */
+      .color-diagram {
+        display: flex;
+        justify-content: center;
+        margin: 30px 0;
+      }
+
+      .rgb-diagram {
+        position: relative;
+        width: 320px;
+        height: 300px;
+      }
+
+      .rgb-circle {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        opacity: 0.7;
+      }
+
+      .rgb-circle.red {
+        background: #ff0000;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .rgb-circle.green {
+        background: #00ff00;
+        bottom: 20px;
+        left: 25px;
+      }
+
+      .rgb-circle.blue {
+        background: #0000ff;
+        bottom: 20px;
+        right: 25px;
+      }
+
+      .rgb-label {
+        position: absolute;
+        font-weight: bold;
+        font-size: 0.85rem;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+        padding: 4px 10px;
+        border-radius: 15px;
+      }
+
+      .rgb-label.red-label {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #cc0000;
+      }
+
+      .rgb-label.green-label {
+        bottom: 0;
+        left: 20px;
+        background: #00aa00;
+        color: white;
+      }
+
+      .rgb-label.blue-label {
+        bottom: 0;
+        right: 20px;
+        background: #0000cc;
+      }
+
+      .rgb-label.center-label {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #333;
+        text-shadow: none;
+        background: white;
+        border: 2px solid #333;
+        z-index: 10;
+      }
+
+      .rgb-label.yellow-label {
+        top: 125px;
+        left: 60px;
+        color: #333;
+        background: #e6e600;
+        text-shadow: none;
+        transform: rotate(-45deg);
+      }
+
+      .rgb-label.cyan-label {
+        bottom: 75px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #333;
+        background: #00e6e6;
+        text-shadow: none;
+      }
+
+      .rgb-label.magenta-label {
+        top: 120px;
+        right: 40px;
+        color: white;
+        background: #e600e6;
+        transform: rotate(45deg);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .category-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .quick-nav {
+          bottom: 15px;
+          right: 15px;
+        }
+
+        .quick-nav-btn {
+          width: 45px;
+          height: 45px;
+        }
+
+        .color-table th,
+        .color-table td {
+          padding: 8px 10px;
+          font-size: 0.85rem;
+        }
+
+        .mixer-display {
+          flex-direction: column;
+        }
+
+        .slider-group {
+          flex-wrap: wrap;
+        }
+
+        .slider-label {
+          width: 80px;
+        }
+
+        .rgb-diagram {
+          width: 250px;
+          height: 250px;
+        }
+
+        .rgb-circle {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav-links">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+        <a href="vpr7-11.html" class="back-link">🎮 К заданию</a>
+      </div>
+
+      <h1>📚 Теория: Цветовая модель RGB</h1>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Всё</button>
+        <button class="filter-btn" data-filter="basics">🔵 Основы RGB</button>
+        <button class="filter-btn" data-filter="colors">🎨 Цвета</button>
+        <button class="filter-btn" data-filter="mixer">🔧 Миксер</button>
+        <button class="filter-btn" data-filter="examples">📝 Примеры</button>
+      </div>
+
+      <div class="theory-intro">
+        <h2>🌈 Что такое цветовая модель RGB?</h2>
+        <p>
+          <strong>RGB</strong> (Red, Green, Blue — красный, зелёный, синий) —
+          аддитивная цветовая модель, описывающая способ кодирования цвета для
+          вывода на экраны мониторов, телевизоров и других устройств.
+        </p>
+        <p><strong>Ключевые понятия:</strong></p>
+        <ul>
+          <li>
+            <strong>Аддитивная модель</strong> — цвета складываются (смешиваются
+            из света), в отличие от субтрактивной модели (краски на бумаге)
+          </li>
+          <li>
+            <strong>Три основных цвета</strong> — красный (R), зелёный (G) и
+            синий (B)
+          </li>
+          <li>
+            <strong>Диапазон значений</strong> — каждый компонент принимает
+            значение от 0 до 255
+          </li>
+          <li>
+            <strong>Всего цветов</strong> — 256³ = 16 777 216 различных оттенков
+          </li>
+        </ul>
+      </div>
+
+      <!-- Основы RGB -->
+      <div class="category-section" data-category="basics" id="basics">
+        <div class="category-header basics">
+          <div class="category-icon basics">🔵</div>
+          <div>
+            <h2 class="category-title">Основы цветовой модели RGB</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>RGB</strong> — это способ представления цвета в виде трёх
+          чисел: интенсивности красного, зелёного и синего компонентов. Каждый
+          компонент может принимать значение от 0 (минимум) до 255 (максимум).
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          📊 Как работает модель RGB
+        </h3>
+        <p style="color: #555; line-height: 1.7; margin-bottom: 15px">
+          В модели RGB каждый цвет кодируется тремя числами в формате
+          <strong>RGB(R, G, B)</strong>, где:
+        </p>
+        <ul style="margin-left: 20px; color: #555; line-height: 1.8">
+          <li>
+            <strong style="color: #e53935">R (Red)</strong> — интенсивность
+            красного цвета (от 0 до 255)
+          </li>
+          <li>
+            <strong style="color: #43a047">G (Green)</strong> — интенсивность
+            зелёного цвета (от 0 до 255)
+          </li>
+          <li>
+            <strong style="color: #1e88e5">B (Blue)</strong> — интенсивность
+            синего цвета (от 0 до 255)
+          </li>
+        </ul>
+
+        <div class="info-box">
+          <h4>💡 Почему именно эти три цвета?</h4>
+          <p>
+            Красный, зелёный и синий выбраны потому, что они являются
+            <strong>основными цветами света</strong>. Человеческий глаз имеет
+            три типа рецепторов (колбочек), чувствительных именно к этим трём
+            цветам. Смешивая их в разных пропорциях, можно получить любой
+            видимый цвет!
+          </p>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🔢 Диапазон значений</h3>
+        <table class="color-table">
+          <thead>
+            <tr>
+              <th>Значение</th>
+              <th>Смысл</th>
+              <th>Пример</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>0</strong></td>
+              <td>Компонент полностью выключен (отсутствует)</td>
+              <td>R=0 — нет красного</td>
+            </tr>
+            <tr>
+              <td><strong>255</strong></td>
+              <td>Компонент на максимуме</td>
+              <td>R=255 — максимальный красный</td>
+            </tr>
+            <tr>
+              <td><strong>128</strong></td>
+              <td>Половина интенсивности</td>
+              <td>R=128 — тёмно-красный</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="warning-box">
+          <h4>⚠️ Важно помнить!</h4>
+          <ul>
+            <li>Чем больше значение, тем ярче компонент</li>
+            <li>Все нули (0, 0, 0) дают чёрный цвет (нет света)</li>
+            <li>Все максимумы (255, 255, 255) дают белый цвет (весь свет)</li>
+            <li>
+              Это <strong>аддитивная</strong> модель — цвета складываются, а не
+              вычитаются
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Основные цвета -->
+      <div class="category-section" data-category="colors" id="colors">
+        <div class="category-header colors">
+          <div class="category-icon colors">🎨</div>
+          <div>
+            <h2 class="category-title">Основные цвета в RGB</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Знание основных цветов и их RGB-кодов поможет быстро определять цвет
+          по значениям компонентов. Запомните эти базовые сочетания!
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">
+          📋 Таблица основных цветов
+        </h3>
+        <table class="color-table">
+          <thead>
+            <tr>
+              <th>Цвет</th>
+              <th>R</th>
+              <th>G</th>
+              <th>B</th>
+              <th>Образец</th>
+              <th>Как запомнить</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Белый</strong></td>
+              <td>255</td>
+              <td>255</td>
+              <td>255</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(255, 255, 255)"
+                ></span>
+              </td>
+              <td>Все максимумы</td>
+            </tr>
+            <tr>
+              <td><strong>Чёрный</strong></td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(0, 0, 0)"
+                ></span>
+              </td>
+              <td>Все нули</td>
+            </tr>
+            <tr>
+              <td><strong>Красный</strong></td>
+              <td>255</td>
+              <td>0</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(255, 0, 0)"
+                ></span>
+              </td>
+              <td>Только R</td>
+            </tr>
+            <tr>
+              <td><strong>Зелёный</strong></td>
+              <td>0</td>
+              <td>255</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(0, 255, 0)"
+                ></span>
+              </td>
+              <td>Только G</td>
+            </tr>
+            <tr>
+              <td><strong>Синий</strong></td>
+              <td>0</td>
+              <td>0</td>
+              <td>255</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(0, 0, 255)"
+                ></span>
+              </td>
+              <td>Только B</td>
+            </tr>
+            <tr>
+              <td><strong>Жёлтый</strong></td>
+              <td>255</td>
+              <td>255</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(255, 255, 0)"
+                ></span>
+              </td>
+              <td>Красный + Зелёный</td>
+            </tr>
+            <tr>
+              <td><strong>Голубой (Циан)</strong></td>
+              <td>0</td>
+              <td>255</td>
+              <td>255</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(0, 255, 255)"
+                ></span>
+              </td>
+              <td>Зелёный + Синий</td>
+            </tr>
+            <tr>
+              <td><strong>Пурпурный (Маджента)</strong></td>
+              <td>255</td>
+              <td>0</td>
+              <td>255</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(255, 0, 255)"
+                ></span>
+              </td>
+              <td>Красный + Синий</td>
+            </tr>
+            <tr>
+              <td><strong>Серый</strong></td>
+              <td>128</td>
+              <td>128</td>
+              <td>128</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(128, 128, 128)"
+                ></span>
+              </td>
+              <td>Все равны</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🔄 Смешение основных цветов
+        </h3>
+        <div class="color-diagram">
+          <div class="rgb-diagram">
+            <div class="rgb-circle red"></div>
+            <div class="rgb-circle green"></div>
+            <div class="rgb-circle blue"></div>
+            <span class="rgb-label red-label">Красный</span>
+            <span class="rgb-label green-label">Зелёный</span>
+            <span class="rgb-label blue-label">Синий</span>
+            <span class="rgb-label yellow-label">Жёлтый</span>
+            <span class="rgb-label cyan-label">Голубой</span>
+            <span class="rgb-label magenta-label">Пурпурный</span>
+            <span class="rgb-label center-label">Белый</span>
+          </div>
+        </div>
+
+        <div class="success-box">
+          <h4>✅ Правила смешения цветов</h4>
+          <ul>
+            <li>
+              <strong>Красный + Зелёный = Жёлтый</strong> (R=255, G=255, B=0)
+            </li>
+            <li>
+              <strong>Зелёный + Синий = Голубой (Циан)</strong> (R=0, G=255,
+              B=255)
+            </li>
+            <li>
+              <strong>Красный + Синий = Пурпурный (Маджента)</strong> (R=255,
+              G=0, B=255)
+            </li>
+            <li>
+              <strong>Красный + Зелёный + Синий = Белый</strong> (R=255, G=255,
+              B=255)
+            </li>
+            <li>
+              <strong>Отсутствие всех цветов = Чёрный</strong> (R=0, G=0, B=0)
+            </li>
+          </ul>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🌈 Оттенки серого</h3>
+        <div class="info-box">
+          <h4>💡 Секрет серого цвета</h4>
+          <p>
+            Когда все три компонента равны (R = G = B), получается оттенок
+            серого:
+          </p>
+          <ul>
+            <li>(0, 0, 0) — чёрный</li>
+            <li>(64, 64, 64) — тёмно-серый</li>
+            <li>(128, 128, 128) — серый</li>
+            <li>(192, 192, 192) — светло-серый</li>
+            <li>(255, 255, 255) — белый</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Интерактивный миксер -->
+      <div class="category-section" data-category="mixer" id="mixer">
+        <div class="category-header mixer">
+          <div class="category-icon mixer">🔧</div>
+          <div>
+            <h2 class="category-title">Интерактивный цветовой миксер</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Попробуйте сами создать цвета, меняя значения RGB-компонентов. Это
+          поможет лучше понять, как работает модель RGB!
+        </div>
+
+        <div class="color-mixer-demo">
+          <div class="mixer-display">
+            <div class="mixer-color-box" id="mixerColorBox"></div>
+          </div>
+          <div class="mixer-sliders">
+            <div class="slider-group">
+              <span class="slider-label red">R (красный):</span>
+              <input
+                type="range"
+                class="slider-input red"
+                id="redSlider"
+                min="0"
+                max="255"
+                value="128"
+              />
+              <span class="slider-value" id="redValue">128</span>
+            </div>
+            <div class="slider-group">
+              <span class="slider-label green">G (зелёный):</span>
+              <input
+                type="range"
+                class="slider-input green"
+                id="greenSlider"
+                min="0"
+                max="255"
+                value="128"
+              />
+              <span class="slider-value" id="greenValue">128</span>
+            </div>
+            <div class="slider-group">
+              <span class="slider-label blue">B (синий):</span>
+              <input
+                type="range"
+                class="slider-input blue"
+                id="blueSlider"
+                min="0"
+                max="255"
+                value="128"
+              />
+              <span class="slider-value" id="blueValue">128</span>
+            </div>
+          </div>
+          <div class="mixer-info">
+            <div class="rgb-value" id="rgbValue">RGB(128, 128, 128)</div>
+            <div class="color-name" id="colorName">Серый</div>
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🎯 Как определять цвет по значениям RGB
+        </h3>
+        <ol style="margin-left: 20px; color: #555; line-height: 2">
+          <li>
+            <strong>Проверьте, равны ли все компоненты</strong> — если да, это
+            оттенок серого
+          </li>
+          <li>
+            <strong>Определите доминирующий компонент(ы)</strong> — какой имеет
+            наибольшее значение
+          </li>
+          <li>
+            <strong>Проверьте наличие двух высоких компонентов</strong> —
+            например, R=255 и G=255 дают жёлтый
+          </li>
+          <li>
+            <strong>Учитывайте интенсивность</strong> — низкие значения дают
+            тёмные оттенки
+          </li>
+        </ol>
+
+        <div class="example-card">
+          <h4>📋 Быстрый анализ цвета</h4>
+          <table class="color-table">
+            <thead>
+              <tr>
+                <th>Условие</th>
+                <th>Результат</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>R = G = B</td>
+                <td>Оттенок серого (от чёрного до белого)</td>
+              </tr>
+              <tr>
+                <td>Один компонент = 255, остальные = 0</td>
+                <td>Чистый цвет (красный, зелёный или синий)</td>
+              </tr>
+              <tr>
+                <td>Два компонента = 255, третий = 0</td>
+                <td>Смешанный цвет (жёлтый, голубой, пурпурный)</td>
+              </tr>
+              <tr>
+                <td>Все компоненты = 255</td>
+                <td>Белый</td>
+              </tr>
+              <tr>
+                <td>Все компоненты = 0</td>
+                <td>Чёрный</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Примеры -->
+      <div class="category-section" data-category="examples" id="examples">
+        <div class="category-header examples">
+          <div class="category-icon examples">📝</div>
+          <div>
+            <h2 class="category-title">Примеры решения задач</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Разбор типовых задач из ВПР по информатике на тему цветовой модели
+          RGB.
+        </div>
+
+        <!-- Пример 1 -->
+        <div class="example-card">
+          <h4>📋 Пример 1: Базовый цвет</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(255, 0, 0)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 255 — красный на максимуме</li>
+              <li>G = 0 — зелёный отсутствует</li>
+              <li>B = 0 — синий отсутствует</li>
+              <li>Вывод: только красный компонент активен</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Красный
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 2 -->
+        <div class="example-card">
+          <h4>📋 Пример 2: Смешанный цвет</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(255, 255, 0)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 255 — красный на максимуме</li>
+              <li>G = 255 — зелёный на максимуме</li>
+              <li>B = 0 — синий отсутствует</li>
+              <li>Красный + Зелёный = Жёлтый</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Жёлтый
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 3 -->
+        <div class="example-card">
+          <h4>📋 Пример 3: Все компоненты равны</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(128, 128, 128)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = G = B = 128</li>
+              <li>Все компоненты равны — это оттенок серого</li>
+              <li>Значение 128 — середина диапазона (0-255)</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Серый
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 4 -->
+        <div class="example-card">
+          <h4>📋 Пример 4: Определение по описанию</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Укажите RGB-код для цвета "Голубой
+            (Циан)".
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Голубой (Циан) = Зелёный + Синий</li>
+              <li>R = 0 (красный не участвует)</li>
+              <li>G = 255 (зелёный на максимуме)</li>
+              <li>B = 255 (синий на максимуме)</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: RGB(0, 255, 255)
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 5 -->
+        <div class="example-card">
+          <h4>📋 Пример 5: Тёмный оттенок</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(0, 128, 0)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 0 — красный отсутствует</li>
+              <li>G = 128 — зелёный на половине интенсивности</li>
+              <li>B = 0 — синий отсутствует</li>
+              <li>Это зелёный, но не максимальной яркости</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Тёмно-зелёный
+            </strong>
+          </div>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">💡 Советы для решения</h3>
+        <div class="success-box">
+          <h4>✅ Алгоритм быстрого определения цвета</h4>
+          <ul>
+            <li>
+              <strong>Шаг 1:</strong> Проверьте: все ли значения равны? → Серый
+            </li>
+            <li><strong>Шаг 2:</strong> Проверьте: все ли 0? → Чёрный</li>
+            <li><strong>Шаг 3:</strong> Проверьте: все ли 255? → Белый</li>
+            <li>
+              <strong>Шаг 4:</strong> Найдите ненулевые компоненты и примените
+              правила смешения
+            </li>
+            <li>
+              <strong>Шаг 5:</strong> Учитывайте интенсивность (низкие значения
+              = тёмный оттенок)
+            </li>
+          </ul>
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Частые ошибки</h4>
+          <ul>
+            <li>
+              Путают жёлтый (R+G) с оранжевым — оранжевый это R=255, G=128, B=0
+            </li>
+            <li>Забывают, что серый получается при R = G = B</li>
+            <li>Не учитывают, что низкие значения дают тёмные оттенки</li>
+            <li>Путают аддитивную модель RGB с субтрактивной (CMYK)</li>
+          </ul>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>Используйте интерактивный миксер для экспериментов с цветами!</p>
+      </footer>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <div class="quick-nav">
+      <button
+        class="quick-nav-btn practice"
+        onclick="location.href = 'vpr7-11.html'"
+        title="К заданию"
+      >
+        🎮
+      </button>
+      <button class="quick-nav-btn top" onclick="scrollToTop()" title="Наверх">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Определение названия цвета по RGB
+      function getColorName(r, g, b) {
+        // Точные совпадения
+        if (r === g && g === b) {
+          if (r === 0) return "Чёрный";
+          if (r === 255) return "Белый";
+          if (r === 128) return "Серый";
+          if (r < 128) return "Тёмно-серый";
+          return "Светло-серый";
+        }
+
+        if (r === 255 && g === 0 && b === 0) return "Красный";
+        if (r === 0 && g === 255 && b === 0) return "Зелёный";
+        if (r === 0 && g === 0 && b === 255) return "Синий";
+        if (r === 255 && g === 255 && b === 0) return "Жёлтый";
+        if (r === 0 && g === 255 && b === 255) return "Голубой (Циан)";
+        if (r === 255 && g === 0 && b === 255) return "Пурпурный (Маджента)";
+
+        // Приближённое определение
+        if (r === 0 && g === 0 && b === 0) return "Чёрный";
+
+        // Оттенки
+        if (r > 200 && g > 200 && b > 200) return "Почти белый";
+
+        if (r === 0 && b === 0 && g > 0) {
+          return g > 200 ? "Зелёный" : "Тёмно-зелёный";
+        }
+        if (g === 0 && b === 0 && r > 0) {
+          return r > 200 ? "Красный" : "Тёмно-красный";
+        }
+        if (r === 0 && g === 0 && b > 0) {
+          return b > 200 ? "Синий" : "Тёмно-синий";
+        }
+
+        if (r > 200 && g > 200 && b === 0) return "Жёлтый";
+        if (r === 0 && g > 200 && b > 200) return "Голубой (Циан)";
+        if (r > 200 && g === 0 && b > 200) return "Пурпурный (Маджента)";
+
+        return "Смешанный цвет";
+      }
+
+      // Обновление цветового миксера
+      function updateMixer() {
+        const r = parseInt(document.getElementById("redSlider").value);
+        const g = parseInt(document.getElementById("greenSlider").value);
+        const b = parseInt(document.getElementById("blueSlider").value);
+
+        document.getElementById("redValue").textContent = r;
+        document.getElementById("greenValue").textContent = g;
+        document.getElementById("blueValue").textContent = b;
+
+        const colorBox = document.getElementById("mixerColorBox");
+        colorBox.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+
+        document.getElementById("rgbValue").textContent =
+          `RGB(${r}, ${g}, ${b})`;
+        document.getElementById("colorName").textContent = getColorName(
+          r,
+          g,
+          b,
+        );
+      }
+
+      // Слушатели слайдеров
+      document
+        .getElementById("redSlider")
+        .addEventListener("input", updateMixer);
+      document
+        .getElementById("greenSlider")
+        .addEventListener("input", updateMixer);
+      document
+        .getElementById("blueSlider")
+        .addEventListener("input", updateMixer);
+
+      // Фильтрация секций
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Обновляем активную кнопку
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          const sections = document.querySelectorAll(".category-section");
+
+          sections.forEach((section) => {
+            if (filter === "all" || section.dataset.category === filter) {
+              section.style.display = "block";
+              // Анимация появления
+              section.style.animation = "fadeIn 0.3s ease-out";
+            } else {
+              section.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Прокрутка наверх
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Инициализация
+      updateMixer();
+    </script>
+  </body>
+</html>

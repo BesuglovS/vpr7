@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Теория - Логические задачи</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 2rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .theory-intro {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .theory-intro h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .theory-intro p {
+        color: #555;
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .theory-intro ul {
+        margin: 15px 0 15px 20px;
+        color: #555;
+      }
+
+      .theory-intro li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+
+      .category-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid;
+      }
+
+      .category-header.method {
+        border-color: #4facfe;
+      }
+
+      .category-header.table {
+        border-color: #38ef7d;
+      }
+
+      .category-header.examples {
+        border-color: #f093fb;
+      }
+
+      .category-header.tips {
+        border-color: #ff6b6b;
+      }
+
+      .category-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+      }
+
+      .category-icon.method {
+        background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .category-icon.table {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .category-icon.examples {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .category-icon.tips {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+      }
+
+      .category-title {
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .category-description {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+      }
+
+      .logic-table-demo {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .logic-table-demo th,
+      .logic-table-demo td {
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        text-align: center;
+        min-width: 80px;
+      }
+
+      .logic-table-demo th {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      .logic-table-demo th.name-header {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+      }
+
+      .logic-table-demo td.name-cell {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        font-weight: 600;
+        text-align: left;
+      }
+
+      .logic-table-demo td.plus {
+        background: rgba(17, 153, 142, 0.2);
+        color: #11998e;
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      .logic-table-demo td.minus {
+        background: rgba(235, 51, 73, 0.15);
+        color: #eb3349;
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      .logic-table-demo td.highlight {
+        background: rgba(255, 193, 7, 0.3);
+        border-color: #ffc107;
+      }
+
+      .example-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #e0e0e0;
+        transition: border-color 0.3s;
+      }
+
+      .example-card:hover {
+        border-color: #667eea;
+      }
+
+      .example-card h4 {
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .example-task {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid #667eea;
+        line-height: 1.7;
+      }
+
+      .example-task .highlight {
+        background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .example-solution {
+        background: #e8f5e9;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #38ef7d;
+      }
+
+      .example-solution strong {
+        color: #11998e;
+      }
+
+      .step-list {
+        margin: 15px 0;
+        padding-left: 0;
+        list-style: none;
+        counter-reset: step-counter;
+      }
+
+      .step-list li {
+        position: relative;
+        padding: 10px 10px 10px 50px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        counter-increment: step-counter;
+        line-height: 1.6;
+      }
+
+      .step-list li::before {
+        content: counter(step-counter);
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .warning-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .warning-box h4 {
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .warning-box ul {
+        margin-left: 20px;
+        color: #856404;
+      }
+
+      .success-box {
+        background: #d4edda;
+        border-left: 4px solid #38ef7d;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .success-box h4 {
+        color: #155724;
+        margin-bottom: 10px;
+      }
+
+      .success-box ul {
+        margin-left: 20px;
+        line-height: 1.8;
+      }
+
+      .info-box {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px 20px;
+        margin: 15px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .info-box h4 {
+        color: #1565c0;
+        margin-bottom: 10px;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: white;
+        color: #667eea;
+      }
+
+      .quick-nav {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      .quick-nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .quick-nav-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-nav-btn.top {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .quick-nav-btn.practice {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 20px;
+      }
+
+      .condition-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .condition-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        border: 2px solid #e0e0e0;
+        transition: all 0.3s;
+      }
+
+      .condition-card:hover {
+        border-color: #667eea;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .condition-card h5 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      .condition-card p {
+        color: #555;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .condition-card code {
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: Consolas, monospace;
+      }
+
+      .table-animation {
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .category-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .quick-nav {
+          bottom: 15px;
+          right: 15px;
+        }
+
+        .quick-nav-btn {
+          width: 45px;
+          height: 45px;
+        }
+
+        .logic-table-demo th,
+        .logic-table-demo td {
+          padding: 8px 10px;
+          font-size: 0.85rem;
+        }
+
+        .condition-types {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav-links">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+        <a href="vpr7-5.html" class="back-link">🎮 К заданию</a>
+      </div>
+
+      <h1>📚 Теория: Решение логических задач</h1>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Всё</button>
+        <button class="filter-btn" data-filter="method">
+          🧠 Метод решения
+        </button>
+        <button class="filter-btn" data-filter="table">📊 Таблицы</button>
+        <button class="filter-btn" data-filter="examples">📝 Примеры</button>
+        <button class="filter-btn" data-filter="tips">💡 Советы</button>
+      </div>
+
+      <div class="theory-intro">
+        <h2>🧩 Что такое логические задачи?</h2>
+        <p>
+          В задании №5 ВПР по информатике вам нужно решить логическую задачу на
+          сопоставление элементов (обычно имён и фамилий) на основе нескольких
+          условий.
+        </p>
+        <p><strong>Ключевые моменты:</strong></p>
+        <ul>
+          <li>
+            <strong>Условия задачи</strong> — утверждения, которые связывают
+            элементы между собой (кто кому соответствует или не соответствует)
+          </li>
+          <li>
+            <strong>Метод таблиц</strong> — основной способ решения, позволяющий
+            визуализировать все возможные соответствия
+          </li>
+          <li>
+            <strong>Логические выводы</strong> — последовательное применение
+            условий для сужения круга возможных вариантов
+          </li>
+        </ul>
+      </div>
+
+      <!-- Метод решения -->
+      <div class="category-section" data-category="method" id="method">
+        <div class="category-header method">
+          <div class="category-icon method">🧠</div>
+          <div>
+            <h2 class="category-title">Метод решения логических задач</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Метод таблиц</strong> — универсальный способ решения
+          логических задач. Он позволяет наглядно представить все возможные
+          соответствия и постепенно исключать невозможные варианты.
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">📋 Алгоритм решения</h3>
+        <ol class="step-list">
+          <li>
+            Внимательно прочитайте условие задачи и выделите все элементы
+            (имена, фамилии и т.д.)
+          </li>
+          <li>
+            Составьте таблицу, где строки — одни элементы, а столбцы — другие
+          </li>
+          <li>
+            Проанализируйте каждое условие и отметьте соответствия в таблице
+          </li>
+          <li>
+            Делайте логические выводы: если у элемента остался один вариант —
+            это правильный ответ
+          </li>
+          <li>
+            После нахождения соответствия исключите этот вариант для других
+            элементов
+          </li>
+          <li>Продолжайте, пока не заполните всю таблицу</li>
+        </ol>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          📌 Типы условий в задачах
+        </h3>
+        <div class="condition-types">
+          <div class="condition-card">
+            <h5>❌ Отрицание</h5>
+            <p>
+              Указывает, что элементы <strong>не соответствуют</strong> друг
+              другу.<br />
+              <em>Пример:</em> "<code>Иван не Петров</code>"<br />
+              Ставим <strong>минус</strong> в соответствующей ячейке.
+            </p>
+          </div>
+          <div class="condition-card">
+            <h5>✅ Утверждение</h5>
+            <p>
+              Указывает, что элементы <strong>соответствуют</strong> друг
+              другу.<br />
+              <em>Пример:</em> "<code>Мария — Иванова</code>"<br />
+              Ставим <strong>плюс</strong> и исключаем для других.
+            </p>
+          </div>
+          <div class="condition-card">
+            <h5>🔤 Общая буква</h5>
+            <p>
+              Два человека имеют общую букву в фамилии.<br />
+              <em>Пример:</em> "<code
+                >У Маши и Оли в фамилии есть буква "О"</code
+              >"<br />
+              Сужаем круг возможных фамилий.
+            </p>
+          </div>
+          <div class="condition-card">
+            <h5>🔤 Первые буквы</h5>
+            <p>
+              Совпадение первых букв имени и фамилии.<br />
+              <em>Пример:</em> "<code
+                >У Петра первая буква имени совпадает с первой буквой
+                фамилии</code
+              >"<br />
+              Ищем фамилию на "П".
+            </p>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h4>ℹ️ Важное правило</h4>
+          <p>
+            В каждой строке и каждом столбце таблицы должен быть ровно
+            <strong>один плюс</strong>. Это означает, что каждому имени
+            соответствует ровно одна фамилия, и каждая фамилия принадлежит ровно
+            одному человеку.
+          </p>
+        </div>
+      </div>
+
+      <!-- Работа с таблицей -->
+      <div class="category-section" data-category="table" id="table">
+        <div class="category-header table">
+          <div class="category-icon table">📊</div>
+          <div>
+            <h2 class="category-title">Работа с таблицей соответствий</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          <strong>Таблица соответствий</strong> — это матрица, где строки
+          представляют одни элементы (например, имена), а столбцы — другие
+          (например, фамилии).
+        </div>
+
+        <h3 style="margin: 20px 0 15px; color: #333">📐 Структура таблицы</h3>
+        <table class="logic-table-demo">
+          <thead>
+            <tr>
+              <th class="name-header">Имя</th>
+              <th>Иванов</th>
+              <th>Петров</th>
+              <th>Сидоров</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name-cell">Анна</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Мария</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Ольга</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="text-align: center; color: #666; margin-bottom: 20px">
+          В начале решения все ячейки пустые — возможны любые соответствия
+        </p>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          ⬇️ Применение условия отрицания
+        </h3>
+        <p style="margin-bottom: 15px">
+          Условие: "<strong>Анна не Иванова</strong>"
+        </p>
+        <table class="logic-table-demo table-animation">
+          <thead>
+            <tr>
+              <th class="name-header">Имя</th>
+              <th>Иванов</th>
+              <th>Петров</th>
+              <th>Сидоров</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name-cell">Анна</td>
+              <td class="minus">−</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Мария</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Ольга</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+              <td class="highlight">?</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          ✅ Применение условия утверждения
+        </h3>
+        <p style="margin-bottom: 15px">
+          Условие: "<strong>Мария — Петрова</strong>"
+        </p>
+        <table class="logic-table-demo table-animation">
+          <thead>
+            <tr>
+              <th class="name-header">Имя</th>
+              <th>Иванов</th>
+              <th>Петров</th>
+              <th>Сидоров</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name-cell">Анна</td>
+              <td class="minus">−</td>
+              <td class="minus">−</td>
+              <td class="highlight">?</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Мария</td>
+              <td class="minus">−</td>
+              <td class="plus">+</td>
+              <td class="minus">−</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Ольга</td>
+              <td class="highlight">?</td>
+              <td class="minus">−</td>
+              <td class="highlight">?</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="text-align: center; color: #666; margin-bottom: 20px">
+          При утверждении ставим плюс и исключаем эту фамилию для всех остальных
+        </p>
+
+        <h3 style="margin: 25px 0 15px; color: #333">🎯 Логический вывод</h3>
+        <div class="success-box">
+          <h4>✅ Правило единственного варианта</h4>
+          <p>
+            Если в строке или столбце осталась только одна пустая ячейка, то в
+            ней обязательно должен быть <strong>плюс</strong>. Это следует из
+            правила, что каждому элементу должен соответствовать ровно один
+            парный элемент.
+          </p>
+        </div>
+
+        <p style="margin: 20px 0 15px">После применения всех условий:</p>
+        <table class="logic-table-demo table-animation">
+          <thead>
+            <tr>
+              <th class="name-header">Имя</th>
+              <th>Иванов</th>
+              <th>Петров</th>
+              <th>Сидоров</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name-cell">Анна</td>
+              <td class="minus">−</td>
+              <td class="minus">−</td>
+              <td class="plus">+</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Мария</td>
+              <td class="minus">−</td>
+              <td class="plus">+</td>
+              <td class="minus">−</td>
+            </tr>
+            <tr>
+              <td class="name-cell">Ольга</td>
+              <td class="plus">+</td>
+              <td class="minus">−</td>
+              <td class="minus">−</td>
+            </tr>
+          </tbody>
+        </table>
+        <p
+          style="
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            margin-top: 15px;
+          "
+        >
+          Ответ: Анна — Сидорова, Мария — Петрова, Ольга — Иванова
+        </p>
+      </div>
+
+      <!-- Примеры -->
+      <div class="category-section" data-category="examples" id="examples">
+        <div class="category-header examples">
+          <div class="category-icon examples">📝</div>
+          <div>
+            <h2 class="category-title">Примеры решения задач</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Разбор типовых задач с пошаговым решением.
+        </div>
+
+        <!-- Пример 1 -->
+        <div class="example-card">
+          <h4>📋 Пример 1: Классическая задача</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Трое друзей празднуют день рождения:
+            <span class="highlight">Александр</span>,
+            <span class="highlight">Дмитрий</span> и
+            <span class="highlight">Максим</span>. Их фамилии:
+            <span class="highlight">Иванов</span>,
+            <span class="highlight">Петров</span>,
+            <span class="highlight">Сидоров</span>. Известно, что:<br />
+            1) Александр не Иванов.<br />
+            2) У Дмитрия и Максима в фамилии есть буква "О".<br />
+            3) Дмитрий не Сидоров.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Условие 1:</strong> Александр не Иванов → ставим минус в
+                ячейке (Александр, Иванов).
+              </li>
+              <li>
+                <strong>Условие 2:</strong> Буква "О" есть в фамилиях Петров и
+                Сидоров. Значит, Дмитрий и Максим — Петров и Сидоров (в каком-то
+                порядке). Тогда Александр — Иванов.
+              </li>
+              <li>
+                <strong>Условие 3:</strong> Дмитрий не Сидоров → Дмитрий —
+                Петров, а Максим — Сидоров.
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Александр — Иванов, Дмитрий — Петров, Максим — Сидоров
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 2 -->
+        <div class="example-card">
+          <h4>📋 Пример 2: Задача с первыми буквами</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Три подруги:
+            <span class="highlight">Мария</span>,
+            <span class="highlight">Ольга</span> и
+            <span class="highlight">Светлана</span>. Их фамилии:
+            <span class="highlight">Миронова</span>,
+            <span class="highlight">Петрова</span>,
+            <span class="highlight">Сергеева</span>. Известно, что:<br />
+            1) У Марии первая буква имени совпадает с первой буквой фамилии.<br />
+            2) Ольга не Сергеева.<br />
+            3) Светлана не Петрова.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Условие 1:</strong> Имя Мария начинается на "М".
+                Единственная фамилия на "М" — Миронова. Значит,
+                <strong>Мария — Миронова</strong>.
+              </li>
+              <li>
+                <strong>Исключение:</strong> Миронова уже занята Марией, поэтому
+                Ольга и Светлана могут быть только Петровой или Сергеевой.
+              </li>
+              <li>
+                <strong>Условие 2:</strong> Ольга не Сергеева → Ольга — Петрова.
+              </li>
+              <li>
+                <strong>Условие 3:</strong> Светлана не Петрова (подтверждение)
+                → Светлана — Сергеева.
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Мария — Миронова, Ольга — Петрова, Светлана — Сергеева
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 3 -->
+        <div class="example-card">
+          <h4>📋 Пример 3: Комбинированная задача</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Трое друзей:
+            <span class="highlight">Андрей</span>,
+            <span class="highlight">Борис</span> и
+            <span class="highlight">Виктор</span>. Их фамилии:
+            <span class="highlight">Иванов</span>,
+            <span class="highlight">Петров</span>,
+            <span class="highlight">Сидоров</span>. Известно, что:<br />
+            1) Андрей не Иванов и не Петров.<br />
+            2) Борис не Петров.<br />
+            3) Виктор не Сидоров.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>
+                <strong>Условие 1:</strong> Андрей не Иванов и не Петров →
+                Андрей может быть только Сидоровым.
+                <strong>Андрей — Сидоров</strong>.
+              </li>
+              <li>
+                <strong>Исключение:</strong> Сидоров уже занят, остаются Иванов
+                и Петров.
+              </li>
+              <li>
+                <strong>Условие 2:</strong> Борис не Петров → Борис — Иванов.
+              </li>
+              <li>
+                <strong>Остаток:</strong> Виктор может быть только Петровым
+                (Сидоров занят Андреем, Иванов — Борисом).
+              </li>
+              <li>
+                <strong>Проверка условия 3:</strong> Виктор не Сидоров — верно,
+                он Петров.
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Андрей — Сидоров, Борис — Иванов, Виктор — Петров
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Советы -->
+      <div class="category-section" data-category="tips" id="tips">
+        <div class="category-header tips">
+          <div class="category-icon tips">💡</div>
+          <div>
+            <h2 class="category-title">Советы и частые ошибки</h2>
+          </div>
+        </div>
+        <div class="category-description">
+          Важные рекомендации, которые помогут избежать типичных ошибок.
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Частые ошибки</h4>
+          <ul>
+            <li>
+              <strong>Невнимательное чтение условия:</strong> пропустив слово
+              "не", можно сделать противоположный вывод
+            </li>
+            <li>
+              <strong>Забывание исключать:</strong> после нахождения
+              соответствия нужно обязательно исключить этот вариант для других
+              элементов
+            </li>
+            <li>
+              <strong>Преждевременные выводы:</strong> не делайте выводов, пока
+              не проанализированы все условия
+            </li>
+            <li>
+              <strong>Путаница с буквами:</strong> условие "в фамилии есть
+              буква" не означает, что фамилия начинается с этой буквы
+            </li>
+            <li>
+              <strong>Неполное заполнение таблицы:</strong> каждая строка и
+              столбец должны содержать ровно один плюс
+            </li>
+          </ul>
+        </div>
+
+        <div class="success-box">
+          <h4>✅ Рекомендации по решению</h4>
+          <ul>
+            <li>Читайте задачу внимательно, выделяйте ключевые слова</li>
+            <li>Выписывайте все условия отдельно для удобства</li>
+            <li>Начинайте с самых простых и однозначных условий</li>
+            <li>После каждого вывода обновляйте таблицу</li>
+            <li>Проверяйте, что найденное решение не противоречит условиям</li>
+            <li>
+              Если зашли в тупик — начните сначала, возможно, упустили условие
+            </li>
+          </ul>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🔄 Порядок анализа условий
+        </h3>
+        <div class="example-card">
+          <h4>📊 Оптимальная стратегия</h4>
+          <ol style="margin-left: 20px; line-height: 1.8">
+            <li>
+              <strong>Сначала — прямые утверждения:</strong> "А — Б" сразу даёт
+              ответ
+            </li>
+            <li>
+              <strong>Затем — условия с единственным вариантом:</strong>
+              если после исключения остаётся один вариант — это ответ
+            </li>
+            <li>
+              <strong>Потом — условия с буквами:</strong> они сужают круг
+              возможных фамилий
+            </li>
+            <li>
+              <strong>В конце — проверка:</strong> убедитесь, что все условия
+              выполнены
+            </li>
+          </ol>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🎯 Быстрая проверка ответа
+        </h3>
+        <div class="example-card">
+          <h4>✓ Чек-лист для проверки</h4>
+          <ul style="margin-left: 20px; line-height: 1.8">
+            <li>Каждому имени соответствует ровно одна фамилия</li>
+            <li>Все условия задачи выполнены</li>
+            <li>Нет противоречий между условиями и ответом</li>
+            <li>Все фамилии распределены (ни одна не пропущена)</li>
+          </ul>
+        </div>
+
+        <div class="info-box">
+          <h4>💡 Совет для интерактивного задания</h4>
+          <p>
+            В интерактивном задании на сайте вы можете кликать на ячейки таблицы
+            для постановки плюсов и минусов. Используйте кнопку "Проверить" для
+            проверки своего решения. Если ошиблись — можно использовать кнопку
+            "Очистить" и начать заново.
+          </p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>Нажмите на раздел в фильтрах для быстрой навигации</p>
+      </footer>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <div class="quick-nav">
+      <button
+        class="quick-nav-btn practice"
+        onclick="location.href = 'vpr7-5.html'"
+        title="К заданию"
+      >
+        🎮
+      </button>
+      <button class="quick-nav-btn top" onclick="scrollToTop()" title="Наверх">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Фильтрация секций
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Обновляем активную кнопку
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.dataset.filter;
+          const sections = document.querySelectorAll(".category-section");
+
+          sections.forEach((section) => {
+            if (filter === "all" || section.dataset.category === filter) {
+              section.style.display = "block";
+              // Анимация появления
+              section.style.animation = "fadeIn 0.3s ease-out";
+            } else {
+              section.style.display = "none";
+            }
+          });
+        });
+      });
+
+      // Прокрутка наверх
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>
