@@ -182,10 +182,21 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 3rem;
         margin-bottom: 10px;
         background: white;
         border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .device-image img {
+        max-width: 90%;
+        max-height: 70px;
+        object-fit: contain;
+      }
+
+      .device-image svg {
+        width: 60px;
+        height: 60px;
       }
 
       .device-name {
@@ -253,15 +264,26 @@
       }
 
       .device-detail-image {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
         margin: 0 auto 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 5rem;
         background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
         border-radius: 15px;
+        overflow: hidden;
+      }
+
+      .device-detail-image img {
+        max-width: 90%;
+        max-height: 130px;
+        object-fit: contain;
+      }
+
+      .device-detail-image svg {
+        width: 100px;
+        height: 100px;
       }
 
       .device-detail-name {
@@ -585,78 +607,78 @@
     </div>
 
     <script>
-      // Данные об устройствах с картинками и описаниями
+      // Данные об устройствах с SVG-иконками и описаниями
       const devicesData = {
         input: [
           {
             name: "Клавиатура",
-            icon: "⌨️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="16" width="56" height="32" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="20" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="16" y="20" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="24" y="20" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="32" y="20" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="40" y="20" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="48" y="20" width="8" height="4" rx="1" fill="#e2e8f0"/><rect x="8" y="26" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="16" y="26" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="24" y="26" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="32" y="26" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="40" y="26" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="48" y="26" width="8" height="4" rx="1" fill="#e2e8f0"/><rect x="8" y="32" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="16" y="32" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="24" y="32" width="16" height="4" rx="1" fill="#e2e8f0"/><rect x="42" y="32" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="50" y="32" width="6" height="4" rx="1" fill="#e2e8f0"/><rect x="12" y="38" width="40" height="4" rx="1" fill="#e2e8f0"/></svg>`,
             description:
               "Основное устройство ввода текстовой информации. Содержит клавиши для ввода букв, цифр, знаков препинания и специальных команд.",
           },
           {
             name: "Мышь",
-            icon: "🖱️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="32" cy="32" rx="16" ry="24" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="30" y="12" width="4" height="12" rx="2" fill="#e2e8f0"/><line x1="32" y1="24" x2="32" y2="40" stroke="#2d3748" stroke-width="2"/><line x1="16" y1="32" x2="48" y2="32" stroke="#2d3748" stroke-width="2"/></svg>`,
             description:
               "Устройство для управления курсором на экране. Позволяет выбирать объекты, открывать файлы и взаимодействовать с интерфейсом.",
           },
           {
             name: "Тачпад",
-            icon: "👆",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="48" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="12" y="12" width="40" height="40" rx="2" fill="#718096"/><line x1="32" y1="12" x2="32" y2="52" stroke="#4a5568" stroke-width="1"/><line x1="12" y1="32" x2="52" y2="32" stroke="#4a5568" stroke-width="1"/></svg>`,
             description:
               "Сенсорная панель на ноутбуках. Заменяет мышь — управление происходит движениями пальцев по поверхности.",
           },
           {
             name: "Трекбол",
-            icon: "🎱",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="20" width="48" height="32" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="12" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="4" fill="#4a5568"/></svg>`,
             description:
               "Устройство, похожее на перевёрнутую мышь. Управление курсором происходит вращением шара пальцами.",
           },
           {
             name: "Джойстик",
-            icon: "🕹️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="40" width="40" height="16" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="28" y="16" width="8" height="28" rx="2" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="12" r="6" fill="#e53e3e" stroke="#c53030" stroke-width="2"/><rect x="16" y="44" width="6" height="6" rx="1" fill="#e2e8f0"/><rect x="42" y="44" width="6" height="6" rx="1" fill="#e2e8f0"/></svg>`,
             description:
               "Устройство ввода для игр. Состоит из ручки, которую можно наклонять в разные стороны для управления.",
           },
           {
             name: "Веб-камера",
-            icon: "📷",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="32" cy="28" rx="20" ry="16" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="28" r="10" fill="#2d3748" stroke="#1a202c" stroke-width="2"/><circle cx="32" cy="28" r="4" fill="#3182ce"/><circle cx="34" cy="26" r="2" fill="#63b3ed"/><rect x="24" y="44" width="16" height="4" fill="#4a5568"/><rect x="20" y="48" width="24" height="8" rx="2" fill="#4a5568" stroke="#2d3748" stroke-width="2"/></svg>`,
             description:
               "Цифровая камера для захвата видео и фото. Передаёт изображение в компьютер в реальном времени.",
           },
           {
             name: "Микрофон",
-            icon: "🎤",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="8" width="24" height="36" rx="12" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="22" y="12" width="20" height="28" rx="10" fill="#718096"/><path d="M16 32v8a16 16 0 0032 0v-8" stroke="#4a5568" stroke-width="3"/><line x1="32" y1="52" x2="32" y2="60" stroke="#4a5568" stroke-width="3"/><line x1="24" y1="60" x2="40" y2="60" stroke="#4a5568" stroke-width="3"/></svg>`,
             description:
               "Устройство для ввода звука. Преобразует звуковые волны в электрический сигнал для компьютера.",
           },
           {
             name: "Сканер документов",
-            icon: "📠",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="20" width="56" height="36" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="24" width="48" height="28" rx="2" fill="#e2e8f0"/><rect x="12" y="28" width="40" height="20" fill="#fff"/><rect x="4" y="8" width="56" height="12" rx="2" fill="#718096" stroke="#2d3748" stroke-width="2"/><rect x="8" y="12" width="48" height="4" fill="#4299e1"/></svg>`,
             description:
               "Устройство для оцифровки бумажных документов. Создаёт цифровую копию изображения на бумаге.",
           },
           {
-            name: "Сканер штрих-кодов / QR-кодов",
-            icon: "📱",
+            name: "Сканер штрих-кодов",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="16" width="48" height="32" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="16" y="24" width="2" height="16" fill="#e2e8f0"/><rect x="20" y="24" width="4" height="16" fill="#e2e8f0"/><rect x="26" y="24" width="2" height="16" fill="#e2e8f0"/><rect x="30" y="24" width="6" height="16" fill="#e2e8f0"/><rect x="38" y="24" width="2" height="16" fill="#e2e8f0"/><rect x="42" y="24" width="4" height="16" fill="#e2e8f0"/><rect x="48" y="24" width="2" height="16" fill="#e2e8f0"/><rect x="24" y="48" width="16" height="8" fill="#e53e3e"/></svg>`,
             description:
               "Устройство для считывания штрих-кодов и QR-кодов. Используется в магазинах и на складах.",
           },
           {
             name: "Биометрические сканеры",
-            icon: "🔐",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="8" width="40" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="28" r="12" fill="#718096" stroke="#2d3748" stroke-width="2"/><path d="M26 28c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#48bb78" stroke-width="2"/><path d="M28 32c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#48bb78" stroke-width="2"/><circle cx="32" cy="28" r="2" fill="#48bb78"/><rect x="20" y="44" width="24" height="4" rx="2" fill="#718096"/></svg>`,
             description:
               "Сканеры отпечатка пальца или распознавания лица для идентификации пользователя. Используются для защиты данных.",
           },
           {
             name: "MIDI-клавиатура",
-            icon: "🎹",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="20" width="56" height="28" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="24" width="6" height="20" fill="#e2e8f0" stroke="#2d3748"/><rect x="16" y="24" width="6" height="20" fill="#e2e8f0" stroke="#2d3748"/><rect x="24" y="24" width="6" height="20" fill="#e2e8f0" stroke="#2d3748"/><rect x="32" y="24" width="6" height="20" fill="#e2e8f0" stroke="#2d3748"/><rect x="40" y="24" width="6" height="20" fill="#e2e8f0" stroke="#2d3748"/><rect x="48" y="24" width="6" height="20" fill="#e2e8f0" stroke="#2d3748"/><rect x="12" y="24" width="4" height="12" fill="#2d3748"/><rect x="20" y="24" width="4" height="12" fill="#2d3748"/><rect x="36" y="24" width="4" height="12" fill="#2d3748"/><rect x="44" y="24" width="4" height="12" fill="#2d3748"/></svg>`,
             description:
               "Музыкальная клавиатура для ввода музыкальной информации. Позволяет записывать и воспроизводить ноты.",
           },
           {
             name: "Графический планшет",
-            icon: "✏️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="24" width="40" height="32" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="28" width="32" height="24" rx="2" fill="#718096"/><rect x="12" y="32" width="24" height="16" fill="#a0aec0"/><circle cx="24" cy="40" r="3" fill="#4a5568"/><rect x="48" y="12" width="8" height="32" rx="3" fill="#e2e8f0" stroke="#2d3748" stroke-width="2"/><rect x="50" y="40" width="4" height="8" rx="1" fill="#4a5568"/></svg>`,
             description:
               "Устройство для рисования цифровых изображений. Состоит из сенсорной панели и специального пера (стилуса).",
           },
@@ -664,67 +686,67 @@
         output: [
           {
             name: "Bluetooth-динамик",
-            icon: "🔊",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="16" width="40" height="32" rx="8" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="24" cy="32" r="8" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="40" cy="32" r="8" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="24" cy="32" r="3" fill="#4a5568"/><circle cx="40" cy="32" r="3" fill="#4a5568"/><path d="M48 8l-8 8 8 8" stroke="#3182ce" stroke-width="2"/><circle cx="52" cy="12" r="2" fill="#3182ce"/></svg>`,
             description:
               "Беспроводной динамик, подключаемый по технологии Bluetooth. Позволяет выводить звук без проводов.",
           },
           {
             name: "Динамики",
-            icon: "🔈",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="8" width="32" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="20" r="6" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="20" r="2" fill="#4a5568"/><circle cx="32" cy="40" r="12" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="40" r="4" fill="#4a5568"/></svg>`,
             description:
               "Устройство вывода звука, встроенное в компьютер или подключаемое отдельно. Воспроизводит аудиосигнал.",
           },
           {
             name: "Колонки",
-            icon: "🔉",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="20" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="18" cy="24" r="6" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="18" cy="40" r="8" fill="#718096" stroke="#2d3748" stroke-width="2"/><rect x="36" y="8" width="20" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="46" cy="24" r="6" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="46" cy="40" r="8" fill="#718096" stroke="#2d3748" stroke-width="2"/></svg>`,
             description:
               "Внешние акустические системы для качественного воспроизведения звука. Могут состоять из нескольких динамиков.",
           },
           {
             name: "Монитор",
-            icon: "🖥️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="56" height="36" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="12" width="48" height="28" fill="#2d3748"/><rect x="10" y="14" width="44" height="24" fill="#4299e1"/><rect x="24" y="44" width="16" height="8" fill="#4a5568"/><rect x="16" y="52" width="32" height="4" rx="2" fill="#4a5568"/></svg>`,
             description:
               "Основное устройство вывода визуальной информации. Отображает изображение на экране.",
           },
           {
             name: "Наушники",
-            icon: "🎧",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 32a20 20 0 0140 0" stroke="#4a5568" stroke-width="4"/><rect x="8" y="28" width="12" height="20" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="44" y="28" width="12" height="20" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="10" y="32" width="8" height="12" rx="2" fill="#718096"/><rect x="46" y="32" width="8" height="12" rx="2" fill="#718096"/></svg>`,
             description:
               "Устройство для индивидуального прослушивания звука. Позволяет не мешать окружающим.",
           },
           {
             name: "Принтер",
-            icon: "🖨️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="20" width="48" height="28" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="16" y="8" width="32" height="16" fill="#e2e8f0" stroke="#2d3748" stroke-width="2"/><rect x="16" y="40" width="32" height="16" fill="#e2e8f0" stroke="#2d3748" stroke-width="2"/><rect x="12" y="28" width="8" height="4" rx="1" fill="#48bb78"/><rect x="22" y="28" width="8" height="4" rx="1" fill="#e53e3e"/></svg>`,
             description:
               "Устройство для вывода информации на бумагу. Печатает текст и изображения на бумажных носителях.",
           },
           {
             name: "3D-принтер",
-            icon: "🧊",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="48" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="12" y="12" width="40" height="40" fill="#718096"/><rect x="24" y="16" width="16" height="4" fill="#e2e8f0"/><rect x="28" y="20" width="8" height="4" fill="#e2e8f0"/><rect x="26" y="40" width="12" height="8" fill="#48bb78"/><line x1="32" y1="24" x2="32" y2="40" stroke="#e2e8f0" stroke-width="2"/></svg>`,
             description:
               "Устройство для создания трёхмерных объектов. Печатает послойно из пластика или других материалов.",
           },
           {
             name: "Плоттер",
-            icon: "📊",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="16" width="56" height="40" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="20" width="48" height="32" fill="#e2e8f0"/><rect x="12" y="24" width="40" height="24" fill="#fff"/><rect x="28" y="8" width="8" height="12" fill="#718096"/><circle cx="32" cy="32" r="4" fill="#4a5568"/></svg>`,
             description:
               "Устройство для вывода графической информации на большие форматы бумаги. Используется для чертежей и плакатов.",
           },
           {
             name: "Проектор",
-            icon: "📽️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="20" width="48" height="28" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="24" cy="34" r="10" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="24" cy="34" r="6" fill="#4299e1"/><circle cx="44" cy="30" r="3" fill="#48bb78"/><circle cx="44" cy="38" r="3" fill="#e53e3e"/><rect x="8" y="44" width="8" height="4" fill="#718096"/></svg>`,
             description:
               "Устройство для проецирования изображения на большой экран или стену. Используется для презентаций.",
           },
           {
             name: "Саундбар",
-            icon: "🎼",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="20" width="56" height="24" rx="8" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="20" cy="32" r="6" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="6" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="44" cy="32" r="6" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="20" cy="32" r="2" fill="#4a5568"/><circle cx="32" cy="32" r="2" fill="#4a5568"/><circle cx="44" cy="32" r="2" fill="#4a5568"/></svg>`,
             description:
               "Длинная акустическая система для улучшения качества звука. Часто используется с телевизорами.",
           },
           {
             name: "Телевизор",
-            icon: "📺",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="12" width="56" height="36" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="16" width="48" height="28" fill="#2d3748"/><rect x="10" y="18" width="44" height="24" fill="#4299e1"/><rect x="24" y="48" width="16" height="4" fill="#4a5568"/><rect x="20" y="52" width="24" height="4" rx="2" fill="#4a5568"/><circle cx="52" cy="44" r="2" fill="#48bb78"/></svg>`,
             description:
               "Устройство для отображения видео и звука. Может использоваться как монитор для компьютера.",
           },
@@ -732,49 +754,49 @@
         storage: [
           {
             name: "HDD / Жёсткий диск",
-            icon: "💿",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="12" width="48" height="40" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="16" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="4" fill="#4a5568"/><circle cx="32" cy="32" r="12" stroke="#4a5568" stroke-width="1"/><circle cx="32" cy="32" r="8" stroke="#4a5568" stroke-width="1"/><rect x="40" y="44" width="12" height="4" rx="1" fill="#48bb78"/></svg>`,
             description:
               "Магнитный накопитель для хранения данных. Состоит из вращающихся дисков и считывающих головок.",
           },
           {
             name: "SSD (твердотельный накопитель)",
-            icon: "💾",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="16" width="48" height="32" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="12" y="20" width="40" height="24" fill="#718096"/><rect x="16" y="24" width="8" height="8" fill="#48bb78"/><rect x="28" y="24" width="8" height="8" fill="#48bb78"/><rect x="40" y="24" width="8" height="8" fill="#48bb78"/><rect x="16" y="36" width="8" height="4" fill="#e2e8f0"/><rect x="28" y="36" width="8" height="4" fill="#e2e8f0"/><rect x="40" y="36" width="8" height="4" fill="#e2e8f0"/></svg>`,
             description:
               "Современный накопитель без движущихся частей. Работает быстрее и тише HDD, но дороже.",
           },
           {
-            name: "USB-флеш-накопитель (Флешка)",
-            icon: "🔌",
+            name: "USB-флеш-накопитель",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="8" width="24" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="24" y="12" width="16" height="8" fill="#718096"/><rect x="26" y="14" width="4" height="4" fill="#48bb78"/><rect x="34" y="14" width="4" height="4" fill="#e53e3e"/><rect x="24" y="24" width="16" height="28" rx="2" fill="#718096"/></svg>`,
             description:
               "Портативное устройство хранения данных. Подключается через USB-порт, удобно для переноса файлов.",
           },
           {
             name: "Дискета 3.5",
-            icon: "📀",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="48" height="48" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="12" y="12" width="40" height="40" fill="#718096"/><rect x="32" y="12" width="20" height="24" fill="#e2e8f0"/><rect x="36" y="16" width="12" height="16" fill="#4a5568"/><rect x="40" y="20" width="4" height="8" fill="#718096"/><rect x="16" y="40" width="24" height="12" rx="2" fill="#e2e8f0"/><circle cx="20" cy="20" r="4" fill="#4a5568"/></svg>`,
             description:
               "Устаревший магнитный носитель информации. Имел маленький объём (1.44 МБ), сейчас практически не используется.",
           },
           {
             name: "CD-R (компакт-диск)",
-            icon: "💿",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="24" fill="#718096" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="20" fill="#a0aec0"/><circle cx="32" cy="32" r="8" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="4" fill="#718096"/><circle cx="32" cy="32" r="16" stroke="#718096" stroke-width="1"/><circle cx="32" cy="32" r="12" stroke="#718096" stroke-width="1"/></svg>`,
             description:
               "Оптический диск для однократной записи. Объём около 700 МБ. Использовался для музыки и программ.",
           },
           {
             name: "DVD (цифровой диск)",
-            icon: "📀",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="24" fill="#9f7aea" stroke="#6b46c1" stroke-width="2"/><circle cx="32" cy="32" r="20" fill="#b794f4"/><circle cx="32" cy="32" r="8" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="4" fill="#9f7aea"/><circle cx="32" cy="32" r="16" stroke="#9f7aea" stroke-width="1"/><circle cx="32" cy="32" r="12" stroke="#9f7aea" stroke-width="1"/></svg>`,
             description:
               "Оптический диск с большим объёмом (4.7 ГБ). Использовался для фильмов и больших программ.",
           },
           {
-            name: "Blu-Ray Disc (оптический диск)",
-            icon: "🔵",
+            name: "Blu-Ray Disc",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="24" fill="#4299e1" stroke="#2b6cb0" stroke-width="2"/><circle cx="32" cy="32" r="20" fill="#63b3ed"/><circle cx="32" cy="32" r="8" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="32" cy="32" r="4" fill="#4299e1"/><circle cx="32" cy="32" r="16" stroke="#4299e1" stroke-width="1"/><circle cx="32" cy="32" r="12" stroke="#4299e1" stroke-width="1"/></svg>`,
             description:
               "Современный оптический диск с большим объёмом (до 50 ГБ). Используется для HD-видео.",
           },
           {
-            name: "Карты памяти (SD / microSD)",
-            icon: "🎴",
+            name: "Карты памяти (SD)",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 8h24l12 12v36a4 4 0 01-4 4H16a4 4 0 01-4-4V12a4 4 0 014-4z" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><path d="M40 8v12h12" fill="#718096"/><rect x="20" y="24" width="4" height="12" fill="#e2e8f0"/><rect x="26" y="24" width="4" height="12" fill="#e2e8f0"/><rect x="32" y="24" width="4" height="12" fill="#e2e8f0"/><rect x="38" y="24" width="4" height="12" fill="#e2e8f0"/><rect x="20" y="44" width="24" height="8" rx="2" fill="#48bb78"/></svg>`,
             description:
               "Портативные носители информации для фотоаппаратов, телефонов и других устройств. Компактные и надёжные.",
           },
@@ -782,25 +804,25 @@
         processing: [
           {
             name: "Процессор (CPU)",
-            icon: "🧠",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="16" y="16" width="32" height="32" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="20" y="20" width="24" height="24" fill="#718096"/><rect x="24" y="24" width="16" height="16" fill="#4a5568"/><rect x="28" y="28" width="8" height="8" fill="#48bb78"/><line x1="16" y1="24" x2="8" y2="24" stroke="#718096" stroke-width="2"/><line x1="16" y1="32" x2="8" y2="32" stroke="#718096" stroke-width="2"/><line x1="16" y1="40" x2="8" y2="40" stroke="#718096" stroke-width="2"/><line x1="48" y1="24" x2="56" y2="24" stroke="#718096" stroke-width="2"/><line x1="48" y1="32" x2="56" y2="32" stroke="#718096" stroke-width="2"/><line x1="48" y1="40" x2="56" y2="40" stroke="#718096" stroke-width="2"/><line x1="24" y1="16" x2="24" y2="8" stroke="#718096" stroke-width="2"/><line x1="32" y1="16" x2="32" y2="8" stroke="#718096" stroke-width="2"/><line x1="40" y1="16" x2="40" y2="8" stroke="#718096" stroke-width="2"/><line x1="24" y1="48" x2="24" y2="56" stroke="#718096" stroke-width="2"/><line x1="32" y1="48" x2="32" y2="56" stroke="#718096" stroke-width="2"/><line x1="40" y1="48" x2="40" y2="56" stroke="#718096" stroke-width="2"/></svg>`,
             description:
               "Центральное устройство обработки данных. Выполняет все вычисления и управляет работой компьютера.",
           },
           {
             name: "Видеокарта (GPU)",
-            icon: "🎮",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="16" width="56" height="32" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="20" width="20" height="24" rx="2" fill="#718096"/><circle cx="18" cy="32" r="6" fill="#48bb78"/><rect x="32" y="20" width="8" height="8" fill="#718096"/><rect x="42" y="20" width="8" height="8" fill="#718096"/><rect x="32" y="30" width="8" height="8" fill="#718096"/><rect x="42" y="30" width="8" height="8" fill="#718096"/><rect x="32" y="40" width="18" height="4" fill="#e2e8f0"/><rect x="8" y="48" width="4" height="8" fill="#718096"/><rect x="16" y="48" width="4" height="8" fill="#718096"/><rect x="24" y="48" width="4" height="8" fill="#718096"/></svg>`,
             description:
               "Устройство для обработки графики. Ускоряет вывод изображений, особенно важно для игр и видеомонтажа.",
           },
           {
             name: "NPU / TPU — нейронные процессоры",
-            icon: "🤖",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="12" y="12" width="40" height="40" rx="4" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><circle cx="24" cy="24" r="4" fill="#9f7aea"/><circle cx="40" cy="24" r="4" fill="#9f7aea"/><circle cx="24" cy="40" r="4" fill="#9f7aea"/><circle cx="40" cy="40" r="4" fill="#9f7aea"/><circle cx="32" cy="32" r="6" fill="#48bb78"/><line x1="24" y1="24" x2="32" y2="32" stroke="#718096" stroke-width="2"/><line x1="40" y1="24" x2="32" y2="32" stroke="#718096" stroke-width="2"/><line x1="24" y1="40" x2="32" y2="32" stroke="#718096" stroke-width="2"/><line x1="40" y1="40" x2="32" y2="32" stroke="#718096" stroke-width="2"/></svg>`,
             description:
               "Специализированные процессоры для работы с искусственным интеллектом и нейросетями. Ускоряют машинное обучение.",
           },
           {
             name: "Суперкомпьютер",
-            icon: "🖥️",
+            svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="8" width="20" height="48" rx="2" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="8" y="12" width="12" height="8" fill="#718096"/><rect x="8" y="24" width="12" height="8" fill="#718096"/><rect x="8" y="36" width="12" height="8" fill="#718096"/><rect x="8" y="48" width="12" height="4" fill="#48bb78"/><rect x="22" y="8" width="20" height="48" rx="2" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="26" y="12" width="12" height="8" fill="#718096"/><rect x="26" y="24" width="12" height="8" fill="#718096"/><rect x="26" y="36" width="12" height="8" fill="#718096"/><rect x="26" y="48" width="12" height="4" fill="#48bb78"/><rect x="40" y="8" width="20" height="48" rx="2" fill="#4a5568" stroke="#2d3748" stroke-width="2"/><rect x="44" y="12" width="12" height="8" fill="#718096"/><rect x="44" y="24" width="12" height="8" fill="#718096"/><rect x="44" y="36" width="12" height="8" fill="#718096"/><rect x="44" y="48" width="12" height="4" fill="#48bb78"/></svg>`,
             description:
               "Комплексная система из множества процессоров для сложных вычислений. Используется в науке и исследованиях.",
           },
@@ -825,7 +847,7 @@
             card.className = "device-card";
             card.dataset.category = category;
             card.innerHTML = `
-              <div class="device-image">${device.icon}</div>
+              <div class="device-image">${device.svg}</div>
               <div class="device-name">${device.name}</div>
             `;
             card.addEventListener("click", () => showDetail(device, category));
@@ -836,7 +858,7 @@
 
       // Показать детали устройства
       function showDetail(device, category) {
-        document.getElementById("detailImage").textContent = device.icon;
+        document.getElementById("detailImage").innerHTML = device.svg;
         document.getElementById("detailName").textContent = device.name;
         document.getElementById("detailDescription").textContent =
           device.description;
