@@ -689,122 +689,106 @@
         return null;
       }
 
-      // Шаблон 1: Классический (А не Б, В и Г имеют общую букву, Д не Е)
+      // Шаблон 1: Классический (общая буква в фамилиях двух человек + отрицания)
       function generateTemplate1(names, surnames, personType) {
         const isFemale = personType === "девочки";
 
-        // Случайно назначаем фамилии
-        const shuffledSurnames = [...surnames];
-        for (let i = shuffledSurnames.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffledSurnames[i], shuffledSurnames[j]] = [
-            shuffledSurnames[j],
-            shuffledSurnames[i],
-          ];
-        }
+        // Перебираем все возможные перестановки фамилий
+        const permutations = getPermutations([...surnames]);
 
-        const matches = names.map((name, i) => ({
-          name: name,
-          surname: shuffledSurnames[i],
-        }));
+        for (const perm of permutations) {
+          const matches = names.map((name, i) => ({
+            name: name,
+            surname: perm[i],
+          }));
 
-        const conditions = [];
-        const getSurname = (name) => shuffledSurnames[names.indexOf(name)];
+          const conditions = [];
 
-        // Условие 1: А не Б (отрицание)
-        const name1 = names[0];
-        const wrongSurname = shuffledSurnames[1]; // Фамилия второго человека
-        conditions.push({
-          type: "notSurname",
-          text: `<span class="highlight">${name1}</span> не <span class="highlight">${wrongSurname}</span>.`,
-          relevantInfo: {
-            name: name1,
-            notSurname: wrongSurname,
-            actualSurname: getSurname(name1),
-          },
-        });
+          const name1 = names[0];
+          const name2 = names[1];
+          const name3 = names[2];
+          const surname1 = perm[0];
+          const surname2 = perm[1];
+          const surname3 = perm[2];
 
-        // Условие 2: Находим общую букву в фамилиях двух человек
-        const name2 = names[1];
-        const name3 = names[2];
-        const surname1 = getSurname(name1);
-        const surname2 = getSurname(name2);
-        const surname3 = getSurname(name3);
-
-        // Ищем общую букву, которая есть ТОЛЬКО в surname2 и surname3, но НЕ в surname1
-        let commonLetter = null;
-        for (const letter of surname2.toLowerCase()) {
-          if (
-            surname3.toLowerCase().includes(letter) &&
-            !surname1.toLowerCase().includes(letter)
-          ) {
-            commonLetter = letter;
-            break;
+          // Ищем общую букву в фамилиях name2 и name3
+          let commonLetter = null;
+          for (const letter of surname2.toLowerCase()) {
+            if (surname3.toLowerCase().includes(letter)) {
+              commonLetter = letter;
+              break;
+            }
           }
-        }
 
-        if (commonLetter) {
+          if (!commonLetter) {
+            continue; // Пробуем следующую перестановку
+          }
+
+          // Условие 1: name2 и name3 имеют общую букву в фамилии
           const name2Gen = declineNameGenitive(name2, isFemale);
           const name3Gen = declineNameGenitive(name3, isFemale);
-          const name1Gen = declineNameGenitive(name1, isFemale);
           conditions.push({
             type: "sameLetterInSurname",
-            text: `У <span class="highlight">${name2Gen}</span> и у <span class="highlight">${name3Gen}</span> в фамилии есть буква «${commonLetter.toUpperCase()}» (а у <span class="highlight">${name1Gen}</span> такой буквы в фамилии нет).`,
+            text: `У <span class="highlight">${name2Gen}</span> и у <span class="highlight">${name3Gen}</span> в фамилии есть буква «${commonLetter.toUpperCase()}».`,
             relevantInfo: {
               person1: name2,
               person2: name3,
               letter: commonLetter,
               surnames: [surname2, surname3],
-              excludedPerson: name1,
             },
           });
-        } else {
-          // Если общая буква не найдена, возвращаем null - этот шаблон не подходит
-          return null;
+
+          // Условие 2: name2 не surname3 (для различения name2 и name3)
+          conditions.push({
+            type: "notSurname",
+            text: `<span class="highlight">${name2}</span> не <span class="highlight">${surname3}</span>.`,
+            relevantInfo: {
+              name: name2,
+              notSurname: surname3,
+              actualSurname: surname2,
+            },
+          });
+
+          // Условие 3: name1 не surname2
+          conditions.push({
+            type: "notSurname",
+            text: `<span class="highlight">${name1}</span> не <span class="highlight">${surname2}</span>.`,
+            relevantInfo: {
+              name: name1,
+              notSurname: surname2,
+              actualSurname: surname1,
+            },
+          });
+
+          // Проверяем, что условия дают однозначное решение
+          if (!validatePuzzle(names, perm, conditions)) {
+            continue; // Пробуем следующую перестановку
+          }
+
+          const taskText = generateTaskTextV2(
+            names,
+            perm,
+            conditions,
+            personType,
+          );
+          const reasoning = generateReasoningV2(
+            names,
+            perm,
+            conditions,
+            personType,
+          );
+
+          return {
+            text: taskText,
+            names: names,
+            surnames: perm,
+            correctMatches: matches,
+            reasoning: reasoning,
+            conditions: conditions,
+          };
         }
 
-        // Условие 3: Дополнительное отрицание или подсказка
-        const remainingName = names.find(
-          (n) =>
-            n !== name1 || shuffledSurnames[names.indexOf(n)] !== wrongSurname,
-        );
-        const name1Surname = getSurname(name1);
-        conditions.push({
-          type: "notSurname",
-          text: `<span class="highlight">${name2}</span> не <span class="highlight">${name1Surname}</span>.`,
-          relevantInfo: {
-            name: name2,
-            notSurname: name1Surname,
-            actualSurname: surname2,
-          },
-        });
-
-        // Проверяем, что условия дают однозначное решение
-        if (!validatePuzzle(names, shuffledSurnames, conditions)) {
-          return null;
-        }
-
-        const taskText = generateTaskTextV2(
-          names,
-          shuffledSurnames,
-          conditions,
-          personType,
-        );
-        const reasoning = generateReasoningV2(
-          names,
-          shuffledSurnames,
-          conditions,
-          personType,
-        );
-
-        return {
-          text: taskText,
-          names: names,
-          surnames: shuffledSurnames,
-          correctMatches: matches,
-          reasoning: reasoning,
-          conditions: conditions,
-        };
+        return null;
       }
 
       // Шаблон 2: С буквами в фамилии

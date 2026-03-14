@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тест генератора 5 задания</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #1a1a2e;
+        color: white;
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      h1,
+      h2 {
+        color: #38ef7d;
+      }
+      .test-result {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        border-left: 4px solid #667eea;
+      }
+      .test-result.pass {
+        border-color: #38ef7d;
+      }
+      .test-result.fail {
+        border-color: #ff6b6b;
+        background: rgba(255, 107, 107, 0.2);
+      }
+      .test-result.warning {
+        border-color: #ffc107;
+        background: rgba(255, 193, 7, 0.2);
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+      .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+      }
+      .stat-card .number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #38ef7d;
+      }
+      .stat-card .label {
+        font-size: 0.9rem;
+        color: #aaa;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      th,
+      td {
+        border: 1px solid #444;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background: rgba(102, 126, 234, 0.3);
+      }
+      .task-details {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        border-radius: 5px;
+        margin: 5px 0;
+        font-size: 0.9rem;
+      }
+      .condition {
+        margin: 5px 0;
+        padding: 5px 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
+      }
+      button {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 10px 5px;
+      }
+      button:hover {
+        transform: translateY(-2px);
+      }
+      .error-log {
+        background: rgba(255, 107, 107, 0.2);
+        padding: 10px;
+        border-radius: 5px;
+        margin: 5px 0;
+        font-family: monospace;
+        font-size: 0.85rem;
+      }
+      .success-log {
+        background: rgba(56, 239, 125, 0.2);
+        padding: 10px;
+        border-radius: 5px;
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🧪 Тест генератора 5 задания ВПР</h1>
+
+    <div class="stats" id="stats">
+      <div class="stat-card">
+        <div class="number" id="totalTests">0</div>
+        <div class="label">Всего тестов</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="passedTests">0</div>
+        <div class="label">Пройдено</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="failedTests">0</div>
+        <div class="label">Ошибок</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="warningTests">0</div>
+        <div class="label">Предупреждений</div>
+      </div>
+    </div>
+
+    <button onclick="runTests(100)">▶ Запустить 100 тестов</button>
+    <button onclick="runTests(500)">▶ Запустить 500 тестов</button>
+    <button onclick="runTests(1000)">▶ Запустить 1000 тестов</button>
+    <button onclick="clearResults()">🗑 Очистить</button>
+
+    <div id="results"></div>
+
+    <script>
+      // Копируем функции из vpr7-5.html для тестирования
+      let femaleNames = [];
+      let maleNames = [];
+      let femaleSurnames = [];
+      let maleSurnames = [];
+
+      // Склонение имён (родительный падеж - "у кого?")
+      function declineNameGenitive(name, isFemale) {
+        if (isFemale) {
+          if (name.endsWith("а")) {
+            const beforeLast = name.slice(-2, -1).toLowerCase();
+            if (/[гкхжшчщ]/.test(beforeLast)) {
+              return name.slice(0, -1) + "и";
+            }
+            return name.slice(0, -1) + "ы";
+          }
+          if (name.endsWith("я")) {
+            return name.slice(0, -1) + "и";
+          }
+          if (name.endsWith("ь")) {
+            return name.slice(0, -1) + "и";
+          }
+          return name;
+        } else {
+          if (name.endsWith("й")) {
+            return name.slice(0, -1) + "я";
+          }
+          if (/[бвгджзклмнпрстфхцчшщ]$/.test(name)) {
+            return name + "а";
+          }
+          if (name.endsWith("а")) {
+            return name.slice(0, -1) + "ы";
+          }
+          if (name.endsWith("я")) {
+            return name.slice(0, -1) + "и";
+          }
+          return name;
+        }
+      }
+
+      function declineSurnameGenitive(surname, isFemale) {
+        if (isFemale) {
+          if (surname.endsWith("а")) {
+            return surname.slice(0, -1) + "ой";
+          }
+          return surname;
+        } else {
+          if (/[бвгджзйклмнпрстфхцчшщ]$/.test(surname)) {
+            return surname + "а";
+          }
+          if (surname.endsWith("й")) {
+            return surname.slice(0, -1) + "я";
+          }
+          if (surname.endsWith("о")) {
+            return surname;
+          }
+          return surname;
+        }
+      }
+
+      function parseData(text) {
+        const lines = text.split("\n");
+        let currentSection = "";
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("# Имена (женские)")) {
+            currentSection = "femaleNames";
+          } else if (line.startsWith("# Имена (мужские)")) {
+            currentSection = "maleNames";
+          } else if (line.startsWith("# Фамилии (женские)")) {
+            currentSection = "femaleSurnames";
+          } else if (line.startsWith("# Фамилии (мужские)")) {
+            currentSection = "maleSurnames";
+          } else if (line.startsWith("# Фамилии (общие)")) {
+            currentSection = "";
+          } else if (line && !line.startsWith("#")) {
+            if (currentSection === "femaleNames") femaleNames.push(line);
+            else if (currentSection === "maleNames") maleNames.push(line);
+            else if (currentSection === "femaleSurnames")
+              femaleSurnames.push(line);
+            else if (currentSection === "maleSurnames") maleSurnames.push(line);
+          }
+        });
+      }
+
+      function getPermutations(arr) {
+        if (arr.length <= 2) {
+          return arr.length === 2 ? [arr, [arr[1], arr[0]]] : [arr];
+        }
+        return arr.reduce(
+          (acc, item, i) =>
+            acc.concat(
+              getPermutations([...arr.slice(0, i), ...arr.slice(i + 1)]).map(
+                (val) => [item, ...val],
+              ),
+            ),
+          [],
+        );
+      }
+
+      // Функция валидации
+      function validatePuzzle(names, surnames, conditions) {
+        const possible = {};
+        names.forEach((name) => {
+          possible[name] = new Set(surnames);
+        });
+
+        for (const condition of conditions) {
+          if (condition.type === "notSurname") {
+            const { name, notSurname } = condition.relevantInfo;
+            possible[name].delete(notSurname);
+          } else if (condition.type === "sameLetterInSurname") {
+            const {
+              person1,
+              person2,
+              surnames: condSurnames,
+            } = condition.relevantInfo;
+            const otherSurname = names.find(
+              (n) => n !== person1 && n !== person2,
+            );
+            if (otherSurname) {
+              possible[otherSurname].delete(condSurnames[0]);
+              possible[otherSurname].delete(condSurnames[1]);
+            }
+          } else if (condition.type === "sameFirstLetterOwn") {
+            const { name, surname } = condition.relevantInfo;
+            possible[name] = new Set([surname]);
+            names.forEach((n) => {
+              if (n !== name) possible[n].delete(surname);
+            });
+          } else if (condition.type === "sameFirstLetter") {
+            const { name2, surname2 } = condition.relevantInfo;
+            possible[name2] = new Set([surname2]);
+            names.forEach((n) => {
+              if (n !== name2) possible[n].delete(surname2);
+            });
+          }
+        }
+
+        let changed = true;
+        while (changed) {
+          changed = false;
+          for (const name of names) {
+            if (possible[name].size === 1) {
+              const surname = [...possible[name]][0];
+              for (const otherName of names) {
+                if (otherName !== name && possible[otherName].has(surname)) {
+                  possible[otherName].delete(surname);
+                  changed = true;
+                }
+              }
+            }
+          }
+        }
+
+        for (const name of names) {
+          if (possible[name].size !== 1) {
+            return false;
+          }
+        }
+
+        const assignedSurnames = new Set(names.map((n) => [...possible[n]][0]));
+        if (assignedSurnames.size !== names.length) {
+          return false;
+        }
+
+        return true;
+      }
+
+      // Шаблоны генерации
+      function generateTemplate1(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+
+        // Перебираем все возможные перестановки фамилий
+        const permutations = getPermutations([...surnames]);
+
+        for (const perm of permutations) {
+          const matches = names.map((name, i) => ({
+            name: name,
+            surname: perm[i],
+          }));
+
+          const conditions = [];
+          const getSurname = (name) => perm[names.indexOf(name)];
+
+          const name1 = names[0];
+          const name2 = names[1];
+          const name3 = names[2];
+          const surname1 = perm[0];
+          const surname2 = perm[1];
+          const surname3 = perm[2];
+
+          // Ищем общую букву в фамилиях name2 и name3
+          let commonLetter = null;
+          for (const letter of surname2.toLowerCase()) {
+            if (surname3.toLowerCase().includes(letter)) {
+              commonLetter = letter;
+              break;
+            }
+          }
+
+          if (!commonLetter) {
+            continue; // Пробуем следующую перестановку
+          }
+
+          // Условие 1: name2 и name3 имеют общую букву в фамилии
+          const name2Gen = declineNameGenitive(name2, isFemale);
+          const name3Gen = declineNameGenitive(name3, isFemale);
+          conditions.push({
+            type: "sameLetterInSurname",
+            text: `У ${name2Gen} и у ${name3Gen} в фамилии есть буква «${commonLetter.toUpperCase()}».`,
+            relevantInfo: {
+              person1: name2,
+              person2: name3,
+              letter: commonLetter,
+              surnames: [surname2, surname3],
+            },
+          });
+
+          // Условие 2: name2 не surname3 (для различения name2 и name3)
+          conditions.push({
+            type: "notSurname",
+            text: `${name2} не ${surname3}.`,
+            relevantInfo: {
+              name: name2,
+              notSurname: surname3,
+              actualSurname: surname2,
+            },
+          });
+
+          // Условие 3: name1 не surname2
+          conditions.push({
+            type: "notSurname",
+            text: `${name1} не ${surname2}.`,
+            relevantInfo: {
+              name: name1,
+              notSurname: surname2,
+              actualSurname: surname1,
+            },
+          });
+
+          // Проверяем, что условия дают однозначное решение
+          if (!validatePuzzle(names, perm, conditions)) {
+            continue; // Пробуем следующую перестановку
+          }
+
+          return {
+            names: names,
+            surnames: perm,
+            correctMatches: matches,
+            conditions: conditions,
+            template: "Template1",
+          };
+        }
+
+        return null;
+      }
+
+      function generateTemplate2(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+        const permutations = getPermutations([...surnames]);
+
+        for (const perm of permutations) {
+          const getSurname = (name) => perm[names.indexOf(name)];
+
+          for (let i = 0; i < names.length; i++) {
+            for (let j = i + 1; j < names.length; j++) {
+              const si = perm[i].toLowerCase();
+              const sj = perm[j].toLowerCase();
+
+              for (const letter of si) {
+                if (sj.includes(letter)) {
+                  const conditions = [];
+                  const nameiGen = declineNameGenitive(names[i], isFemale);
+                  const namejGen = declineNameGenitive(names[j], isFemale);
+                  conditions.push({
+                    type: "sameLetterInSurname",
+                    text: `У ${nameiGen} и у ${namejGen} в фамилии есть буква «${letter.toUpperCase()}».`,
+                    relevantInfo: {
+                      person1: names[i],
+                      person2: names[j],
+                      letter: letter,
+                      surnames: [perm[i], perm[j]],
+                    },
+                  });
+
+                  const thirdIdx = 3 - i - j;
+                  const thirdName = names[thirdIdx];
+                  const thirdSurname = perm[thirdIdx];
+
+                  if (!thirdSurname.toLowerCase().includes(letter)) {
+                    conditions.push({
+                      type: "notSurname",
+                      text: `${thirdName} не ${perm[i]}.`,
+                      relevantInfo: {
+                        name: thirdName,
+                        notSurname: perm[i],
+                        actualSurname: thirdSurname,
+                      },
+                    });
+
+                    conditions.push({
+                      type: "notSurname",
+                      text: `${names[i]} не ${perm[j]}.`,
+                      relevantInfo: {
+                        name: names[i],
+                        notSurname: perm[j],
+                        actualSurname: perm[i],
+                      },
+                    });
+
+                    if (!validatePuzzle(names, perm, conditions)) {
+                      continue;
+                    }
+
+                    const matches = names.map((name, idx) => ({
+                      name: name,
+                      surname: perm[idx],
+                    }));
+
+                    return {
+                      names: names,
+                      surnames: perm,
+                      correctMatches: matches,
+                      conditions: conditions,
+                      template: "Template2",
+                    };
+                  }
+                }
+              }
+            }
+          }
+        }
+        return null;
+      }
+
+      function generateTemplate3(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+        const permutations = getPermutations([...surnames]);
+
+        for (const perm of permutations) {
+          const conditions = [];
+          let foundMatch = false;
+
+          for (let i = 0; i < names.length && !foundMatch; i++) {
+            for (let j = 0; j < names.length && !foundMatch; j++) {
+              if (
+                i !== j &&
+                names[i][0].toLowerCase() === perm[j][0].toLowerCase()
+              ) {
+                const letter = perm[j][0].toLowerCase();
+                const surnamesWithSameLetter = perm.filter(
+                  (s) => s[0].toLowerCase() === letter,
+                );
+                if (surnamesWithSameLetter.length > 1) {
+                  continue;
+                }
+
+                foundMatch = true;
+                const name1Gen = declineNameGenitive(names[i], isFemale);
+                const name2Gen = declineNameGenitive(names[j], isFemale);
+
+                conditions.push({
+                  type: "sameFirstLetter",
+                  text: `У ${name1Gen} первая буква имени такая же, как первая буква фамилии у ${name2Gen}.`,
+                  relevantInfo: {
+                    name1: names[i],
+                    name2: names[j],
+                    surname2: perm[j],
+                  },
+                });
+
+                const k = 3 - i - j;
+                conditions.push({
+                  type: "notSurname",
+                  text: `${names[k]} не ${perm[i]}.`,
+                  relevantInfo: {
+                    name: names[k],
+                    notSurname: perm[i],
+                    actualSurname: perm[k],
+                  },
+                });
+
+                conditions.push({
+                  type: "notSurname",
+                  text: `${names[j]} не ${perm[k]}.`,
+                  relevantInfo: {
+                    name: names[j],
+                    notSurname: perm[k],
+                    actualSurname: perm[j],
+                  },
+                });
+
+                if (!validatePuzzle(names, perm, conditions)) {
+                  foundMatch = false;
+                  conditions.length = 0;
+                  continue;
+                }
+
+                const matches = names.map((name, idx) => ({
+                  name: name,
+                  surname: perm[idx],
+                }));
+
+                return {
+                  names: names,
+                  surnames: perm,
+                  correctMatches: matches,
+                  conditions: conditions,
+                  template: "Template3",
+                };
+              }
+            }
+          }
+        }
+        return null;
+      }
+
+      function generateTemplate4(names, surnames, personType) {
+        const isFemale = personType === "девочки";
+        const permutations = getPermutations([...surnames]);
+
+        for (const perm of permutations) {
+          const conditions = [];
+          let matchIdx = -1;
+
+          for (let i = 0; i < names.length; i++) {
+            if (names[i][0].toLowerCase() === perm[i][0].toLowerCase()) {
+              const letter = perm[i][0].toLowerCase();
+              const surnamesWithSameLetter = perm.filter(
+                (s) => s[0].toLowerCase() === letter,
+              );
+              if (surnamesWithSameLetter.length === 1) {
+                matchIdx = i;
+                break;
+              }
+            }
+          }
+
+          if (matchIdx === -1) continue;
+
+          const matchedNameGen = declineNameGenitive(names[matchIdx], isFemale);
+
+          conditions.push({
+            type: "sameFirstLetterOwn",
+            text: `У ${matchedNameGen} первая буква имени и фамилии совпадают.`,
+            relevantInfo: { name: names[matchIdx], surname: perm[matchIdx] },
+          });
+
+          const otherIdx1 = (matchIdx + 1) % 3;
+          const otherIdx2 = (matchIdx + 2) % 3;
+          conditions.push({
+            type: "notSurname",
+            text: `${names[otherIdx1]} не ${perm[matchIdx]}.`,
+            relevantInfo: {
+              name: names[otherIdx1],
+              notSurname: perm[matchIdx],
+              actualSurname: perm[otherIdx1],
+            },
+          });
+
+          conditions.push({
+            type: "notSurname",
+            text: `${names[otherIdx2]} не ${perm[otherIdx1]}.`,
+            relevantInfo: {
+              name: names[otherIdx2],
+              notSurname: perm[otherIdx1],
+              actualSurname: perm[otherIdx2],
+            },
+          });
+
+          if (!validatePuzzle(names, perm, conditions)) {
+            continue;
+          }
+
+          const matches = names.map((name, idx) => ({
+            name: name,
+            surname: perm[idx],
+          }));
+
+          return {
+            names: names,
+            surnames: perm,
+            correctMatches: matches,
+            conditions: conditions,
+            template: "Template4",
+          };
+        }
+        return null;
+      }
+
+      function generatePuzzle(names, surnames, personType) {
+        const templates = [
+          generateTemplate1,
+          generateTemplate2,
+          generateTemplate3,
+          generateTemplate4,
+        ];
+        const shuffledTemplates = [...templates].sort(
+          () => Math.random() - 0.5,
+        );
+
+        for (const template of shuffledTemplates) {
+          const result = template(names, surnames, personType);
+          if (result) {
+            return result;
+          }
+        }
+        return null;
+      }
+
+      function generateTask() {
+        const useFemale = Math.random() > 0.5;
+        const names = useFemale ? femaleNames : maleNames;
+        const surnames = useFemale ? femaleSurnames : maleSurnames;
+        const personType = useFemale ? "девочки" : "мальчики";
+
+        const selectedIndices = [];
+        while (selectedIndices.length < 3) {
+          const idx = Math.floor(Math.random() * names.length);
+          if (!selectedIndices.includes(idx)) {
+            selectedIndices.push(idx);
+          }
+        }
+
+        const selectedNames = selectedIndices.map((i) => names[i]);
+        const selectedSurnames = selectedIndices.map((i) => surnames[i]);
+
+        return generatePuzzle(selectedNames, selectedSurnames, personType);
+      }
+
+      // Функции тестирования
+      let stats = { total: 0, passed: 0, failed: 0, warnings: 0 };
+      let templateStats = {
+        Template1: { total: 0, passed: 0 },
+        Template2: { total: 0, passed: 0 },
+        Template3: { total: 0, passed: 0 },
+        Template4: { total: 0, passed: 0 },
+      };
+
+      function verifySolution(task) {
+        const errors = [];
+        const warnings = [];
+
+        // 1. Проверка соответствия correctMatches и surnames
+        for (const match of task.correctMatches) {
+          const expectedSurname = task.surnames[task.names.indexOf(match.name)];
+          if (match.surname !== expectedSurname) {
+            errors.push(
+              `Несоответствие в correctMatches: ${match.name} должен быть ${expectedSurname}, но указан ${match.surname}`,
+            );
+          }
+        }
+
+        // 2. Проверка, что каждый человек имеет ровно одну фамилию
+        const nameToSurname = {};
+        for (const match of task.correctMatches) {
+          if (nameToSurname[match.name]) {
+            errors.push(
+              `Дублирование: ${match.name} имеет более одной фамилии`,
+            );
+          }
+          nameToSurname[match.name] = match.surname;
+        }
+
+        // 3. Проверка уникальности фамилий
+        const usedSurnames = new Set();
+        for (const match of task.correctMatches) {
+          if (usedSurnames.has(match.surname)) {
+            errors.push(
+              `Дублирование фамилии: ${match.surname} назначена более чем одному человеку`,
+            );
+          }
+          usedSurnames.add(match.surname);
+        }
+
+        // 4. Проверка валидации
+        if (!validatePuzzle(task.names, task.surnames, task.conditions)) {
+          errors.push(
+            `validatePuzzle вернул false, но задача была сгенерирована`,
+          );
+        }
+
+        // 5. Проверка условий
+        for (let i = 0; i < task.conditions.length; i++) {
+          const cond = task.conditions[i];
+
+          if (cond.type === "notSurname") {
+            // Проверяем, что условие истинно
+            const actualSurname =
+              task.surnames[task.names.indexOf(cond.relevantInfo.name)];
+            if (actualSurname === cond.relevantInfo.notSurname) {
+              errors.push(
+                `Условие ${i + 1} ложно: ${cond.relevantInfo.name} на самом деле ${cond.relevantInfo.notSurname}`,
+              );
+            }
+            // Проверяем relevantInfo.actualSurname
+            if (cond.relevantInfo.actualSurname !== actualSurname) {
+              warnings.push(
+                `Условие ${i + 1}: actualSurname неверен в relevantInfo`,
+              );
+            }
+          }
+
+          if (cond.type === "sameLetterInSurname") {
+            const surname1 =
+              task.surnames[task.names.indexOf(cond.relevantInfo.person1)];
+            const surname2 =
+              task.surnames[task.names.indexOf(cond.relevantInfo.person2)];
+            const letter = cond.relevantInfo.letter.toLowerCase();
+
+            if (
+              !surname1.toLowerCase().includes(letter) ||
+              !surname2.toLowerCase().includes(letter)
+            ) {
+              errors.push(
+                `Условие ${i + 1} ложно: буква "${letter}" отсутствует в фамилиях ${cond.relevantInfo.person1} или ${cond.relevantInfo.person2}`,
+              );
+            }
+
+            // Проверяем, что surnames в relevantInfo соответствуют действительности
+            if (
+              !cond.relevantInfo.surnames.includes(surname1) ||
+              !cond.relevantInfo.surnames.includes(surname2)
+            ) {
+              warnings.push(
+                `Условие ${i + 1}: surnames в relevantInfo не соответствуют действительности`,
+              );
+            }
+          }
+
+          if (cond.type === "sameFirstLetterOwn") {
+            const name = cond.relevantInfo.name;
+            const surname = cond.relevantInfo.surname;
+            const actualSurname = task.surnames[task.names.indexOf(name)];
+
+            if (name[0].toLowerCase() !== surname[0].toLowerCase()) {
+              errors.push(
+                `Условие ${i + 1} ложно: ${name} и ${surname} начинаются с разных букв`,
+              );
+            }
+            if (surname !== actualSurname) {
+              errors.push(
+                `Условие ${i + 1}: указанная фамилия ${surname} не соответствует фактической ${actualSurname}`,
+              );
+            }
+          }
+
+          if (cond.type === "sameFirstLetter") {
+            const { name1, name2, surname2 } = cond.relevantInfo;
+            const actualSurname2 = task.surnames[task.names.indexOf(name2)];
+
+            if (name1[0].toLowerCase() !== surname2[0].toLowerCase()) {
+              errors.push(
+                `Условие ${i + 1} ложно: ${name1} начинается с "${name1[0]}", а ${surname2} с "${surname2[0]}"`,
+              );
+            }
+            if (surname2 !== actualSurname2) {
+              errors.push(
+                `Условие ${i + 1}: указанная фамилия ${surname2} не соответствует фактической ${actualSurname2}`,
+              );
+            }
+          }
+        }
+
+        // 6. Проверка однозначности решения
+        const possible = {};
+        task.names.forEach((name) => {
+          possible[name] = new Set(task.surnames);
+        });
+
+        for (const condition of task.conditions) {
+          if (condition.type === "notSurname") {
+            possible[condition.relevantInfo.name].delete(
+              condition.relevantInfo.notSurname,
+            );
+          } else if (condition.type === "sameLetterInSurname") {
+            const {
+              person1,
+              person2,
+              surnames: condSurnames,
+            } = condition.relevantInfo;
+            const otherPerson = task.names.find(
+              (n) => n !== person1 && n !== person2,
+            );
+            if (otherPerson) {
+              possible[otherPerson].delete(condSurnames[0]);
+              possible[otherPerson].delete(condSurnames[1]);
+            }
+          } else if (condition.type === "sameFirstLetterOwn") {
+            possible[condition.relevantInfo.name] = new Set([
+              condition.relevantInfo.surname,
+            ]);
+          } else if (condition.type === "sameFirstLetter") {
+            possible[condition.relevantInfo.name2] = new Set([
+              condition.relevantInfo.surname2,
+            ]);
+          }
+        }
+
+        // Распространение ограничений
+        let changed = true;
+        while (changed) {
+          changed = false;
+          for (const name of task.names) {
+            if (possible[name].size === 1) {
+              const surname = [...possible[name]][0];
+              for (const otherName of task.names) {
+                if (otherName !== name && possible[otherName].has(surname)) {
+                  possible[otherName].delete(surname);
+                  changed = true;
+                }
+              }
+            }
+          }
+        }
+
+        // Проверяем, что решение совпадает с correctMatches
+        for (const match of task.correctMatches) {
+          const computedSurname = [...possible[match.name]][0];
+          if (computedSurname !== match.surname) {
+            errors.push(
+              `Вычисленное решение не совпадает: ${match.name} должен быть ${computedSurname}, но correctMatches указывает ${match.surname}`,
+            );
+          }
+        }
+
+        return { errors, warnings };
+      }
+
+      function runTests(count) {
+        stats = { total: 0, passed: 0, failed: 0, warnings: 0 };
+        templateStats = {
+          Template1: { total: 0, passed: 0 },
+          Template2: { total: 0, passed: 0 },
+          Template3: { total: 0, passed: 0 },
+          Template4: { total: 0, passed: 0 },
+        };
+
+        let resultsHtml = "<h2>Результаты тестирования</h2>";
+        const failedTests = [];
+
+        for (let i = 0; i < count; i++) {
+          stats.total++;
+          const task = generateTask();
+
+          if (!task) {
+            stats.failed++;
+            failedTests.push({
+              testNum: i + 1,
+              error: "Не удалось сгенерировать задачу",
+            });
+            continue;
+          }
+
+          templateStats[task.template].total++;
+          const verification = verifySolution(task);
+
+          if (verification.errors.length > 0) {
+            stats.failed++;
+            templateStats[task.template].passed--;
+            failedTests.push({
+              testNum: i + 1,
+              template: task.template,
+              task: task,
+              errors: verification.errors,
+              warnings: verification.warnings,
+            });
+          } else {
+            stats.passed++;
+            templateStats[task.template].passed++;
+            if (verification.warnings.length > 0) {
+              stats.warnings++;
+            }
+          }
+        }
+
+        // Обновляем статистику
+        document.getElementById("totalTests").textContent = stats.total;
+        document.getElementById("passedTests").textContent = stats.passed;
+        document.getElementById("failedTests").textContent = stats.failed;
+        document.getElementById("warningTests").textContent = stats.warnings;
+
+        // Выводим статистику по шаблонам
+        resultsHtml += "<h3>Статистика по шаблонам:</h3>";
+        resultsHtml +=
+          "<table><tr><th>Шаблон</th><th>Всего</th><th>Прошло</th><th>Успешность</th></tr>";
+        for (const [template, data] of Object.entries(templateStats)) {
+          const rate =
+            data.total > 0 ? Math.round((data.passed / data.total) * 100) : 0;
+          resultsHtml += `<tr><td>${template}</td><td>${data.total}</td><td>${data.passed}</td><td>${rate}%</td></tr>`;
+        }
+        resultsHtml += "</table>";
+
+        // Выводим ошибки
+        if (failedTests.length > 0) {
+          resultsHtml += `<h3>❌ Найдены ошибки (${failedTests.length}):</h3>`;
+
+          for (const test of failedTests.slice(0, 20)) {
+            // Показываем первые 20
+            resultsHtml += `<div class="test-result fail">`;
+            resultsHtml += `<strong>Тест #${test.testNum}</strong> (${test.template || "N/A"})`;
+
+            if (test.task) {
+              resultsHtml += `<div class="task-details">`;
+              resultsHtml += `<div><strong>Имена:</strong> ${test.task.names.join(", ")}</div>`;
+              resultsHtml += `<div><strong>Фамилии:</strong> ${test.task.surnames.join(", ")}</div>`;
+              resultsHtml += `<div><strong>Ответы:</strong> ${test.task.correctMatches.map((m) => `${m.name} - ${m.surname}`).join(", ")}</div>`;
+              resultsHtml += `<div><strong>Условия:</strong>`;
+              for (const cond of test.task.conditions) {
+                resultsHtml += `<div class="condition">${cond.text}</div>`;
+              }
+              resultsHtml += `</div>`;
+            }
+
+            if (test.errors) {
+              resultsHtml += `<div class="error-log">`;
+              resultsHtml += `<strong>Ошибки:</strong><ul>`;
+              for (const err of test.errors) {
+                resultsHtml += `<li>${err}</li>`;
+              }
+              resultsHtml += `</ul></div>`;
+            }
+
+            if (test.error) {
+              resultsHtml += `<div class="error-log">${test.error}</div>`;
+            }
+
+            resultsHtml += `</div>`;
+          }
+
+          if (failedTests.length > 20) {
+            resultsHtml += `<p>... и ещё ${failedTests.length - 20} ошибок</p>`;
+          }
+        } else {
+          resultsHtml += `<div class="test-result pass"><strong>✅ Все тесты пройдены успешно!</strong></div>`;
+        }
+
+        document.getElementById("results").innerHTML = resultsHtml;
+      }
+
+      function clearResults() {
+        document.getElementById("results").innerHTML = "";
+        document.getElementById("totalTests").textContent = "0";
+        document.getElementById("passedTests").textContent = "0";
+        document.getElementById("failedTests").textContent = "0";
+        document.getElementById("warningTests").textContent = "0";
+      }
+
+      // Данные напрямую (для работы без сервера)
+      function loadDataDirect() {
+        femaleNames = [
+          "Мария",
+          "Ирина",
+          "Светлана",
+          "Анна",
+          "Елена",
+          "Ольга",
+          "Наталья",
+          "Татьяна",
+          "Екатерина",
+          "Юлия",
+          "Александра",
+          "Виктория",
+        ];
+        maleNames = [
+          "Александр",
+          "Дмитрий",
+          "Максим",
+          "Сергей",
+          "Андрей",
+          "Алексей",
+          "Артём",
+          "Илья",
+          "Кирилл",
+          "Михаил",
+          "Никита",
+          "Владислав",
+        ];
+        femaleSurnames = [
+          "Миронова",
+          "Иванова",
+          "Сергеева",
+          "Петрова",
+          "Сидорова",
+          "Козлова",
+          "Новикова",
+          "Морозова",
+          "Волкова",
+          "Соколова",
+          "Попова",
+          "Лебедева",
+          "Кузнецова",
+          "Смирнова",
+        ];
+        maleSurnames = [
+          "Миронов",
+          "Иванов",
+          "Сергеев",
+          "Петров",
+          "Сидоров",
+          "Козлов",
+          "Новиков",
+          "Морозов",
+          "Волков",
+          "Соколов",
+          "Попов",
+          "Лебедев",
+          "Кузнецов",
+          "Смирнов",
+        ];
+        console.log("Данные загружены напрямую:", {
+          femaleNames: femaleNames.length,
+          maleNames: maleNames.length,
+          femaleSurnames: femaleSurnames.length,
+          maleSurnames: maleSurnames.length,
+        });
+      }
+
+      // Загрузка данных
+      async function init() {
+        try {
+          const response = await fetch("vpr7-5.txt");
+          const text = await response.text();
+          parseData(text);
+          console.log("Данные загружены из файла:", {
+            femaleNames,
+            maleNames,
+            femaleSurnames,
+            maleSurnames,
+          });
+        } catch (error) {
+          console.log(
+            "Загрузка из файла не удалась, использую встроенные данные",
+          );
+          loadDataDirect();
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>

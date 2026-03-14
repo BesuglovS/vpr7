@@ -828,6 +828,26 @@
             </li>
           </ul>
         </div>
+
+        <div
+          class="warning-box"
+          style="background: #e3f2fd; border-color: #2196f3"
+        >
+          <h4 style="color: #1565c0">🔑 Важно: отличие от Windows-путей</h4>
+          <ul style="color: #1565c0">
+            <li>
+              В URL используется <strong>прямой слеш</strong> <code>/</code>
+            </li>
+            <li>
+              В Windows используется <strong>обратный слеш</strong>
+              <code>\</code>
+            </li>
+            <li>
+              Пример: <code>https://site.com/docs/file.pdf</code> — правильно,
+              <code>https://site.com\docs\file.pdf</code> — неправильно!
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- Имя файла -->
@@ -992,6 +1012,177 @@
             ><span class="url-part separator">/</span
             ><span class="url-part file">задание.pdf</span>
           </div>
+        </div>
+
+        <div class="example-box">
+          <h4>📝 Пример 4: Файл в корне сервера (без пути)</h4>
+          <p style="color: #b0bec5; margin-bottom: 10px">
+            Доступ к файлу <code style="color: #a18cd1">index.html</code>,
+            находящемуся на сервере <code style="color: #38ef7d">site.ru</code>,
+            осуществляется по протоколу
+            <code style="color: #ff6b6b">https</code>. Файл находится в корне
+            сервера (не в папке).
+          </p>
+          <div class="example-url">
+            <span class="url-part protocol">https://</span
+            ><span class="url-part domain">site.ru</span
+            ><span class="url-part separator">/</span
+            ><span class="url-part file">index.html</span>
+          </div>
+          <p style="color: #78909c; margin-top: 10px; font-size: 0.9rem">
+            Обратите внимание: после домена всё равно нужен символ
+            <code>/</code> перед именем файла!
+          </p>
+        </div>
+      </div>
+
+      <!-- Как читать условие задачи -->
+      <div class="category-section" id="reading">
+        <div class="category-header" style="border-color: #9c27b0">
+          <div
+            class="category-icon"
+            style="
+              background: linear-gradient(145deg, #9c27b0 0%, #e91e63 100%);
+            "
+          >
+            📖
+          </div>
+          <div>
+            <h2 class="category-title">Как читать условие задачи</h2>
+          </div>
+        </div>
+
+        <p style="color: #666; margin-bottom: 15px">
+          В заданиях на составление URL используются определённые формулировки.
+          Вот как их правильно понимать:
+        </p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Формулировка в задаче</th>
+              <th>Что это значит</th>
+              <th>Пример в URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>«на сервере <strong>X</strong>»</td>
+              <td>Домен = X</td>
+              <td><code>school.edu</code></td>
+            </tr>
+            <tr>
+              <td>«по протоколу <strong>X</strong>»</td>
+              <td>Протокол = X</td>
+              <td><code>https://</code></td>
+            </tr>
+            <tr>
+              <td>«в каталоге <strong>X</strong>»</td>
+              <td>Одна папка: <code>/X/</code></td>
+              <td><code>/docs/</code></td>
+            </tr>
+            <tr>
+              <td>
+                «в каталоге <strong>Y</strong> внутри каталога
+                <strong>X</strong>»
+              </td>
+              <td>Две папки: <code>/X/Y/</code></td>
+              <td><code>/files/download/</code></td>
+            </tr>
+            <tr>
+              <td>«файл <strong>F</strong>»</td>
+              <td>Имя файла = F</td>
+              <td><code>report.pdf</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="tip-box">
+          <h4>💡 Важный момент про порядок папок</h4>
+          <ul>
+            <li>
+              «в каталоге <strong>B</strong> внутри каталога <strong>A</strong>»
+              → путь <code>/A/B/</code> (сначала внешняя папка, потом
+              внутренняя)
+            </li>
+            <li>Порядок важен! <code>/A/B/</code> ≠ <code>/B/A/</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Кодирование спецсимволов -->
+      <div class="category-section" id="encoding">
+        <div class="category-header" style="border-color: #607d8b">
+          <div
+            class="category-icon"
+            style="
+              background: linear-gradient(145deg, #607d8b 0%, #455a64 100%);
+            "
+          >
+            🔐
+          </div>
+          <div>
+            <h2 class="category-title">
+              Кодирование спецсимволов (дополнительно)
+            </h2>
+          </div>
+        </div>
+
+        <p style="color: #666; margin-bottom: 15px">
+          Если в имени файла или пути есть пробелы или специальные символы, они
+          кодируются специальным образом:
+        </p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Символ</th>
+              <th>Код в URL</th>
+              <th>Пример</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>пробел</td>
+              <td><code>%20</code></td>
+              <td><code>my%20file.pdf</code> вместо «my file.pdf»</td>
+            </tr>
+            <tr>
+              <td>кириллица</td>
+              <td><code>%XX%XX</code></td>
+              <td>
+                <code>%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80</code> вместо
+                «пример»
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="color: #666; margin: 15px 0; line-height: 1.6">
+          <strong>Кириллические домены</strong> (например, <code>.рф</code>)
+          технически кодируются с помощью специального алгоритма Punycode: домен
+          <code>пример.рф</code> превращается в
+          <code>xn--e1afmkfd.xn--p1ai</code>. Однако современные браузеры
+          автоматически показывают кириллические домены в читаемом виде, а в
+          заданиях ВПР можно писать их как есть —
+          <code>https://файлы.рф/</code>.
+        </p>
+
+        <div class="tip-box" style="background: #e8f5e9; border-color: #4caf50">
+          <h4 style="color: #2e7d32">💡 Для заданий ВПР</h4>
+          <ul style="color: #2e7d32">
+            <li>
+              В заданиях ВПР обычно используются имена файлов и путей без
+              пробелов и спецсимволов
+            </li>
+            <li>
+              Кириллические домены (например, <code>.рф</code>) можно писать как
+              есть, кодировать их не требуется
+            </li>
+            <li>
+              Эта информация дана для общего развития и понимания принципов URL
+            </li>
+          </ul>
         </div>
       </div>
 

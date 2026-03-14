@@ -233,6 +233,18 @@
         animation: pulse 1s ease-in-out infinite;
       }
 
+      .error-message {
+        display: none;
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
       .hint-box {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
@@ -431,6 +443,10 @@
         🎉 Поздравляем! Все устройства распределены правильно!
       </div>
 
+      <div class="error-message" id="errorMessage">
+        ❌ Не все устройства распределены правильно. Исправьте ошибки!
+      </div>
+
       <div class="hint-box" id="hintBox">
         <h4>💡 Подсказка — категории устройств:</h4>
         <div class="hint-info">
@@ -488,23 +504,32 @@
           initGame();
         } catch (error) {
           console.error("Ошибка загрузки данных:", error);
-          // Fallback - встроенные данные
+          // Fallback - встроенные данные (должны содержать минимум 3 устройства в каждой категории)
           const fallbackData = `@Устройства ввода
 Клавиатура
 Мышь
 Сканер документов
+Веб-камера
+Микрофон
 
 @Устройства вывода
 Монитор
 Принтер
 Наушники
+Колонки
+Проектор
 
 @Устройства хранения
 SSD (твердотельный накопитель)
 USB-флеш-накопитель (Флешка)
+HDD (жёсткий диск)
+CD-R (компакт-диск)
 
 @Устройства обработки
-Процессор (CPU — центральная обработка данных)`;
+Процессор (CPU)
+Видеокарта (GPU)
+NPU (нейронный процессор)
+Суперкомпьютер`;
           parseData(fallbackData);
           initGame();
         }
@@ -528,16 +553,24 @@ USB-флеш-накопитель (Флешка)
 
       // Инициализация игры
       function initGame() {
-        // Выбираем по 2-3 устройства из каждой категории (всего 9)
+        // Выбираем устройства из каждой категории случайным образом
         selectedDevices = [];
         deviceCategories = {};
 
         const categoryNames = Object.keys(categories);
-        const devicesPerCategory = [3, 2, 2, 2]; // Распределение 9 устройств
 
-        categoryNames.forEach((category, index) => {
+        // Фиксированное распределение: [3, 2, 2, 2] = 9 устройств
+        // Но случайно перемешиваем какая категория сколько получит
+        let distribution = [3, 2, 2, 2];
+        distribution.sort(() => Math.random() - 0.5);
+
+        // Выбираем устройства из каждой категории
+        categoryNames.forEach((category, idx) => {
           const devices = [...categories[category]];
-          const count = devicesPerCategory[index] || 2;
+          let count = distribution[idx];
+
+          // Ограничиваем количество доступными устройствами
+          count = Math.min(count, devices.length);
 
           for (let i = 0; i < count && devices.length > 0; i++) {
             const randomIndex = Math.floor(Math.random() * devices.length);
@@ -789,16 +822,28 @@ USB-флеш-накопитель (Флешка)
       function checkWin() {
         const allPlaced =
           document.getElementById("devicesPool").children.length === 0;
-        if (allPlaced && correctAnswers === totalDevices) {
-          document.getElementById("successMessage").style.display = "block";
+        const successMessage = document.getElementById("successMessage");
+        const errorMessage = document.getElementById("errorMessage");
+
+        if (allPlaced) {
+          if (correctAnswers === totalDevices) {
+            successMessage.style.display = "block";
+            errorMessage.style.display = "none";
+          } else {
+            successMessage.style.display = "none";
+            errorMessage.style.display = "block";
+            errorMessage.innerHTML = `❌ Не все устройства распределены правильно. Ошибок: ${totalDevices - correctAnswers}. Исправьте ошибки!`;
+          }
         } else {
-          document.getElementById("successMessage").style.display = "none";
+          successMessage.style.display = "none";
+          errorMessage.style.display = "none";
         }
       }
 
       // Сброс игры
       function resetGame() {
         document.getElementById("successMessage").style.display = "none";
+        document.getElementById("errorMessage").style.display = "none";
         document.getElementById("hintBox").style.display = "none";
         categories = {};
         selectedDevices = [];

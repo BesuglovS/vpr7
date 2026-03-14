@@ -1276,8 +1276,7 @@
         });
 
         answered = true;
-        const isCorrect =
-          userPath.toLowerCase() === currentTask.correctPath.toLowerCase();
+        const isCorrect = userPath === currentTask.correctPath;
 
         const feedback = document.getElementById("feedback");
         const resultDisplay = document.getElementById("resultDisplay");
