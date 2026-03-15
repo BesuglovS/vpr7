@@ -149,19 +149,16 @@
         height: 30px;
         border-bottom: 1px solid #d1d5db;
         position: relative;
-        margin-left: 50px;
-        margin-right: 30px;
       }
 
       .ruler-marks {
         position: absolute;
         top: 0;
-        left: 0;
-        right: 0;
+        left: 50px;
+        right: 50px;
         height: 100%;
         display: flex;
         justify-content: space-between;
-        padding: 0 10px;
       }
 
       .ruler-mark {
@@ -196,29 +193,26 @@
       }
 
       .indent-left {
-        left: 100px;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-top: 10px solid #4b5563;
+        border-bottom: 10px solid #4b5563;
+        top: 20px;
       }
 
       .indent-first-line {
-        left: 130px;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-bottom: 10px solid #3b82f6;
-        top: 10px;
+        border-top: 10px solid #3b82f6;
+        top: 0;
       }
 
       .indent-hanging {
-        left: 80px;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
         border-top: 10px solid #ef4444;
       }
 
       .indent-right {
-        right: 50px;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
         border-top: 10px solid #4b5563;
@@ -238,6 +232,7 @@
         margin-bottom: 15px;
         font-family: "Times New Roman", Times, serif;
         font-size: 14pt;
+        white-space: pre-line;
       }
 
       /* Различные виды форматирования */
@@ -258,20 +253,19 @@
       }
 
       .para-indent-left {
-        margin-left: 2cm;
+        /* Устанавливается динамически через JS */
       }
 
       .para-indent-right {
-        margin-right: 1.5cm;
+        /* Устанавливается динамически через JS */
       }
 
       .para-first-line-indent {
-        text-indent: 1.25cm;
+        /* Устанавливается динамически через JS */
       }
 
       .para-hanging-indent {
-        text-indent: -1cm;
-        margin-left: 2cm;
+        /* Устанавливается динамически через JS */
       }
 
       /* Выбор элементов форматирования */
@@ -499,9 +493,9 @@
           padding: 15px 20px;
         }
 
-        .ruler {
-          margin-left: 20px;
-          margin-right: 15px;
+        .ruler-marks {
+          left: 20px;
+          right: 20px;
         }
 
         .options-grid {
@@ -589,6 +583,59 @@
       let answered = false;
       let stats = { correct: 0, total: 0 };
 
+      // Значения отступов в сантиметрах (должны соответствовать CSS)
+      const indentValuesCm = {
+        firstLineIndent: 1.25,
+        hangingIndent: 2, // при выступе margin-left определяет позицию
+        leftIndent: 2,
+        rightIndent: 1.5,
+      };
+
+      // Расчётная функция для позиций маркеров и отступов текста
+      function calculateRulerPositions() {
+        // Используем ширину области документа для расчёта
+        const documentArea = document.querySelector(".document-area");
+        const documentWidth = documentArea.offsetWidth;
+        // Область текста = ширина документа минус padding (50px слева + 50px справа = 100px)
+        const textWidth = documentWidth - 100;
+        const pxPerCm = textWidth / 15; // шкала от 0 до 15 см
+
+        return {
+          firstLineIndent: indentValuesCm.firstLineIndent * pxPerCm + "px",
+          hangingIndent: indentValuesCm.hangingIndent * pxPerCm + "px",
+          leftIndent: indentValuesCm.leftIndent * pxPerCm + "px",
+          rightIndent: indentValuesCm.rightIndent * pxPerCm + "px",
+          pxPerCm: pxPerCm,
+        };
+      }
+
+      // Применение динамических отступов к тексту
+      function applyDynamicIndents(paragraph) {
+        const positions = calculateRulerPositions();
+
+        // Сначала применяем отступ слева (базовый)
+        if (paragraph.classList.contains("para-indent-left")) {
+          paragraph.style.marginLeft = positions.leftIndent;
+        }
+
+        // Затем применяем отступ первой строки (добавляется к отступу слева)
+        if (paragraph.classList.contains("para-first-line-indent")) {
+          paragraph.style.textIndent = positions.firstLineIndent;
+        }
+
+        // Выступ первой строки
+        if (paragraph.classList.contains("para-hanging-indent")) {
+          paragraph.style.textIndent =
+            "-" + parseFloat(positions.hangingIndent) / 2 + "px";
+          paragraph.style.marginLeft = positions.hangingIndent;
+        }
+
+        // Отступ справа
+        if (paragraph.classList.contains("para-indent-right")) {
+          paragraph.style.marginRight = positions.rightIndent;
+        }
+      }
+
       // Все возможные элементы форматирования
       const formattingTypes = {
         firstLineIndent: {
@@ -644,11 +691,11 @@
           correctFormatting: ["alignLeft"],
         },
         {
-          text: "    В современном мире информационные технологии играют важную роль. Они проникают во все сферы человеческой деятельности и изменяют привычные способы работы с информацией, коммуникации и обучения.",
+          text: "В современном мире информационные технологии играют важную роль. Они проникают во все сферы человеческой деятельности и изменяют привычные способы работы с информацией, коммуникации и обучения.",
           correctFormatting: ["firstLineIndent", "leftIndent", "alignJustify"],
         },
         {
-          text: "        1. Первый пункт списка содержит важную информацию о структуре документа и его основных элементах, которые необходимо учитывать при оформлении.\n        2. Второй пункт описывает требования к форматированию текста.",
+          text: "1. Первый пункт списка содержит важную информацию о структуре документа и его основных элементах, которые необходимо учитывать при оформлении.\n2. Второй пункт описывает требования к форматированию текста.",
           correctFormatting: ["hangingIndent", "alignLeft"],
         },
         {
@@ -673,7 +720,7 @@
           correctFormatting: ["firstLineIndent", "alignJustify", "rightIndent"],
         },
         {
-          text: "        Глава 1. Введение в информатику. В данной главе рассматриваются основные понятия информатики как науки, её место в системе естественных и технических наук, а также роль информационных технологий в современном обществе.",
+          text: "Глава 1. Введение в информатику. В данной главе рассматриваются основные понятия информатики как науки, её место в системе естественных и технических наук, а также роль информационных технологий в современном обществе.",
           correctFormatting: ["hangingIndent", "alignJustify"],
         },
         {
@@ -720,6 +767,11 @@
         // Сбрасываем классы форматирования
         paragraph.className = "document-paragraph";
 
+        // Сбрасываем инлайн-стили от предыдущего задания
+        paragraph.style.marginLeft = "";
+        paragraph.style.marginRight = "";
+        paragraph.style.textIndent = "";
+
         // Применяем форматирование визуально
         currentTask.correctFormatting.forEach((format) => {
           if (format === "firstLineIndent") {
@@ -741,6 +793,9 @@
           }
         });
 
+        // Применяем динамические отступы к тексту
+        applyDynamicIndents(paragraph);
+
         // Обновляем линейку
         updateRuler();
 
@@ -758,32 +813,52 @@
         );
         oldIndicators.forEach((el) => el.remove());
 
+        // Вычисляем позиции маркеров динамически
+        const rulerPositions = calculateRulerPositions();
+        const rulerPadding = 50; // padding линейки совпадает с padding области документа
+
         // Добавляем индикаторы в зависимости от форматирования
+        // Маркеры позиционируются относительно левого края линейки с учётом padding
+
+        // Сначала вычисляем базовую позицию с учётом отступа слева
+        let baseLeftIndent = 0;
+        if (currentTask.correctFormatting.has("leftIndent")) {
+          baseLeftIndent = parseFloat(rulerPositions.leftIndent);
+        }
+
         if (currentTask.correctFormatting.has("firstLineIndent")) {
           const indicator = document.createElement("div");
           indicator.className = "ruler-indent indent-first-line";
-          indicator.style.left = "80px";
+          // Маркер отступа первой строки позиционируется от отступа слева
+          indicator.style.left =
+            rulerPadding +
+            baseLeftIndent +
+            parseFloat(rulerPositions.firstLineIndent) +
+            "px";
           ruler.appendChild(indicator);
         }
 
         if (currentTask.correctFormatting.has("hangingIndent")) {
           const indicator = document.createElement("div");
           indicator.className = "ruler-indent indent-hanging";
-          indicator.style.left = "60px";
+          indicator.style.left =
+            rulerPadding + parseFloat(rulerPositions.hangingIndent) + "px";
           ruler.appendChild(indicator);
         }
 
         if (currentTask.correctFormatting.has("leftIndent")) {
           const indicator = document.createElement("div");
           indicator.className = "ruler-indent indent-left";
-          indicator.style.left = "70px";
+          indicator.style.left =
+            rulerPadding + parseFloat(rulerPositions.leftIndent) + "px";
           ruler.appendChild(indicator);
         }
 
         if (currentTask.correctFormatting.has("rightIndent")) {
           const indicator = document.createElement("div");
           indicator.className = "ruler-indent indent-right";
-          indicator.style.right = "80px";
+          indicator.style.right =
+            rulerPadding + parseFloat(rulerPositions.rightIndent) + "px";
           ruler.appendChild(indicator);
         }
       }

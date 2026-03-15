@@ -851,8 +851,12 @@
             <li><strong>Байты → Биты:</strong> умножить на 8</li>
             <li><strong>КБ → Байты:</strong> умножить на 1024</li>
             <li><strong>Байты → КБ:</strong> разделить на 1024</li>
+            <li><strong>МБ → КБ:</strong> умножить на 1024</li>
+            <li><strong>КБ → МБ:</strong> разделить на 1024</li>
             <li><strong>Кбит/с → бит/с:</strong> умножить на 1024</li>
+            <li><strong>Мбит/с → Кбит/с:</strong> умножить на 1024</li>
             <li><strong>Минуты → Секунды:</strong> умножить на 60</li>
+            <li><strong>Секунды → Минуты:</strong> разделить на 60</li>
           </ul>
         </div>
       </div>
@@ -1079,19 +1083,19 @@
           <span class="task-type-badge">⏱️ Найти время</span>
           <h4>📋 Пример 6: Время в минутах</h4>
           <div class="example-task">
-            Файл размером <span class="highlight">1 МБ</span> передаётся со
-            скоростью <span class="highlight">256 Кбит/с</span>. Определите
-            время передачи в минутах.
+            Файл размером <span class="highlight">120 МБ</span> передаётся со
+            скоростью <span class="highlight">2 Мбит/с</span>. Определите время
+            передачи в минутах.
           </div>
           <div class="example-solution">
             <strong>Решение:</strong>
             <ol style="margin-left: 20px; line-height: 1.8">
-              <li>Переводим объём в Кбит: 1 МБ = 1024 КБ = 8192 Кбит</li>
-              <li>Вычисляем время в секундах: 8192 Кбит ÷ 256 Кбит/с = 32 с</li>
-              <li>Переводим в минуты: 32 ÷ 60 ≈ 0,53 мин</li>
+              <li>Переводим объём в Мбит: 120 МБ = 120 × 8 = 960 Мбит</li>
+              <li>Вычисляем время в секундах: 960 Мбит ÷ 2 Мбит/с = 480 с</li>
+              <li>Переводим в минуты: 480 ÷ 60 = 8 мин</li>
             </ol>
             <strong style="display: block; margin-top: 10px"
-              >Ответ: 32 секунды или ≈ 0,53 минуты</strong
+              >Ответ: 8 минут</strong
             >
           </div>
         </div>
@@ -1116,6 +1120,60 @@
             </ol>
             <strong style="display: block; margin-top: 10px"
               >Ответ: 1,875 МБ</strong
+            >
+          </div>
+        </div>
+
+        <!-- Пример 8 -->
+        <div class="example-card">
+          <span class="task-type-badge">🚀 Найти скорость</span>
+          <h4>📋 Пример 8: Скорость в Мбит/с</h4>
+          <div class="example-task">
+            Файл размером <span class="highlight">1 ГБ</span> был передан за
+            <span class="highlight">8 минут</span>. Определите скорость передачи
+            данных в Мбит/с.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переводим объём в Мбит: 1 ГБ = 1024 МБ = 8192 Мбит</li>
+              <li>Переводим время в секунды: 8 мин = 480 с</li>
+              <li>
+                Вычисляем скорость в Мбит/с: 8192 Мбит ÷ 480 с ≈ 17,07 Мбит/с
+              </li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: ≈ 17 Мбит/с</strong
+            >
+            <p style="margin-top: 10px; color: #666; font-size: 0.9rem">
+              <em
+                >Примечание: При переводе ГБ в Мбит сначала переводим в МБ (×
+                1024), затем в Мбит (× 8).</em
+              >
+            </p>
+          </div>
+        </div>
+
+        <!-- Пример 9 -->
+        <div class="example-card">
+          <span class="task-type-badge">📦 Найти объём</span>
+          <h4>📋 Пример 9: Объём в гигабайтах</h4>
+          <div class="example-task">
+            Скорость передачи данных составляет
+            <span class="highlight">100 Мбит/с</span>. Файл передавался
+            <span class="highlight">2 минуты</span>. Определите размер файла в
+            ГБ.
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>Переводим время в секунды: 2 мин = 120 с</li>
+              <li>Вычисляем объём в Мбит: 100 Мбит/с × 120 с = 12000 Мбит</li>
+              <li>Переводим в МБ: 12000 ÷ 8 = 1500 МБ</li>
+              <li>Переводим в ГБ: 1500 ÷ 1024 ≈ 1,46 ГБ</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px"
+              >Ответ: ≈ 1,46 ГБ</strong
             >
           </div>
         </div>

@@ -468,6 +468,23 @@
       let answered = false;
       let stats = { correct: 0, total: 0 };
 
+      // Загрузка статистики из localStorage
+      function loadStats() {
+        const saved = localStorage.getItem("vpr7-7-stats");
+        if (saved) {
+          try {
+            stats = JSON.parse(saved);
+          } catch (e) {
+            stats = { correct: 0, total: 0 };
+          }
+        }
+      }
+
+      // Сохранение статистики в localStorage
+      function saveStats() {
+        localStorage.setItem("vpr7-7-stats", JSON.stringify(stats));
+      }
+
       // Единицы измерения
       const units = {
         KB: { name: "КБ", nameFull: "килобайт", factor: 1024 },
@@ -948,8 +965,8 @@
           {
             initial: { size: 12, unit: "GB" },
             deleted: { size: 2048, unit: "MB" },
-            added: { size: 0.5, unit: "TB" },
-            capacity: { size: 1, unit: "TB" },
+            added: { size: 512, unit: "MB" },
+            capacity: { size: 16, unit: "GB" },
             remainUnit: "GB",
           },
           {
@@ -957,6 +974,13 @@
             deleted: { size: 1024, unit: "MB" },
             added: { size: 2, unit: "GB" },
             capacity: { size: 16, unit: "GB" },
+            remainUnit: "GB",
+          },
+          {
+            initial: { size: 20, unit: "GB" },
+            deleted: { size: 5120, unit: "MB" },
+            added: { size: 1.5, unit: "GB" },
+            capacity: { size: 32, unit: "GB" },
             remainUnit: "GB",
           },
         ];
@@ -970,7 +994,7 @@
         const usedAfterDelete = initialGB - deletedGB;
         const usedFinal = usedAfterDelete + addedGB;
         const remainGB = capacityGB - usedFinal;
-        const answer = roundValue(remainGB);
+        const answer = roundValue(convert(remainGB, "GB", set.remainUnit));
 
         const taskText = scenario.text(
           set.initial.size,
@@ -996,15 +1020,17 @@
           `<div class="hint-step">3. Найдём объём после добавления:</div>`,
           `<div class="hint-step">   <span class="formula">${usedAfterDelete} + ${addedGB} = ${usedFinal} ГБ</span></div>`,
           `<div class="hint-step">4. Найдём свободное место:</div>`,
-          `<div class="hint-step">   <span class="formula">${capacityGB} − ${usedFinal} = ${answer} ГБ</span></div>`,
-          `<div class="hint-step">   <span class="result">Ответ: ${answer} ГБ</span></div>`,
+          `<div class="hint-step">   <span class="formula">${capacityGB} − ${usedFinal} = ${remainGB} ГБ</span></div>`,
+          `<div class="hint-step">5. Переведём в ${units[set.remainUnit].nameFull}:</div>`,
+          `<div class="hint-step">   ${remainGB} ГБ = ${answer} ${units[set.remainUnit].name}</div>`,
+          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${units[set.remainUnit].name}</span></div>`,
         ];
 
         return {
           type: "🧮 Сложная задача",
           text: taskText,
           answer: answer,
-          answerUnit: "GB",
+          answerUnit: set.remainUnit,
           hintSteps: hintSteps,
         };
       }
@@ -1162,6 +1188,7 @@
 
         feedback.style.display = "block";
         updateStats();
+        saveStats();
       }
 
       // Обновление статистики
@@ -1185,6 +1212,8 @@
         });
 
       // Запуск
+      loadStats();
+      updateStats();
       generateTask();
     </script>
   </body>

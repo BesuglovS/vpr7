@@ -496,6 +496,11 @@
         byte: { name: "байт", nameFull: "байт", factor: 8 },
         KB: { name: "КБ", nameFull: "килобайт", factor: 8 * 1024 },
         MB: { name: "МБ", nameFull: "мегабайт", factor: 8 * 1024 * 1024 },
+        GB: {
+          name: "ГБ",
+          nameFull: "гигабайт",
+          factor: 8 * 1024 * 1024 * 1024,
+        },
       };
 
       // Единицы измерения времени
@@ -672,6 +677,27 @@
             timeUnit: "s",
             answerUnit: "KB",
           },
+          {
+            speed: 8,
+            speedUnit: "Mbps",
+            time: 2,
+            timeUnit: "min",
+            answerUnit: "MB",
+          },
+          {
+            speed: 4,
+            speedUnit: "Mbps",
+            time: 4,
+            timeUnit: "min",
+            answerUnit: "MB",
+          },
+          {
+            speed: 2,
+            speedUnit: "Mbps",
+            time: 8,
+            timeUnit: "min",
+            answerUnit: "MB",
+          },
         ];
 
         const set = randomChoice(sets);
@@ -754,10 +780,12 @@
         const taskText = `Файл размером <span class="highlight">${set.volume} ${volumeUnits[set.volumeUnit].name}</span> был передан за <span class="highlight">${set.time} ${timeUnits[set.timeUnit].name}</span>. Определите скорость передачи данных в ${speedUnits[set.answerUnit].nameFull}.`;
 
         const hintSteps = [
-          `<div class="hint-step">1. Используем формулу: <span class="formula">v = I / t</span></div>`,
-          `<div class="hint-step">2. Вычислим скорость в бит/с:</div>`,
+          `<div class="hint-step">1. Переведём объём файла в биты:</div>`,
+          `<div class="hint-step">   ${set.volume} ${volumeUnits[set.volumeUnit].name} = ${set.volume} × 1024 × 8 = ${bitsTotal} бит</div>`,
+          `<div class="hint-step">2. Используем формулу: <span class="formula">v = I / t</span></div>`,
+          `<div class="hint-step">3. Вычислим скорость в бит/с:</div>`,
           `<div class="hint-step">   ${bitsTotal} бит ÷ ${timeSec} с = ${speedBps} бит/с</div>`,
-          `<div class="hint-step">3. Переведём в ${speedUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">4. Переведём в ${speedUnits[set.answerUnit].nameFull}:</div>`,
           `<div class="hint-step">   ${speedBps} бит/с = ${answer} ${speedUnits[set.answerUnit].name}</div>`,
           `<div class="hint-step">   <span class="result">Ответ: ${answer} ${speedUnits[set.answerUnit].name}</span></div>`,
         ];
@@ -796,7 +824,7 @@
             answerUnit: "Kbps",
           },
           {
-            volume: 512,
+            volume: 480,
             volumeUnit: "KB",
             time: 1,
             timeUnit: "min",
@@ -896,10 +924,12 @@
         const taskText = `Файл размером <span class="highlight">${set.volume} ${volumeUnits[set.volumeUnit].name}</span> передаётся со скоростью <span class="highlight">${set.speed} ${speedUnits[set.speedUnit].name}</span>. Определите время передачи в ${timeUnits[set.answerUnit].nameFull}.`;
 
         const hintSteps = [
-          `<div class="hint-step">1. Используем формулу: <span class="formula">t = I / v</span></div>`,
-          `<div class="hint-step">2. Вычислим время в секундах:</div>`,
+          `<div class="hint-step">1. Переведём объём файла в биты:</div>`,
+          `<div class="hint-step">   ${set.volume} ${volumeUnits[set.volumeUnit].name} = ${set.volume} × 1024 × 8 = ${bitsTotal} бит</div>`,
+          `<div class="hint-step">2. Используем формулу: <span class="formula">t = I / v</span></div>`,
+          `<div class="hint-step">3. Вычислим время в секундах:</div>`,
           `<div class="hint-step">   ${bitsTotal} бит ÷ ${speedBps} бит/с = ${timeSec} с</div>`,
-          `<div class="hint-step">3. Ответ в ${timeUnits[set.answerUnit].nameFull}:</div>`,
+          `<div class="hint-step">4. Ответ в ${timeUnits[set.answerUnit].nameFull}:</div>`,
           `<div class="hint-step">   <span class="result">Ответ: ${answer} ${timeUnits[set.answerUnit].name}</span></div>`,
         ];
 
@@ -964,6 +994,27 @@
             speedUnit: "Mbps",
             answerUnit: "s",
           },
+          {
+            volume: 60,
+            volumeUnit: "MB",
+            speed: 1,
+            speedUnit: "Mbps",
+            answerUnit: "min",
+          },
+          {
+            volume: 120,
+            volumeUnit: "MB",
+            speed: 2,
+            speedUnit: "Mbps",
+            answerUnit: "min",
+          },
+          {
+            volume: 30,
+            volumeUnit: "MB",
+            speed: 512,
+            speedUnit: "Kbps",
+            answerUnit: "min",
+          },
         ];
 
         const set = randomChoice(sets);
@@ -981,9 +1032,12 @@
           `<div class="hint-step">   ${set.speed} ${speedUnits[set.speedUnit].name} = ${speedBps} бит/с</div>`,
           `<div class="hint-step">3. Вычислим время по формуле <span class="formula">t = I / v</span>:</div>`,
           `<div class="hint-step">   <span class="formula">${bitsTotal} бит ÷ ${speedBps} бит/с = ${timeSec} с</span></div>`,
-          `<div class="hint-step">4. Ответ в ${timeUnits[set.answerUnit].nameFull}:</div>`,
-          `<div class="hint-step">   <span class="result">Ответ: ${answer} ${timeUnits[set.answerUnit].name}</span></div>`,
-        ];
+          `<div class="hint-step">4. ${set.answerUnit === "min" ? "Переведём секунды в минуты:" : "Ответ в " + timeUnits[set.answerUnit].nameFull + ":"}</div>`,
+          `<div class="hint-step">   ${set.answerUnit === "min" ? timeSec + " с ÷ 60 = " + answer + " мин" : '<span class="result">Ответ: ' + answer + " " + timeUnits[set.answerUnit].name + "</span>"}</div>`,
+          set.answerUnit === "min"
+            ? `<div class="hint-step">   <span class="result">Ответ: ${answer} ${timeUnits[set.answerUnit].name}</span></div>`
+            : "",
+        ].filter(Boolean);
 
         return {
           type: "⏱️ Найти время передачи",
