@@ -1511,6 +1511,9 @@
 
         feedback.style.display = "block";
 
+        // Отправляем результат в родительское окно (режим экзамена)
+        sendExamResult(correctCount === totalCells);
+
         // Показываем ход рассуждений
         if (currentTask.reasoning && currentTask.reasoning.length > 0) {
           const reasoningSteps = document.getElementById("reasoningSteps");
@@ -1546,8 +1549,50 @@
         startGame();
       }
 
+      // Отправка результата в режим экзамена
+      function sendExamResult(correct) {
+        if (window.parent !== window) {
+          window.parent.postMessage(
+            {
+              type: "vpr7-task-result",
+              correct: correct,
+            },
+            "*",
+          );
+        }
+      }
+
+      // Отправка высоты контента в режим экзамена
+      function sendContentHeight() {
+        if (window.parent !== window) {
+          const height = document.documentElement.scrollHeight;
+          window.parent.postMessage(
+            {
+              type: "vpr7-content-height",
+              height: height,
+            },
+            "*",
+          );
+        }
+      }
+
+      // Скрытие навигации в режиме экзамена
+      function hideExamNavigation() {
+        if (window.parent !== window) {
+          const backLinks = document.querySelectorAll(".back-link");
+          backLinks.forEach((link) => (link.style.display = "none"));
+          const theoryLinks = document.querySelectorAll('a[href*="-t.html"]');
+          theoryLinks.forEach((link) => (link.style.display = "none"));
+        }
+      }
+
       // Запуск
       loadData();
+      hideExamNavigation();
+
+      // Отправляем высоту после загрузки страницы
+      window.addEventListener("load", sendContentHeight);
+      window.addEventListener("resize", sendContentHeight);
     </script>
   </body>
 </html>

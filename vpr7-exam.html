@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ВПР 7 класс - Полный вариант</title>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+      (function (m, e, t, r, i, k, a) {
+        m[i] =
+          m[i] ||
+          function () {
+            (m[i].a = m[i].a || []).push(arguments);
+          };
+        m[i].l = 1 * new Date();
+        for (var j = 0; j < document.scripts.length; j++) {
+          if (document.scripts[j].src === r) {
+            return;
+          }
+        }
+        ((k = e.createElement(t)),
+          (a = e.getElementsByTagName(t)[0]),
+          (k.async = 1),
+          (k.src = r),
+          a.parentNode.insertBefore(k, a));
+      })(
+        window,
+        document,
+        "script",
+        "https://mc.yandex.ru/metrika/tag.js?id=107146125",
+        "ym",
+      );
+
+      ym(107146125, "init", {
+        ssr: true,
+        webvisor: true,
+        clickmap: true,
+        ecommerce: "dataLayer",
+        referrer: document.referrer,
+        url: location.href,
+        accurateTrackBounce: true,
+        trackLinks: true,
+      });
+    </script>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 500;
+      }
+
+      .back-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .progress-section {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .task-counter {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .task-counter span {
+        color: #667eea;
+      }
+
+      .progress-bar-container {
+        width: 200px;
+        height: 12px;
+        background: #e0e0e0;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        border-radius: 6px;
+        transition: width 0.3s ease;
+      }
+
+      .score-display {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .score-item {
+        text-align: center;
+        padding: 8px 15px;
+        background: #f5f5f5;
+        border-radius: 10px;
+      }
+
+      .score-value {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #11998e;
+      }
+
+      .score-label {
+        font-size: 0.75rem;
+        color: #666;
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+      }
+
+      .task-frame-container {
+        flex: 1;
+        background: white;
+        border-radius: 15px;
+        overflow: visible;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .task-frame {
+        width: 100%;
+        height: 800px;
+        min-height: 600px;
+        border: none;
+        display: block;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding: 20px;
+        flex-wrap: wrap;
+      }
+
+      .nav-btn {
+        border: none;
+        padding: 15px 35px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-btn:hover:not(:disabled) {
+        transform: translateY(-3px);
+      }
+
+      .nav-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-prev {
+        background: linear-gradient(145deg, #6c757d 0%, #495057 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+      }
+
+      .btn-next {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-finish {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+      }
+
+      .task-indicators {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 20px;
+        flex-wrap: wrap;
+      }
+
+      .task-indicator {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 3px solid transparent;
+      }
+
+      .task-indicator.current {
+        border-color: #667eea;
+        transform: scale(1.15);
+      }
+
+      .task-indicator.completed {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .task-indicator.completed-wrong {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .task-indicator.pending {
+        background: #e0e0e0;
+        color: #666;
+      }
+
+      .task-indicator:hover {
+        transform: scale(1.1);
+      }
+
+      /* Results screen */
+      .results-screen {
+        display: none;
+        flex: 1;
+        padding: 20px;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .results-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 800px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      .results-title {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 30px;
+      }
+
+      .results-score {
+        font-size: 4rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .results-score.excellent {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .results-score.good {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .results-score.satisfactory {
+        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .results-score.needs-work {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .results-message {
+        font-size: 1.3rem;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .results-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .result-detail-item {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 15px;
+      }
+
+      .result-detail-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .result-detail-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .results-breakdown {
+        margin-top: 30px;
+        text-align: left;
+      }
+
+      .results-breakdown h3 {
+        color: #333;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .breakdown-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+      }
+
+      .breakdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .breakdown-item.correct {
+        border-left: 4px solid #38ef7d;
+      }
+
+      .breakdown-item.incorrect {
+        border-left: 4px solid #f45c43;
+      }
+
+      .breakdown-item.skipped {
+        border-left: 4px solid #ffc107;
+      }
+
+      .breakdown-number {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        background: #e0e0e0;
+      }
+
+      .breakdown-item.correct .breakdown-number {
+        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .breakdown-item.incorrect .breakdown-number {
+        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .breakdown-item.skipped .breakdown-number {
+        background: linear-gradient(145deg, #ffc107 0%, #ff9800 100%);
+        color: white;
+      }
+
+      .breakdown-status {
+        font-size: 1.2rem;
+      }
+
+      .results-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+
+      .results-btn {
+        border: none;
+        padding: 15px 30px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .results-btn:hover {
+        transform: translateY(-3px);
+      }
+
+      .btn-restart {
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-home {
+        background: linear-gradient(145deg, #6c757d 0%, #495057 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .progress-section {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .progress-bar-container {
+          width: 150px;
+        }
+
+        .task-frame {
+          min-height: calc(100vh - 300px);
+        }
+
+        .nav-btn {
+          padding: 12px 25px;
+          font-size: 1rem;
+        }
+
+        .results-card {
+          padding: 25px;
+        }
+
+        .results-title {
+          font-size: 1.5rem;
+        }
+
+        .results-score {
+          font-size: 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-content">
+        <a href="vpr7.html" class="back-link">← На главную</a>
+
+        <div class="progress-section">
+          <div class="task-counter">
+            Задание <span id="currentTaskNum">1</span> из <span>12</span>
+          </div>
+          <div class="progress-bar-container">
+            <div
+              class="progress-bar"
+              id="progressBar"
+              style="width: 8.33%"
+            ></div>
+          </div>
+        </div>
+
+        <div class="score-display">
+          <div class="score-item">
+            <div class="score-value" id="correctScore">0</div>
+            <div class="score-label">Правильно</div>
+          </div>
+          <div class="score-item">
+            <div class="score-value" id="totalAttempted">0</div>
+            <div class="score-label">Попыток</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="task-indicators" id="taskIndicators"></div>
+
+    <main class="main-content">
+      <div class="task-frame-container" id="taskContainer">
+        <iframe class="task-frame" id="taskFrame" src=""></iframe>
+      </div>
+
+      <div class="results-screen" id="resultsScreen">
+        <div class="results-card">
+          <h1 class="results-title">🎓 Результаты ВПР</h1>
+          <div class="results-score" id="finalScore">0/12</div>
+          <p class="results-message" id="resultsMessage">Отличная работа!</p>
+
+          <div class="results-details">
+            <div class="result-detail-item">
+              <div class="result-detail-value" id="detailCorrect">0</div>
+              <div class="result-detail-label">Правильных ответов</div>
+            </div>
+            <div class="result-detail-item">
+              <div class="result-detail-value" id="detailIncorrect">0</div>
+              <div class="result-detail-label">Неправильных ответов</div>
+            </div>
+            <div class="result-detail-item">
+              <div class="result-detail-value" id="detailPercent">0%</div>
+              <div class="result-detail-label">Процент выполнения</div>
+            </div>
+          </div>
+
+          <div class="results-breakdown">
+            <h3>📋 Детализация по заданиям</h3>
+            <div class="breakdown-list" id="breakdownList"></div>
+          </div>
+
+          <div class="results-buttons">
+            <button class="results-btn btn-restart" onclick="restartExam()">
+              🔄 Пройти заново
+            </button>
+            <a href="vpr7.html" class="results-btn btn-home">🏠 На главную</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <nav class="navigation" id="navigation">
+      <button class="nav-btn btn-prev" id="btnPrev" onclick="prevTask()">
+        ← Назад
+      </button>
+      <button class="nav-btn btn-next" id="btnNext" onclick="nextTask()">
+        Далее →
+      </button>
+      <button class="nav-btn btn-finish" id="btnFinish" onclick="finishExam()">
+        ✓ Завершить
+      </button>
+    </nav>
+
+    <script>
+      // Задания
+      const tasks = [
+        { file: "vpr7-1.html", title: "Устройства компьютера" },
+        { file: "vpr7-2.html", title: "Пути к файлам" },
+        { file: "vpr7-3.html", title: "Типы файлов" },
+        { file: "vpr7-4.html", title: "URL-адреса" },
+        { file: "vpr7-5.html", title: "Логические задачи" },
+        { file: "vpr7-6.html", title: "Декодирование сообщений" },
+        { file: "vpr7-7.html", title: "Объём информации" },
+        { file: "vpr7-8.html", title: "Объём текстовой информации" },
+        { file: "vpr7-9.html", title: "Передача информации" },
+        { file: "vpr7-10.html", title: "Объём информации в предложении" },
+        { file: "vpr7-11.html", title: "Цветовая модель RGB" },
+        { file: "vpr7-12.html", title: "Форматирование текста" },
+      ];
+
+      // Состояние экзамена
+      let currentTaskIndex = 0;
+      let results = {}; // { taskIndex: { completed: boolean, correct: boolean } }
+      let correctCount = 0;
+      let attemptedCount = 0;
+
+      // Инициализация
+      function init() {
+        loadResults();
+        renderTaskIndicators();
+        loadTask(currentTaskIndex);
+        updateUI();
+      }
+
+      // Загрузка результатов из localStorage
+      function loadResults() {
+        const saved = localStorage.getItem("vpr7-exam-results");
+        if (saved) {
+          const data = JSON.parse(saved);
+          results = data.results || {};
+          correctCount = data.correctCount || 0;
+          attemptedCount = data.attemptedCount || 0;
+        }
+      }
+
+      // Сохранение результатов в localStorage
+      function saveResults() {
+        localStorage.setItem(
+          "vpr7-exam-results",
+          JSON.stringify({
+            results,
+            correctCount,
+            attemptedCount,
+          }),
+        );
+      }
+
+      // Отрисовка индикаторов заданий
+      function renderTaskIndicators() {
+        const container = document.getElementById("taskIndicators");
+        container.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+          const indicator = document.createElement("div");
+          indicator.className = "task-indicator";
+          indicator.textContent = index + 1;
+          indicator.onclick = () => goToTask(index);
+
+          if (index === currentTaskIndex) {
+            indicator.classList.add("current");
+          }
+
+          // Устанавливаем статус - только один класс
+          if (results[index]) {
+            if (results[index].correct) {
+              indicator.classList.add("completed");
+            } else {
+              indicator.classList.add("completed-wrong");
+            }
+          } else {
+            indicator.classList.add("pending");
+          }
+
+          container.appendChild(indicator);
+        });
+      }
+
+      // Загрузка задания
+      function loadTask(index) {
+        const frame = document.getElementById("taskFrame");
+        frame.src = tasks[index].file + "?examMode=1";
+        currentTaskIndex = index;
+        updateUI();
+        renderTaskIndicators();
+      }
+
+      // Автоматическое изменение высоты iframe
+      function resizeIframe() {
+        const frame = document.getElementById("taskFrame");
+        try {
+          const doc = frame.contentDocument || frame.contentWindow.document;
+          const height = doc.body.scrollHeight;
+          frame.style.height = Math.max(height + 50, 600) + "px";
+        } catch (e) {
+          // Если iframe ещё не загрузился или кросс-домен
+          frame.style.height = "800px";
+        }
+      }
+
+      // Слушатель загрузки iframe
+      document.getElementById("taskFrame").onload = function () {
+        resizeIframe();
+      };
+
+      // Обновление UI
+      function updateUI() {
+        // Счётчик заданий
+        document.getElementById("currentTaskNum").textContent =
+          currentTaskIndex + 1;
+
+        // Прогресс-бар
+        const progress = ((currentTaskIndex + 1) / tasks.length) * 100;
+        document.getElementById("progressBar").style.width = progress + "%";
+
+        // Счётчики
+        document.getElementById("correctScore").textContent = correctCount;
+        document.getElementById("totalAttempted").textContent = attemptedCount;
+
+        // Кнопки навигации
+        document.getElementById("btnPrev").disabled = currentTaskIndex === 0;
+
+        // Показываем/скрываем кнопки
+        if (currentTaskIndex === tasks.length - 1) {
+          document.getElementById("btnNext").style.display = "none";
+          document.getElementById("btnFinish").style.display = "flex";
+        } else {
+          document.getElementById("btnNext").style.display = "flex";
+          document.getElementById("btnFinish").style.display = "none";
+        }
+      }
+
+      // Навигация
+      function prevTask() {
+        if (currentTaskIndex > 0) {
+          loadTask(currentTaskIndex - 1);
+        }
+      }
+
+      function nextTask() {
+        if (currentTaskIndex < tasks.length - 1) {
+          loadTask(currentTaskIndex + 1);
+        }
+      }
+
+      function goToTask(index) {
+        loadTask(index);
+      }
+
+      // Завершение экзамена
+      function finishExam() {
+        showResults();
+      }
+
+      // Показ результатов
+      function showResults() {
+        document.getElementById("taskContainer").style.display = "none";
+        document.getElementById("navigation").style.display = "none";
+        document.getElementById("resultsScreen").style.display = "flex";
+        document.querySelector(".task-indicators").style.display = "none";
+
+        // Подсчёт результатов
+        let correct = 0;
+        let incorrect = 0;
+        let skipped = 0;
+
+        tasks.forEach((task, index) => {
+          if (results[index]) {
+            if (results[index].correct) {
+              correct++;
+            } else {
+              incorrect++;
+            }
+          } else {
+            skipped++;
+          }
+        });
+
+        const total = tasks.length;
+        const percent = Math.round((correct / total) * 100);
+
+        // Отображение оценки
+        const scoreEl = document.getElementById("finalScore");
+        scoreEl.textContent = `${correct}/${total}`;
+
+        // Определение класса для оценки
+        scoreEl.className = "results-score";
+        if (percent >= 90) {
+          scoreEl.classList.add("excellent");
+        } else if (percent >= 70) {
+          scoreEl.classList.add("good");
+        } else if (percent >= 50) {
+          scoreEl.classList.add("satisfactory");
+        } else {
+          scoreEl.classList.add("needs-work");
+        }
+
+        // Сообщение
+        const messageEl = document.getElementById("resultsMessage");
+        if (percent >= 90) {
+          messageEl.textContent = "Превосходно! Вы отлично подготовлены к ВПР!";
+        } else if (percent >= 70) {
+          messageEl.textContent =
+            "Хороший результат! Продолжайте тренироваться!";
+        } else if (percent >= 50) {
+          messageEl.textContent = "Неплохо, но есть над чем поработать.";
+        } else {
+          messageEl.textContent =
+            "Рекомендуем ещё раз изучить теорию и потренироваться.";
+        }
+
+        // Детали
+        document.getElementById("detailCorrect").textContent = correct;
+        document.getElementById("detailIncorrect").textContent = incorrect;
+        document.getElementById("detailPercent").textContent = percent + "%";
+
+        // Детализация по заданиям
+        const breakdownList = document.getElementById("breakdownList");
+        breakdownList.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+          const item = document.createElement("div");
+          let statusClass, statusIcon;
+
+          if (results[index]) {
+            if (results[index].correct) {
+              statusClass = "correct";
+              statusIcon = "✓";
+            } else {
+              statusClass = "incorrect";
+              statusIcon = "✗";
+            }
+          } else {
+            statusClass = "skipped";
+            statusIcon = "—";
+          }
+
+          item.className = `breakdown-item ${statusClass}`;
+          item.innerHTML = `
+            <div class="breakdown-number">${index + 1}</div>
+            <div style="flex: 1;">${task.title}</div>
+            <div class="breakdown-status">${statusIcon}</div>
+          `;
+
+          breakdownList.appendChild(item);
+        });
+
+        // Очистка localStorage
+        localStorage.removeItem("vpr7-exam-results");
+      }
+
+      // Перезапуск экзамена
+      function restartExam() {
+        results = {};
+        correctCount = 0;
+        attemptedCount = 0;
+        currentTaskIndex = 0;
+
+        document.getElementById("taskContainer").style.display = "block";
+        document.getElementById("navigation").style.display = "flex";
+        document.getElementById("resultsScreen").style.display = "none";
+        document.querySelector(".task-indicators").style.display = "flex";
+
+        loadTask(0);
+        renderTaskIndicators();
+        updateUI();
+      }
+
+      // Приём сообщений от iframe
+      window.addEventListener("message", function (event) {
+        // Обработка высоты контента
+        if (event.data && event.data.type === "vpr7-content-height") {
+          const frame = document.getElementById("taskFrame");
+          const height = event.data.height;
+          if (height && height > 400) {
+            frame.style.height = height + 20 + "px";
+          }
+        }
+
+        // Проверяем тип сообщения
+        if (event.data && event.data.type === "vpr7-task-result") {
+          const taskIndex = currentTaskIndex;
+          const isCorrect = event.data.correct;
+
+          // Записываем результат только если это первая попытка
+          if (!results[taskIndex]) {
+            results[taskIndex] = {
+              completed: true,
+              correct: isCorrect,
+            };
+
+            attemptedCount++;
+            if (isCorrect) {
+              correctCount++;
+            }
+
+            saveResults();
+            renderTaskIndicators();
+            updateUI();
+          }
+        }
+      });
+
+      // Запуск
+      init();
+    </script>
+  </body>
+</html>
