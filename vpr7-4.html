@@ -1211,10 +1211,29 @@
       // Скрытие навигации в режиме экзамена
       function hideExamNavigation() {
         if (window.parent !== window) {
+          // Скрываем ссылку "На главную"
           const backLinks = document.querySelectorAll(".back-link");
           backLinks.forEach((link) => (link.style.display = "none"));
+
+          // Скрываем кнопку "Теория"
           const theoryLinks = document.querySelectorAll('a[href*="-t.html"]');
           theoryLinks.forEach((link) => (link.style.display = "none"));
+
+          // Скрываем кнопку "Подсказка"
+          const hintButtons = document.querySelectorAll(".btn-hint");
+          hintButtons.forEach((btn) => (btn.style.display = "none"));
+
+          // Скрываем кнопку "Очистить"
+          const clearButtons = document.querySelectorAll(".btn-clear");
+          clearButtons.forEach((btn) => (btn.style.display = "none"));
+
+          // Скрываем кнопку "Новое задание"
+          const resetButtons = document.querySelectorAll(".btn-reset");
+          resetButtons.forEach((btn) => (btn.style.display = "none"));
+
+          // Скрываем счётчик заданий
+          const scoreBoards = document.querySelectorAll(".score-board");
+          scoreBoards.forEach((board) => (board.style.display = "none"));
         }
       }
 

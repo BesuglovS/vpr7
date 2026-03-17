@@ -262,12 +262,12 @@
       }
 
       .task-indicator.completed {
-        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+        background: #27ae60;
         color: white;
       }
 
       .task-indicator.completed-wrong {
-        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+        background: #f45c43;
         color: white;
       }
 
@@ -625,7 +625,8 @@
 
       // Инициализация
       function init() {
-        loadResults();
+        // Очищаем результаты при новом запуске экзамена
+        localStorage.removeItem("vpr7-exam-results");
         renderTaskIndicators();
         loadTask(currentTaskIndex);
         updateUI();
@@ -863,6 +864,7 @@
         correctCount = 0;
         attemptedCount = 0;
         currentTaskIndex = 0;
+        localStorage.removeItem("vpr7-exam-results");
 
         document.getElementById("taskContainer").style.display = "block";
         document.getElementById("navigation").style.display = "flex";
@@ -905,6 +907,17 @@
             saveResults();
             renderTaskIndicators();
             updateUI();
+
+            // Автоматический переход к следующему заданию или показ результатов
+            setTimeout(function () {
+              if (currentTaskIndex === tasks.length - 1) {
+                // Это было последнее задание - показываем результаты
+                finishExam();
+              } else {
+                // Переходим к следующему заданию
+                nextTask();
+              }
+            }, 1500); // Задержка 1.5 секунды, чтобы пользователь увидел результат
           }
         }
       });

@@ -898,6 +898,18 @@ NPU (нейронный процессор)
           // Скрываем кнопку "Теория" и другие навигационные кнопки
           const theoryLinks = document.querySelectorAll('a[href*="-t.html"]');
           theoryLinks.forEach((link) => (link.style.display = "none"));
+
+          // Скрываем кнопку "Подсказка"
+          const hintButtons = document.querySelectorAll(".btn-hint");
+          hintButtons.forEach((btn) => (btn.style.display = "none"));
+
+          // Скрываем кнопку "Начать заново"
+          const resetButtons = document.querySelectorAll(".btn-reset");
+          resetButtons.forEach((btn) => (btn.style.display = "none"));
+
+          // Скрываем счётчик очков
+          const scoreBoards = document.querySelectorAll(".score-board");
+          scoreBoards.forEach((board) => (board.style.display = "none"));
         }
       }
 

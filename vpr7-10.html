@@ -677,10 +677,25 @@
       // Скрытие навигации в режиме экзамена
       function hideExamNavigation() {
         if (window.parent !== window) {
+          // Скрываем ссылку "На главную"
           const backLinks = document.querySelectorAll(".back-link");
           backLinks.forEach((link) => (link.style.display = "none"));
+
+          // Скрываем кнопку "Теория"
           const theoryLinks = document.querySelectorAll('a[href*="-t.html"]');
           theoryLinks.forEach((link) => (link.style.display = "none"));
+
+          // Скрываем кнопку "Подсказка"
+          const hintButtons = document.querySelectorAll(".btn-hint");
+          hintButtons.forEach((btn) => (btn.style.display = "none"));
+
+          // Скрываем кнопку "Новая задача"
+          const resetButtons = document.querySelectorAll(".btn-reset");
+          resetButtons.forEach((btn) => (btn.style.display = "none"));
+
+          // Скрываем статистику
+          const statsSections = document.querySelectorAll(".stats");
+          statsSections.forEach((section) => (section.style.display = "none"));
         }
       }
 
