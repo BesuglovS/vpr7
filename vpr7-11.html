@@ -759,6 +759,7 @@
       let selectedAnswer = null;
       let answered = false;
       let stats = { correct: 0, total: 0 };
+      let examTaskCompleted = false; // Флаг, что задание уже выполнено в режиме экзамена
 
       // Цвета для задач
       const colors = [
@@ -1260,6 +1261,52 @@
           statsSections.forEach((section) => (section.style.display = "none"));
         }
       }
+
+      // Показ сообщения о завершённом задании
+      function showCompletedMessage(correct) {
+        examTaskCompleted = true;
+        // Скрываем рабочую область
+        document.querySelector(".task-card").style.display = "none";
+
+        // Показываем сообщение
+        const container = document.querySelector(".container");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "completed-message";
+        messageDiv.style.cssText = `
+          background: rgba(255, 255, 255, 0.95);
+          border-radius: 15px;
+          padding: 40px;
+          text-align: center;
+          margin-top: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        `;
+
+        if (correct) {
+          messageDiv.innerHTML = `
+            <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
+            <h2 style="color: #11998e; margin-bottom: 15px; font-size: 1.5rem;">Задание уже выполнено!</h2>
+            <p style="color: #333; font-size: 1.1rem;">Вы правильно выполнили это задание в режиме экзамена.</p>
+          `;
+        } else {
+          messageDiv.innerHTML = `
+            <div style="font-size: 4rem; margin-bottom: 20px;">❌</div>
+            <h2 style="color: #eb3349; margin-bottom: 15px; font-size: 1.5rem;">Задание уже выполнено!</h2>
+            <p style="color: #333; font-size: 1.1rem;">Вы допустили ошибку в этом задании в режиме экзамена.</p>
+          `;
+        }
+
+        container.appendChild(messageDiv);
+        sendContentHeight();
+      }
+
+      // Приём сообщений от родительского окна (режим экзамена)
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "vpr7-task-status") {
+          if (event.data.completed) {
+            showCompletedMessage(event.data.correct);
+          }
+        }
+      });
 
       // Запуск
       generateTask();

@@ -694,6 +694,20 @@
         renderTaskIndicators();
       }
 
+      // Отправка статуса задания в iframe
+      function sendTaskStatusToIframe() {
+        const frame = document.getElementById("taskFrame");
+        const isCompleted = results[currentTaskIndex] ? true : false;
+        frame.contentWindow.postMessage(
+          {
+            type: "vpr7-task-status",
+            completed: isCompleted,
+            correct: isCompleted ? results[currentTaskIndex].correct : false,
+          },
+          "*",
+        );
+      }
+
       // Автоматическое изменение высоты iframe
       function resizeIframe() {
         const frame = document.getElementById("taskFrame");
@@ -710,6 +724,7 @@
       // Слушатель загрузки iframe
       document.getElementById("taskFrame").onload = function () {
         resizeIframe();
+        sendTaskStatusToIframe();
       };
 
       // Обновление UI
