@@ -55,8 +55,6 @@
     <!-- Libraries for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Library for ODT export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
       * {
@@ -279,12 +277,6 @@
         box-shadow: 0 4px 15px rgba(235, 51, 73, 0.4);
       }
 
-      .btn-odt {
-        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
-      }
-
       .preview-section {
         margin-top: 20px;
       }
@@ -389,22 +381,25 @@
       }
 
       .a4-header {
-        text-align: center;
-        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
         border-bottom: 2px solid #333;
-        padding-bottom: 15px;
+        padding-bottom: 10px;
       }
 
       .a4-header h1 {
-        font-size: 16pt;
+        font-size: 14pt;
         color: #333;
         text-shadow: none;
-        margin-bottom: 5px;
+        margin: 0;
       }
 
       .a4-header .variant-info {
-        font-size: 12pt;
-        color: #666;
+        font-size: 14pt;
+        color: #333;
+        font-weight: bold;
       }
 
       .a4-task {
@@ -687,6 +682,18 @@
           <div class="total-tasks">
             Всего заданий в варианте: <span id="totalTasksCount">12</span>
           </div>
+          <button
+            class="btn"
+            style="
+              background: #6b7280;
+              color: white;
+              padding: 10px 20px;
+              font-size: 0.95rem;
+            "
+            onclick="resetAllTasks()"
+          >
+            🗑️ Сбросить все
+          </button>
         </div>
 
         <div class="buttons">
@@ -700,14 +707,6 @@
             disabled
           >
             📄 Скачать PDF
-          </button>
-          <button
-            class="btn btn-odt"
-            id="btnOdt"
-            onclick="downloadODT()"
-            disabled
-          >
-            📝 Скачать ODT
           </button>
         </div>
       </div>
@@ -772,6 +771,14 @@
       document.querySelectorAll(".task-count-select").forEach((select) => {
         select.addEventListener("change", updateTotalCount);
       });
+
+      // Reset all task counts to 0
+      function resetAllTasks() {
+        document.querySelectorAll(".task-count-select").forEach((select) => {
+          select.value = "0";
+        });
+        updateTotalCount();
+      }
 
       // Generate variants
       async function generateVariants() {
@@ -843,10 +850,8 @@
         loading.classList.remove("active");
         previewContent.style.display = "block";
 
-        // Enable download buttons
+        // Enable download button
         document.getElementById("btnPdf").disabled =
-          generatedVariants.length === 0;
-        document.getElementById("btnOdt").disabled =
           generatedVariants.length === 0;
       }
 
@@ -883,7 +888,26 @@
         forPDF = false,
       ) {
         const pageClass = forPDF ? "pdf-page" : "a4-page";
-        let html = `
+
+        if (includeAnswers) {
+          // Только страница ответов
+          let html = `
+                <div class="${pageClass} answers-page">
+                  <div class="a4-header">
+                    <h1>Ответы</h1>
+                    <div class="variant-info">Вариант ${variant.number}</div>
+                  </div>
+              `;
+
+          variant.tasks.forEach((task) => {
+            html += `<div style="margin-bottom: 8px;"><b>${task.number}.</b> ${task.answer}</div>`;
+          });
+
+          html += `</div>`;
+          return html;
+        } else {
+          // Страница с заданиями
+          let html = `
                 <div class="${pageClass}">
                   <div class="a4-header">
                     <h1>ВПР Информатика 7 класс</h1>
@@ -891,44 +915,19 @@
                   </div>
               `;
 
-        variant.tasks.forEach((task) => {
-          html += `
+          variant.tasks.forEach((task) => {
+            html += `
                   <div class="a4-task">
                     <div class="a4-task-number">${task.number}.</div>
                     <div class="a4-task-text">${task.text}</div>
-                    ${
-                      includeAnswers
-                        ? `<div class="answer-key">Ответ: ${task.answer}</div>`
-                        : `<div class="a4-answer-label">Ответ:</div><div class="a4-answer-space"></div>`
-                    }
+                    <div class="a4-answer-label">Ответ:</div><div class="a4-answer-space"></div>
                   </div>
                 `;
-        });
-
-        html += `</div>`;
-
-        if (includeAnswers) {
-          html += `
-                  <div class="${pageClass} answers-page">
-                    <div class="a4-header">
-                      <h1>Ответы</h1>
-                      <div class="variant-info">Вариант ${variant.number}</div>
-                    </div>
-                `;
-
-          variant.tasks.forEach((task) => {
-            html += `
-                    <div class="a4-task">
-                      <div class="a4-task-number">${task.number}.</div>
-                      <span class="answer-key">${task.answer}</span>
-                    </div>
-                  `;
           });
 
           html += `</div>`;
+          return html;
         }
-
-        return html;
       }
 
       // Download PDF
@@ -941,7 +940,7 @@
         // A4 dimensions in points (1 pt = 1/72 inch)
         const pageWidthPt = 595.28;
         const pageHeightPt = 841.89;
-        const marginPt = 20;
+        const marginPt = 10;
         const contentWidthPt = pageWidthPt - 2 * marginPt;
 
         // Pixel dimensions for rendering (at 2x scale for quality)
@@ -950,26 +949,10 @@
 
         let isFirstPage = true;
 
-        for (const variant of generatedVariants) {
-          // Create temporary container for rendering
-          const container = document.createElement("div");
-          container.style.width = contentWidthPx + "px";
-          container.style.padding = "0";
-          container.style.background = "white";
-          container.style.fontFamily = "'Times New Roman', Times, serif";
-          container.style.fontSize = "14px";
-          container.style.lineHeight = "1.6";
-          container.style.boxSizing = "border-box";
-          container.style.position = "absolute";
-          container.style.left = "-9999px";
-          container.style.top = "0";
-          container.innerHTML = renderVariantHTML(variant, false, true);
-          document.body.appendChild(container);
-
-          // Wait for rendering
+        // Helper function to add page to PDF
+        async function addPageToPDF(container, pdf, isFirst) {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          // Render variant page
           const canvas = await html2canvas(container, {
             scale: 1,
             useCORS: true,
@@ -978,20 +961,16 @@
             windowWidth: contentWidthPx,
           });
 
-          if (!isFirstPage) {
+          if (!isFirst) {
             pdf.addPage();
           }
-          isFirstPage = false;
 
           const imgData = canvas.toDataURL("image/png", 1.0);
           const imgWidthPt = contentWidthPt;
           const imgHeightPt = (canvas.height * contentWidthPt) / canvas.width;
 
-          // Center horizontally
           const xOffset = marginPt;
           let yOffset = marginPt;
-
-          // Add image, splitting across pages if needed
           const availableHeight = pageHeightPt - 2 * marginPt;
 
           if (imgHeightPt <= availableHeight) {
@@ -1003,16 +982,18 @@
               imgWidthPt,
               imgHeightPt,
             );
+            return false;
           } else {
-            // Split across multiple pages
             let remainingHeight = canvas.height;
             let srcY = 0;
             const ptsPerPx = contentWidthPt / canvas.width;
+            let firstChunk = true;
 
             while (remainingHeight > 0) {
-              if (srcY > 0) {
+              if (!firstChunk) {
                 pdf.addPage();
               }
+              firstChunk = false;
 
               const chunkHeightPx = Math.min(
                 remainingHeight,
@@ -1020,7 +1001,6 @@
               );
               const chunkHeightPt = chunkHeightPx * ptsPerPx;
 
-              // Create temp canvas for this chunk
               const chunkCanvas = document.createElement("canvas");
               chunkCanvas.width = canvas.width;
               chunkCanvas.height = chunkHeightPx;
@@ -1050,224 +1030,38 @@
               srcY += chunkHeightPx;
               remainingHeight -= chunkHeightPx;
             }
+            return false;
           }
-
-          // Add answers page
-          container.innerHTML = renderVariantHTML(variant, true, true);
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          const answersCanvas = await html2canvas(container, {
-            scale: 1,
-            useCORS: true,
-            logging: false,
-            width: contentWidthPx,
-            windowWidth: contentWidthPx,
-          });
-
-          pdf.addPage();
-          const answersImgData = answersCanvas.toDataURL("image/png", 1.0);
-          const answersImgHeightPt =
-            (answersCanvas.height * contentWidthPt) / answersCanvas.width;
-
-          if (answersImgHeightPt <= availableHeight) {
-            pdf.addImage(
-              answersImgData,
-              "PNG",
-              xOffset,
-              yOffset,
-              imgWidthPt,
-              answersImgHeightPt,
-            );
-          } else {
-            let remainingHeight = answersCanvas.height;
-            let srcY = 0;
-            const ptsPerPx = contentWidthPt / answersCanvas.width;
-
-            while (remainingHeight > 0) {
-              if (srcY > 0) {
-                pdf.addPage();
-              }
-
-              const chunkHeightPx = Math.min(
-                remainingHeight,
-                Math.round(availableHeight / ptsPerPx),
-              );
-              const chunkHeightPt = chunkHeightPx * ptsPerPx;
-
-              const chunkCanvas = document.createElement("canvas");
-              chunkCanvas.width = answersCanvas.width;
-              chunkCanvas.height = chunkHeightPx;
-              const ctx = chunkCanvas.getContext("2d");
-              ctx.drawImage(
-                answersCanvas,
-                0,
-                srcY,
-                answersCanvas.width,
-                chunkHeightPx,
-                0,
-                0,
-                answersCanvas.width,
-                chunkHeightPx,
-              );
-
-              const chunkImgData = chunkCanvas.toDataURL("image/png", 1.0);
-              pdf.addImage(
-                chunkImgData,
-                "PNG",
-                xOffset,
-                yOffset,
-                imgWidthPt,
-                chunkHeightPt,
-              );
-
-              srcY += chunkHeightPx;
-              remainingHeight -= chunkHeightPx;
-            }
-          }
-
-          document.body.removeChild(container);
         }
 
+        // Create temporary container for rendering
+        const container = document.createElement("div");
+        container.style.width = contentWidthPx + "px";
+        container.style.padding = "0";
+        container.style.background = "white";
+        container.style.fontFamily = "'Times New Roman', Times, serif";
+        container.style.fontSize = "14px";
+        container.style.lineHeight = "1.6";
+        container.style.boxSizing = "border-box";
+        container.style.position = "absolute";
+        container.style.left = "-9999px";
+        container.style.top = "0";
+        document.body.appendChild(container);
+
+        // Phase 1: Render all variants (tasks only)
+        for (const variant of generatedVariants) {
+          container.innerHTML = renderVariantHTML(variant, false, true);
+          isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
+        }
+
+        // Phase 2: Render all answers at the end
+        for (const variant of generatedVariants) {
+          container.innerHTML = renderVariantHTML(variant, true, true);
+          isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
+        }
+
+        document.body.removeChild(container);
         pdf.save(`ВПР_7_класс_варианты.pdf`);
-      }
-
-      // Download ODT
-      async function downloadODT() {
-        if (generatedVariants.length === 0) return;
-
-        const zip = new JSZip();
-
-        // mimetype (must be first and uncompressed)
-        zip.file("mimetype", "application/vnd.oasis.opendocument.text", {
-          compression: "STORE",
-        });
-
-        // META-INF/manifest.xml
-        const manifestXML = `<?xml version="1.0" encoding="UTF-8"?>
-      <manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0">
-        <manifest:file-entry manifest:full-path="/" manifest:media-type="application/vnd.oasis.opendocument.text"/>
-        <manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/>
-        <manifest:file-entry manifest:full-path="styles.xml" manifest:media-type="text/xml"/>
-        <manifest:file-entry manifest:full-path="meta.xml" manifest:media-type="text/xml"/>
-      </manifest:manifest>`;
-        zip.folder("META-INF").file("manifest.xml", manifestXML);
-
-        // styles.xml
-        const stylesXML = `<?xml version="1.0" encoding="UTF-8"?>
-      <office:document-styles xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
-        xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
-        xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
-        xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0">
-        <office:styles>
-          <style:style style:name="Standard" style:family="paragraph">
-            <style:paragraph-properties fo:margin-bottom="0.5cm" fo:line-height="150%"/>
-            <style:text-properties fo:font-size="12pt" style:font-name="Times New Roman"/>
-          </style:style>
-          <style:style style:name="Heading" style:family="paragraph">
-            <style:paragraph-properties fo:text-align="center" fo:margin-bottom="1cm"/>
-            <style:text-properties fo:font-size="16pt" fo:font-weight="bold"/>
-          </style:style>
-          <style:style style:name="Task" style:family="paragraph">
-            <style:paragraph-properties fo:margin-bottom="0.8cm" fo:margin-left="1cm"/>
-          </style:style>
-          <style:style style:name="Answer" style:family="paragraph">
-            <style:paragraph-properties fo:margin-top="0.3cm"/>
-            <style:text-properties fo:font-style="italic" fo:color="#666666"/>
-          </style:style>
-          <style:style style:name="AnswerKey" style:family="paragraph">
-            <style:text-properties fo:font-weight="bold" fo:color="#2e7d32"/>
-          </style:style>
-        </office:styles>
-      </office:document-styles>`;
-        zip.file("styles.xml", stylesXML);
-
-        // meta.xml
-        const metaXML = `<?xml version="1.0" encoding="UTF-8"?>
-      <office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
-        xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0">
-        <office:meta>
-          <meta:generator>VPR7 Generator</meta:generator>
-          <meta:creation-date>${new Date().toISOString()}</meta:creation-date>
-        </office:meta>
-      </office:document-meta>`;
-        zip.file("meta.xml", metaXML);
-
-        // content.xml
-        let contentXML = `<?xml version="1.0" encoding="UTF-8"?>
-      <office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
-        xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
-        xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0">
-        <office:body>
-          <office:text>
-      `;
-
-        generatedVariants.forEach((variant) => {
-          // Variant header
-          contentXML += `
-            <text:h text:style-name="Heading">ВПР Информатика 7 класс — Вариант ${variant.number}</text:h>
-      `;
-
-          // Tasks
-          variant.tasks.forEach((task) => {
-            const taskText = escapeXML(stripHTML(task.text));
-            const answerText = escapeXML(stripHTML(task.answer));
-            contentXML += `
-            <text:p text:style-name="Task"><text:span text:style-name="Bold">${task.number}.</text:span> ${taskText}</text:p>
-            <text:p text:style-name="Answer">Ответ: _________________</text:p>
-      `;
-          });
-
-          // Page break
-          contentXML += `
-            <text:p text:style-name="Standard"/>
-            <text:h text:style-name="Heading">Ответы — Вариант ${variant.number}</text:h>
-      `;
-
-          // Answers
-          variant.tasks.forEach((task) => {
-            const answerText = escapeXML(stripHTML(task.answer));
-            contentXML += `
-            <text:p text:style-name="Task"><text:span text:style-name="Bold">${task.number}.</text:span> <text:span text:style-name="AnswerKey">${answerText}</text:span></text:p>
-      `;
-          });
-
-          // Page break between variants
-          if (variant.number < generatedVariants.length) {
-            contentXML += `
-            <text:p text:style-name="Standard"/>
-      `;
-          }
-        });
-
-        contentXML += `
-          </office:text>
-        </office:body>
-      </office:document-content>`;
-        zip.file("content.xml", contentXML);
-
-        // Generate and download
-        const blob = await zip.generateAsync({ type: "blob" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "ВПР_7_класс_варианты.odt";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-
-      // Helper functions
-      function escapeXML(str) {
-        const escape = document.createElement("div");
-        escape.textContent = str;
-        return escape.innerHTML;
-      }
-
-      function stripHTML(html) {
-        const tmp = document.createElement("div");
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || "";
       }
 
       // Initialize
