@@ -749,6 +749,18 @@
           <button
             class="btn"
             style="
+              background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              padding: 10px 20px;
+              font-size: 0.95rem;
+            "
+            onclick="setAllTasksToOne()"
+          >
+            ✅ Каждого вида по 1
+          </button>
+          <button
+            class="btn"
+            style="
               background: #6b7280;
               color: white;
               padding: 10px 20px;
@@ -756,7 +768,7 @@
             "
             onclick="resetAllTasks()"
           >
-            🗑️ Сбросить все
+            🗑️ Убрать все задания
           </button>
         </div>
 
@@ -852,6 +864,14 @@
       function resetAllTasks() {
         document.querySelectorAll(".task-count-select").forEach((select) => {
           select.value = "0";
+        });
+        updateTotalCount();
+      }
+
+      // Set all task counts to 1
+      function setAllTasksToOne() {
+        document.querySelectorAll(".task-count-select").forEach((select) => {
+          select.value = "1";
         });
         updateTotalCount();
       }
