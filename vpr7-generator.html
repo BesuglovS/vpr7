@@ -472,6 +472,70 @@
         }
       }
 
+      /* Progress modal styles */
+      .progress-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .progress-modal.active {
+        display: flex;
+      }
+
+      .progress-content {
+        background: white;
+        border-radius: 20px;
+        padding: 30px 40px;
+        max-width: 450px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .progress-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        height: 20px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 15px;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 10px;
+      }
+
+      .progress-text {
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .progress-percent {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #667eea;
+      }
+
       .no-preview {
         text-align: center;
         padding: 60px 20px;
@@ -734,6 +798,18 @@
     <!-- Print container for PDF generation -->
     <div class="print-container" id="printContainer"></div>
 
+    <!-- Progress modal for PDF generation -->
+    <div class="progress-modal" id="progressModal">
+      <div class="progress-content">
+        <div class="progress-title">📄 Формирование PDF</div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">Подготовка...</div>
+        <div class="progress-percent" id="progressPercent">0%</div>
+      </div>
+    </div>
+
     <script src="vpr7-tasks-generator.js"></script>
     <script>
       // Task types configuration
@@ -930,9 +1006,31 @@
         }
       }
 
+      // Progress modal functions
+      function showProgressModal() {
+        document.getElementById("progressModal").classList.add("active");
+        updateProgress(0, "Подготовка...");
+      }
+
+      function hideProgressModal() {
+        document.getElementById("progressModal").classList.remove("active");
+      }
+
+      function updateProgress(percent, text) {
+        document.getElementById("progressBar").style.width = percent + "%";
+        document.getElementById("progressPercent").textContent =
+          Math.round(percent) + "%";
+        if (text) {
+          document.getElementById("progressText").textContent = text;
+        }
+      }
+
       // Download PDF
       async function downloadPDF() {
         if (generatedVariants.length === 0) return;
+
+        // Show progress modal
+        showProgressModal();
 
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "pt", "a4");
@@ -949,9 +1047,14 @@
 
         let isFirstPage = true;
 
+        // Calculate total steps for progress
+        const totalVariants = generatedVariants.length;
+        const totalSteps = totalVariants * 2; // tasks + answers for each variant
+        let currentStep = 0;
+
         // Helper function to add page to PDF
         async function addPageToPDF(container, pdf, isFirst) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 50));
 
           const canvas = await html2canvas(container, {
             scale: 1,
@@ -1048,20 +1151,39 @@
         container.style.top = "0";
         document.body.appendChild(container);
 
-        // Phase 1: Render all variants (tasks only)
-        for (const variant of generatedVariants) {
-          container.innerHTML = renderVariantHTML(variant, false, true);
-          isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
-        }
+        try {
+          // Phase 1: Render all variants (tasks only)
+          for (let i = 0; i < generatedVariants.length; i++) {
+            const variant = generatedVariants[i];
+            updateProgress(
+              (currentStep / totalSteps) * 100,
+              `Вариант ${variant.number}: формирование заданий...`,
+            );
+            container.innerHTML = renderVariantHTML(variant, false, true);
+            isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
+            currentStep++;
+          }
 
-        // Phase 2: Render all answers at the end
-        for (const variant of generatedVariants) {
-          container.innerHTML = renderVariantHTML(variant, true, true);
-          isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
-        }
+          // Phase 2: Render all answers at the end
+          for (let i = 0; i < generatedVariants.length; i++) {
+            const variant = generatedVariants[i];
+            updateProgress(
+              (currentStep / totalSteps) * 100,
+              `Вариант ${variant.number}: формирование ответов...`,
+            );
+            container.innerHTML = renderVariantHTML(variant, true, true);
+            isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
+            currentStep++;
+          }
 
-        document.body.removeChild(container);
-        pdf.save(`ВПР_7_класс_варианты.pdf`);
+          updateProgress(100, "Сохранение файла...");
+          await new Promise((resolve) => setTimeout(resolve, 200));
+
+          pdf.save(`ВПР_7_класс_варианты.pdf`);
+        } finally {
+          document.body.removeChild(container);
+          hideProgressModal();
+        }
       }
 
       // Initialize
