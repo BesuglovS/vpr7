@@ -985,19 +985,17 @@
           // Страница с заданиями
           let html = `
                 <div class="${pageClass}">
-                  <div class="a4-header">
-                    <h1>ВПР Информатика 7 класс</h1>
-                    <div class="variant-info">Вариант ${variant.number}</div>
-                  </div>
-                  <div style="margin-bottom: 20px; padding: 10px 0; border-bottom: 1px solid #333;">
-                    <div style="margin-bottom: 8px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333; flex-wrap: wrap; gap: 10px;">
+                    <div style="font-size: 14pt; font-weight: bold;">ВПР Информатика 7 класс</div>
+                    <div>
                       <span style="font-weight: bold;">Фамилия, имя: </span>
-                      <span style="display: inline-block; width: 300px; border-bottom: 1px solid #333; margin-left: 5px;">&nbsp;</span>
+                      <span style="display: inline-block; width: 300px; border-bottom: 1px solid #333;">&nbsp;</span>
                     </div>
                     <div>
                       <span style="font-weight: bold;">Класс: </span>
-                      <span style="display: inline-block; width: 100px; border-bottom: 1px solid #333; margin-left: 5px;">&nbsp;</span>
+                      <span style="display: inline-block; width: 60px; border-bottom: 1px solid #333;">&nbsp;</span>
                     </div>
+                    <div style="font-size: 14pt; font-weight: bold;">Вариант ${variant.number}</div>
                   </div>
               `;
 
