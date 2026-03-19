@@ -1039,6 +1039,9 @@
 
         // Show progress modal
         showProgressModal();
+        // Даем браузеру время отрисовать модальное окно
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        await new Promise((resolve) => setTimeout(resolve, 50));
 
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "pt", "a4");
@@ -1167,6 +1170,8 @@
               (currentStep / totalSteps) * 100,
               `Вариант ${variant.number}: формирование заданий...`,
             );
+            // Даем браузеру время обновить UI
+            await new Promise((resolve) => requestAnimationFrame(resolve));
             container.innerHTML = renderVariantHTML(variant, false, true);
             isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
             currentStep++;
@@ -1179,12 +1184,15 @@
               (currentStep / totalSteps) * 100,
               `Вариант ${variant.number}: формирование ответов...`,
             );
+            // Даем браузеру время обновить UI
+            await new Promise((resolve) => requestAnimationFrame(resolve));
             container.innerHTML = renderVariantHTML(variant, true, true);
             isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
             currentStep++;
           }
 
           updateProgress(100, "Сохранение файла...");
+          await new Promise((resolve) => requestAnimationFrame(resolve));
           await new Promise((resolve) => setTimeout(resolve, 200));
 
           pdf.save(`ВПР_7_класс_варианты.pdf`);
