@@ -939,6 +939,13 @@
           previewTabs.appendChild(tab);
         });
 
+        // Add "Ответы" tab
+        const answersTab = document.createElement("button");
+        answersTab.className = "preview-tab";
+        answersTab.textContent = "📋 Ответы";
+        answersTab.onclick = () => showAnswersTable();
+        previewTabs.appendChild(answersTab);
+
         // Show first variant
         currentVariantIndex = 0;
         renderPreview();
@@ -958,6 +965,19 @@
           tab.classList.toggle("active", i === index);
         });
         renderPreview();
+      }
+
+      // Show answers table
+      function showAnswersTable() {
+        document.querySelectorAll(".preview-tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        // Activate the last tab (Ответы)
+        const tabs = document.querySelectorAll(".preview-tab");
+        tabs[tabs.length - 1].classList.add("active");
+
+        const previewContent = document.getElementById("previewContent");
+        previewContent.innerHTML = renderAnswersTable(false);
       }
 
       // Render preview
@@ -986,21 +1006,9 @@
         const pageClass = forPDF ? "pdf-page" : "a4-page";
 
         if (includeAnswers) {
-          // Только страница ответов
-          let html = `
-                <div class="${pageClass} answers-page">
-                  <div class="a4-header">
-                    <h1>Ответы</h1>
-                    <div class="variant-info">Вариант ${variant.number}</div>
-                  </div>
-              `;
-
-          variant.tasks.forEach((task) => {
-            html += `<div style="margin-bottom: 8px;"><b>${task.number}.</b> ${task.answer}</div>`;
-          });
-
-          html += `</div>`;
-          return html;
+          // Эта функция больше не используется для отдельных ответов
+          // Используется renderAnswersTable для сводной таблицы
+          return "";
         } else {
           // Страница с заданиями
           let html = `
@@ -1032,6 +1040,95 @@
           html += `</div>`;
           return html;
         }
+      }
+
+      // Render answers table for all variants
+      function renderAnswersTable(forPDF = false) {
+        if (generatedVariants.length === 0) return "";
+
+        const pageClass = forPDF ? "pdf-page" : "a4-page";
+
+        // Get max number of tasks across all variants
+        const maxTasks = Math.max(
+          ...generatedVariants.map((v) => v.tasks.length),
+        );
+
+        // Maximum tasks per table
+        const tasksPerTable = 12;
+
+        // Calculate number of tables needed
+        const numTables = Math.ceil(maxTasks / tasksPerTable);
+
+        // Build header for a specific table
+        function buildHeader(startTask, endTask) {
+          let headerCells =
+            "<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center;'>Вариант</th>";
+          for (let i = startTask; i <= endTask; i++) {
+            // Get task type from first variant (all variants have same task types at same positions)
+            const task = generatedVariants[0]?.tasks[i - 1];
+            const taskType = task ? task.type : "";
+            const headerText = taskType ? `${i} (${taskType})` : `${i}`;
+            headerCells += `<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center; min-width: 60px;'>${headerText}</th>`;
+          }
+          return headerCells;
+        }
+
+        // Build rows for a specific table
+        function buildRows(startTask, endTask) {
+          let tableRows = "";
+          generatedVariants.forEach((variant) => {
+            let rowCells = `<td style='border: 1px solid #333; padding: 8px; font-weight: bold; text-align: center;'>${variant.number}</td>`;
+
+            // Add answers for tasks in this range
+            for (let i = startTask; i <= endTask; i++) {
+              const task = variant.tasks[i - 1]; // tasks array is 0-indexed
+              if (task) {
+                // Allow word wrap for long answers (like file paths in task 2)
+                rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center; word-wrap: break-word; word-break: break-all; max-width: 80px;'>${task.answer}</td>`;
+              } else {
+                rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center;'>&nbsp;</td>`;
+              }
+            }
+
+            tableRows += `<tr>${rowCells}</tr>`;
+          });
+          return tableRows;
+        }
+
+        // Build all tables
+        let tablesHtml = "";
+        for (let t = 0; t < numTables; t++) {
+          const startTask = t * tasksPerTable + 1;
+          const endTask = Math.min((t + 1) * tasksPerTable, maxTasks);
+
+          // Add spacing between tables
+          if (t > 0) {
+            tablesHtml += `<div style="margin-top: 30px;"></div>`;
+          }
+
+          tablesHtml += `
+            <table style="width: 100%; border-collapse: collapse; font-size: 11pt;">
+              <thead>
+                <tr>${buildHeader(startTask, endTask)}</tr>
+              </thead>
+              <tbody>
+                ${buildRows(startTask, endTask)}
+              </tbody>
+            </table>
+          `;
+        }
+
+        const html = `
+          <div class="${pageClass}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333;">
+              <h1 style="font-size: 14pt; color: #333; margin: 0;">Ответы</h1>
+              <div style="font-size: 12pt; color: #666;">ВПР Информатика 7 класс</div>
+            </div>
+            ${tablesHtml}
+          </div>
+        `;
+
+        return html;
       }
 
       // Progress modal functions
@@ -1197,19 +1294,15 @@
             currentStep++;
           }
 
-          // Phase 2: Render all answers at the end
-          for (let i = 0; i < generatedVariants.length; i++) {
-            const variant = generatedVariants[i];
-            updateProgress(
-              (currentStep / totalSteps) * 100,
-              `Вариант ${variant.number}: формирование ответов...`,
-            );
-            // Даем браузеру время обновить UI
-            await new Promise((resolve) => requestAnimationFrame(resolve));
-            container.innerHTML = renderVariantHTML(variant, true, true);
-            isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
-            currentStep++;
-          }
+          // Phase 2: Render answers table (single page with all variants)
+          updateProgress(
+            (currentStep / totalSteps) * 100,
+            "Формирование таблицы ответов...",
+          );
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+          container.innerHTML = renderAnswersTable(true);
+          isFirstPage = await addPageToPDF(container, pdf, isFirstPage);
+          currentStep++;
 
           updateProgress(100, "Сохранение файла...");
           await new Promise((resolve) => requestAnimationFrame(resolve));
