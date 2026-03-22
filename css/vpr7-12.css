@@ -85,17 +85,19 @@
 
 .indent-first-line {
   background: #e74c3c;
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
 }
 
 .indent-hanging {
   background: #3498db;
-  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
 
 .indent-left {
   background: #27ae60;
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  top: auto;
+  bottom: 0;
 }
 
 .indent-right {

@@ -4,9 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Определение пути к папке или файлу</title>
-    <link rel="stylesheet" href="vpr7-2.css" />
+    <link rel="stylesheet" href="css/vpr7-2.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
+    <script src="js/vpr7-exam-utils.js"></script>
     <noscript
       ><div>
         <img
@@ -16,7 +17,7 @@
         /></div
     ></noscript>
     <!-- /Yandex.Metrika counter -->
-    <script src="vpr7-2-generator.js"></script>
+    <script src="js/vpr7-2-generator.js"></script>
   </head>
   <body>
     <div class="container">
@@ -94,7 +95,7 @@
 
       // Загрузка данных из файла
       async function loadData() {
-        pathData = await Generator.loadPathData("vpr7-2.txt");
+        pathData = await Generator.loadPathData("data/vpr7-2.txt");
         startGame();
       }
 
@@ -439,151 +440,22 @@
         feedback.style.display = "block";
 
         // Отправляем результат в родительское окно (режим экзамена)
-        sendExamResult(isCorrect);
-      }
-
-      // Отправка результата в режим экзамена
-      function sendExamResult(correct) {
-        if (window.parent !== window) {
-          window.parent.postMessage(
-            {
-              type: "vpr7-task-result",
-              correct: correct,
-            },
-            "*",
-          );
-        }
-      }
-
-      // Очистка зоны сборки
-      function clearAssembly() {
-        const zone = document.getElementById("assemblyZone");
-        const pool = document.getElementById("partsPool");
-
-        while (zone.firstChild) {
-          pool.appendChild(zone.firstChild);
-        }
-
-        updateResultDisplay();
-      }
-
-      // Сброс игры
-      function resetGame() {
-        startGame();
-      }
-
-      // Показать подсказку
-      function showHint() {
-        if (!currentTask || answered) return;
-
-        const hintBox = document.getElementById("hintBox");
-        const hintText = document.getElementById("hintText");
-
-        if (hintBox.style.display === "none") {
-          hintText.textContent = currentTask.informativeHint;
-          hintBox.style.display = "block";
-        } else {
-          hintBox.style.display = "none";
-        }
-      }
-
-      // Отправка высоты контента в режим экзамена
-      function sendContentHeight() {
-        if (window.parent !== window) {
-          const height = document.documentElement.scrollHeight;
-          window.parent.postMessage(
-            {
-              type: "vpr7-content-height",
-              height: height,
-            },
-            "*",
-          );
-        }
-      }
-
-      // Скрытие навигации в режиме экзамена
-      function hideExamNavigation() {
-        if (window.parent !== window) {
-          // Скрываем ссылку "На главную"
-          const backLinks = document.querySelectorAll(".back-link");
-          backLinks.forEach((link) => (link.style.display = "none"));
-
-          // Скрываем кнопку "Теория"
-          const theoryLinks = document.querySelectorAll('a[href*="-t.html"]');
-          theoryLinks.forEach((link) => (link.style.display = "none"));
-
-          // Скрываем кнопку "Подсказка"
-          const hintButtons = document.querySelectorAll(".btn-hint");
-          hintButtons.forEach((btn) => (btn.style.display = "none"));
-
-          // Скрываем кнопку "Очистить"
-          const clearButtons = document.querySelectorAll(".btn-clear");
-          clearButtons.forEach((btn) => (btn.style.display = "none"));
-
-          // Скрываем кнопку "Новое задание"
-          const resetButtons = document.querySelectorAll(".btn-reset");
-          resetButtons.forEach((btn) => (btn.style.display = "none"));
-
-          // Скрываем счётчик заданий
-          const scoreBoards = document.querySelectorAll(".score-board");
-          scoreBoards.forEach((board) => (board.style.display = "none"));
-        }
-      }
-
-      // Показ сообщения о завершённом задании
-      function showCompletedMessage(correct) {
-        examTaskCompleted = true;
-        // Скрываем рабочую область
-        document.querySelector(".task-card").style.display = "none";
-        document.querySelector(".score-board").style.display = "none";
-
-        // Показываем сообщение
-        const container = document.querySelector(".container");
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "completed-message";
-        messageDiv.style.cssText = `
-          background: rgba(255, 255, 255, 0.95);
-          border-radius: 15px;
-          padding: 40px;
-          text-align: center;
-          margin-top: 20px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        `;
-
-        if (correct) {
-          messageDiv.innerHTML = `
-            <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
-            <h2 style="color: #11998e; margin-bottom: 15px; font-size: 1.5rem;">Задание уже выполнено!</h2>
-            <p style="color: #333; font-size: 1.1rem;">Вы правильно выполнили это задание в режиме экзамена.</p>
-          `;
-        } else {
-          messageDiv.innerHTML = `
-            <div style="font-size: 4rem; margin-bottom: 20px;">❌</div>
-            <h2 style="color: #eb3349; margin-bottom: 15px; font-size: 1.5rem;">Задание уже выполнено!</h2>
-            <p style="color: #333; font-size: 1.1rem;">Вы допустили ошибку в этом задании в режиме экзамена.</p>
-          `;
-        }
-
-        container.appendChild(messageDiv);
-        sendContentHeight();
+        VPR7_ExamUtils.sendExamResult(isCorrect);
       }
 
       // Приём сообщений от родительского окна (режим экзамена)
-      window.addEventListener("message", function (event) {
-        if (event.data && event.data.type === "vpr7-task-status") {
-          if (event.data.completed) {
-            showCompletedMessage(event.data.correct);
-          }
-        }
+      VPR7_ExamUtils.setupExamMessageListener((correct) => {
+        examTaskCompleted = true;
+        VPR7_ExamUtils.showCompletedMessage(correct, ".container", [
+          ".game-area",
+          ".score-board",
+          ".buttons",
+        ]);
       });
 
       // Запуск
       loadData();
-      hideExamNavigation();
-
-      // Отправляем высоту после загрузки страницы
-      window.addEventListener("load", sendContentHeight);
-      window.addEventListener("resize", sendContentHeight);
+      VPR7_ExamUtils.initExamMode();
     </script>
   </body>
 </html>

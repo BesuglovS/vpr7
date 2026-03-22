@@ -162,3 +162,91 @@
   text-align: center;
   font-size: 1.1rem;
 }
+
+/* ============================================
+   Message Container (Interactive Decoding)
+   ============================================ */
+.message-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-family: "Consolas", "Courier New", monospace;
+}
+
+.message-char {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  padding: 5px 8px;
+  letter-spacing: 0.3em;
+}
+
+.message-divider-slot {
+  width: 20px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.message-divider-slot::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 0;
+  background: #667eea;
+  transition: height 0.2s;
+}
+
+.message-divider-slot:hover::after {
+  height: 20px;
+  background: #667eea;
+}
+
+.message-divider-slot.has-divider::after {
+  height: 30px;
+  background: #667eea;
+}
+
+.divider-hint {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+  margin: 10px 0;
+  font-style: italic;
+}
+
+/* ============================================
+   Print Styles (PDF Export)
+   ============================================ */
+@media print {
+  .message-container {
+    display: block;
+    text-align: center;
+    background: white;
+    padding: 10px 0;
+  }
+
+  .message-char {
+    display: inline-block;
+    font-size: 1.6rem;
+    padding: 5px 18px;
+    letter-spacing: 0.8em;
+    margin-right: 1em;
+  }
+
+  .message-divider-slot {
+    display: none;
+  }
+
+  .divider-hint {
+    display: none;
+  }
+}

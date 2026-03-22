@@ -1,0 +1,263 @@
+/**
+ * VPR 7 - Task 1: Device Categories
+ * Специфичные стили для задания 1 - Распределение устройств по категориям
+ */
+
+/* Импорт общих стилей */
+@import url("vpr7-common.css");
+
+/* ============================================
+   Game Area
+   ============================================ */
+.game-area {
+  margin-bottom: 20px;
+}
+
+/* ============================================
+   Devices Pool
+   ============================================ */
+.devices-pool {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.devices-pool h2 {
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.devices-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  min-height: 80px;
+  padding: 15px;
+  background: #f0f4f8;
+  border-radius: 10px;
+  border: 2px dashed #b0bec5;
+}
+
+/* ============================================
+   Device Items
+   ============================================ */
+.device {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+  touch-action: none;
+}
+
+.device:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.device.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.device.correct {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+}
+
+.device.incorrect {
+  background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+  box-shadow: 0 4px 12px rgba(235, 51, 73, 0.3);
+}
+
+/* ============================================
+   Categories Grid
+   ============================================ */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.category {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 2px solid transparent;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.category h3 {
+  color: #333;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.category.drag-over {
+  border-color: #667eea;
+  transform: scale(1.02);
+}
+
+.category-devices {
+  min-height: 80px;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 2px dashed #b0bec5;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+  align-content: flex-start;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.category-devices .device {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* ============================================
+   Score Board
+   ============================================ */
+.score-board {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.score span {
+  color: #667eea;
+}
+
+/* ============================================
+   Messages
+   ============================================ */
+.success-message,
+.error-message {
+  display: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.success-message {
+  color: #11998e;
+  border: 2px solid #38ef7d;
+}
+
+.error-message {
+  color: #eb3349;
+  border: 2px solid #f45c43;
+}
+
+/* ============================================
+   Hint Box
+   ============================================ */
+.hint-box {
+  display: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hint-box h4 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.hint-info {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.hint-info h5 {
+  color: #667eea;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.hint-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.hint-info li {
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.hint-info li strong {
+  color: #667eea;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 600px) {
+  .device {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .score-board {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .categories-grid {
+    gap: 10px;
+  }
+}

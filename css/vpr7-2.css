@@ -1,0 +1,286 @@
+/**
+ * VPR 7 - Task 2: Path Navigation
+ * Специфичные стили для задания 2
+ */
+
+/* Импорт общих стилей */
+@import url("vpr7-common.css");
+
+/* ============================================
+   Path Workspace
+   ============================================ */
+.path-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* ============================================
+   Path Parts Pool
+   ============================================ */
+.path-parts-pool {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.path-parts-pool h3 {
+  color: #333;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.parts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px;
+  background: #f0f4f8;
+  border-radius: 8px;
+  border: 2px dashed #b0bec5;
+  min-height: 80px;
+}
+
+.parts-container.drag-over {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* ============================================
+   Path Assembly Zone
+   ============================================ */
+.path-assembly {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.path-assembly h3 {
+  color: #333;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.assembly-zone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-start;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 2px dashed #b0bec5;
+  border-radius: 8px;
+  min-height: 60px;
+  transition: all 0.2s;
+}
+
+.assembly-zone.drag-over {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* ============================================
+   Path Part Elements
+   ============================================ */
+.path-part {
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: grab;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  touch-action: none;
+  user-select: none;
+}
+
+.path-part:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.path-part.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+/* Disk */
+.path-part.disk {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Folder */
+.path-part.folder {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  box-shadow: 0 4px 10px rgba(17, 153, 142, 0.3);
+}
+
+/* File */
+.path-part.file {
+  background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  box-shadow: 0 4px 10px rgba(240, 147, 251, 0.3);
+}
+
+/* Separator */
+.path-part.separator {
+  background: #e0e0e0;
+  color: #333;
+  font-weight: bold;
+  padding: 8px 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   Result Display
+   ============================================ */
+.result-display {
+  margin-top: 15px;
+  padding: 12px 15px;
+  background: #f0f4f8;
+  border-radius: 8px;
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 0.95rem;
+  color: #333;
+  text-align: center;
+  word-break: break-all;
+  border: 2px solid transparent;
+}
+
+.result-display.correct {
+  background: rgba(17, 153, 142, 0.2);
+  border-color: #38ef7d;
+  color: #11998e;
+}
+
+.result-display.incorrect {
+  background: rgba(235, 51, 73, 0.2);
+  border-color: #f45c43;
+  color: #eb3349;
+}
+
+/* ============================================
+   Extensions Matching (legacy)
+   ============================================ */
+.extensions-matching {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 700px) {
+  .extensions-matching {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   Extensions Pool
+   ============================================ */
+.extensions-pool {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.extensions-pool h3 {
+  color: #333;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.extensions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px;
+  background: #f0f4f8;
+  border-radius: 8px;
+  border: 2px dashed #b0bec5;
+}
+
+.extension-item {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: grab;
+  font-weight: 500;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+  transition: transform 0.2s;
+  touch-action: none;
+}
+
+.extension-item:hover {
+  transform: translateY(-2px);
+}
+
+.extension-item.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+/* ============================================
+   Categories
+   ============================================ */
+.categories-area {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.category-box {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.category-box h4 {
+  color: #333;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.category-dropzone {
+  min-height: 50px;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 2px dashed #b0bec5;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.category-dropzone.drag-over {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.category-box.correct {
+  border-color: #38ef7d;
+}
+
+.category-box.incorrect {
+  border-color: #f45c43;
+}
