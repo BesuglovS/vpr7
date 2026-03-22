@@ -107,7 +107,7 @@
   /**
    * Load logic puzzle data from file or use fallback
    */
-  async function loadData(filePath = "vpr7-5.txt") {
+  async function loadData(filePath = "data/vpr7-5.txt") {
     try {
       const response = await fetch(filePath);
       const text = await response.text();
@@ -586,6 +586,18 @@
     return matrix;
   }
 
+  /**
+   * Shuffle array randomly
+   */
+  function shuffleArray(arr) {
+    const result = [...arr];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
+
   // Export for use in pages
   if (typeof window !== "undefined") {
     window.VPR7_Task5_Generator = {
@@ -603,6 +615,7 @@
       generatePuzzle,
       generateTask,
       buildCorrectMatrix,
+      shuffleArray,
     };
   }
 })();

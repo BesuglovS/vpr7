@@ -90,8 +90,38 @@
 
       // Загрузка данных и запуск
       async function initData() {
-        urlData = await VPR7_Task4_Generator.loadData();
+        urlData = await VPR7_Task4_Generator.loadData("data/vpr7-4.txt");
         startGame();
+      }
+
+      // Сброс игры (новое задание)
+      function resetGame() {
+        generateTask();
+      }
+
+      // Очистка зоны сборки
+      function clearAssembly() {
+        const zone = document.getElementById("assemblyZone");
+        const pool = document.getElementById("partsPool");
+        const parts = zone.querySelectorAll(".path-part");
+        parts.forEach((part) => {
+          pool.appendChild(part);
+        });
+        document.getElementById("resultDisplay").textContent =
+          "Перетащите элементы для сборки URL";
+        document.getElementById("resultDisplay").className = "result-display";
+      }
+
+      // Показ подсказки
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        const hintText = document.getElementById("hintText");
+        if (currentTask && currentTask.hint) {
+          hintText.textContent = currentTask.hint;
+        } else {
+          hintText.textContent = "Соберите URL: протокол://домен/путь/файл";
+        }
+        hintBox.style.display = "block";
       }
 
       // Начало игры

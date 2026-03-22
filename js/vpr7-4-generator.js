@@ -276,6 +276,79 @@ notes.txt`;
     }
   }
 
+  /**
+   * Shuffle array using Fisher-Yates algorithm
+   */
+  function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  /**
+   * Generate URL parts for the interactive task
+   */
+  function generateUrlParts(task, data) {
+    const parts = [];
+
+    // Protocol part
+    parts.push({
+      text: task.protocol + "://",
+      type: "protocol",
+    });
+
+    // Domain part
+    parts.push({
+      text: task.domain + "/",
+      type: "domain",
+    });
+
+    // Path parts
+    task.pathParts.forEach((path, index) => {
+      const isLast = index === task.pathParts.length - 1;
+      parts.push({
+        text: isLast ? path + "/" : path + "/",
+        type: "path",
+      });
+    });
+
+    // File part
+    parts.push({
+      text: task.file,
+      type: "file",
+    });
+
+    // Add some decoy parts
+    const useCyrillic = task.domain && /[а-яё]/i.test(task.domain);
+    const decoyProtocols = data.protocols.filter((p) => p !== task.protocol);
+    const decoyDomains = useCyrillic
+      ? data.domainsCyrillic.filter((d) => d !== task.domain)
+      : data.domainsLatin.filter((d) => d !== task.domain);
+
+    // Add 1-2 decoy protocols
+    const shuffledDecoyProtocols = shuffleArray(decoyProtocols);
+    for (let i = 0; i < Math.min(2, shuffledDecoyProtocols.length); i++) {
+      parts.push({
+        text: shuffledDecoyProtocols[i] + "://",
+        type: "protocol decoy",
+      });
+    }
+
+    // Add 1-2 decoy domains
+    const shuffledDecoyDomains = shuffleArray(decoyDomains);
+    for (let i = 0; i < Math.min(2, shuffledDecoyDomains.length); i++) {
+      parts.push({
+        text: shuffledDecoyDomains[i] + "/",
+        type: "domain decoy",
+      });
+    }
+
+    return parts;
+  }
+
   // Export for use in pages
   if (typeof window !== "undefined") {
     window.VPR7_Task4_Generator = {
@@ -286,6 +359,8 @@ notes.txt`;
       generateWithPathTask,
       generateDeepPathTask,
       generateTask,
+      shuffleArray,
+      generateUrlParts,
     };
   }
 })();
