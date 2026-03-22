@@ -5,43 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Форматирование текста — Задание 12</title>
     <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-      (function (m, e, t, r, i, k, a) {
-        m[i] =
-          m[i] ||
-          function () {
-            (m[i].a = m[i].a || []).push(arguments);
-          };
-        m[i].l = 1 * new Date();
-        for (var j = 0; j < document.scripts.length; j++) {
-          if (document.scripts[j].src === r) {
-            return;
-          }
-        }
-        ((k = e.createElement(t)),
-          (a = e.getElementsByTagName(t)[0]),
-          (k.async = 1),
-          (k.src = r),
-          a.parentNode.insertBefore(k, a));
-      })(
-        window,
-        document,
-        "script",
-        "https://mc.yandex.ru/metrika/tag.js?id=107146125",
-        "ym",
-      );
-
-      ym(107146125, "init", {
-        ssr: true,
-        webvisor: true,
-        clickmap: true,
-        ecommerce: "dataLayer",
-        referrer: document.referrer,
-        url: location.href,
-        accurateTrackBounce: true,
-        trackLinks: true,
-      });
-    </script>
+    <script src="metrika.js"></script>
     <noscript
       ><div>
         <img
@@ -51,463 +15,7 @@
         /></div
     ></noscript>
     <!-- /Yandex.Metrika counter -->
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-        min-height: 100vh;
-        padding: 20px;
-      }
-
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      h1 {
-        text-align: center;
-        color: white;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        font-size: 1.6rem;
-      }
-
-      .back-link {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        text-decoration: none;
-        padding: 10px 20px;
-        border-radius: 25px;
-        margin-bottom: 20px;
-        transition: background 0.3s;
-      }
-
-      .back-link:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      .instructions {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 15px 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        text-align: center;
-        font-size: 0.95rem;
-        color: #333;
-      }
-
-      .task-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      }
-
-      /* Word-подобный интерфейс */
-      .word-simulator {
-        border: 2px solid #d1d5db;
-        border-radius: 8px;
-        overflow: hidden;
-        background: white;
-      }
-
-      .word-toolbar {
-        background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
-        padding: 10px 15px;
-        border-bottom: 1px solid #d1d5db;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
-
-      .toolbar-btn {
-        padding: 6px 10px;
-        background: white;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        color: #374151;
-      }
-
-      .toolbar-btn.active {
-        background: #dbeafe;
-        border-color: #3b82f6;
-        color: #1d4ed8;
-      }
-
-      /* Линейка форматирования */
-      .ruler {
-        background: #f9fafb;
-        height: 30px;
-        border-bottom: 1px solid #d1d5db;
-        position: relative;
-      }
-
-      .ruler-marks {
-        position: absolute;
-        top: 0;
-        left: 50px;
-        right: 50px;
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-      }
-
-      .ruler-mark {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-size: 0.65rem;
-        color: #6b7280;
-      }
-
-      .ruler-mark::before {
-        content: "";
-        width: 1px;
-        height: 8px;
-        background: #9ca3af;
-        margin-bottom: 2px;
-      }
-
-      .ruler-mark.major::before {
-        height: 12px;
-        background: #4b5563;
-      }
-
-      /* Индикаторы на линейке */
-      .ruler-indent {
-        position: absolute;
-        top: 0;
-        width: 0;
-        height: 0;
-        cursor: pointer;
-        z-index: 10;
-      }
-
-      .indent-left {
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 10px solid #4b5563;
-        top: 20px;
-      }
-
-      .indent-first-line {
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 10px solid #3b82f6;
-        top: 0;
-      }
-
-      .indent-hanging {
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 10px solid #ef4444;
-      }
-
-      .indent-right {
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 10px solid #4b5563;
-      }
-
-      /* Область документа */
-      .document-area {
-        padding: 20px 50px 30px 50px;
-        min-height: 200px;
-        background: white;
-      }
-
-      .document-paragraph {
-        font-size: 1rem;
-        line-height: 1.8;
-        color: #1f2937;
-        margin-bottom: 15px;
-        font-family: "Times New Roman", Times, serif;
-        font-size: 14pt;
-        white-space: pre-line;
-      }
-
-      /* Различные виды форматирования */
-      .para-align-left {
-        text-align: left;
-      }
-
-      .para-align-right {
-        text-align: right;
-      }
-
-      .para-align-center {
-        text-align: center;
-      }
-
-      .para-align-justify {
-        text-align: justify;
-      }
-
-      .para-indent-left {
-        /* Устанавливается динамически через JS */
-      }
-
-      .para-indent-right {
-        /* Устанавливается динамически через JS */
-      }
-
-      .para-first-line-indent {
-        /* Устанавливается динамически через JS */
-      }
-
-      .para-hanging-indent {
-        /* Устанавливается динамически через JS */
-      }
-
-      /* Выбор элементов форматирования */
-      .formatting-options {
-        margin-top: 25px;
-      }
-
-      .formatting-options h3 {
-        color: #333;
-        margin-bottom: 15px;
-        font-size: 1.1rem;
-        text-align: center;
-      }
-
-      .options-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 10px;
-      }
-
-      .option-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 15px;
-        background: #f8fafc;
-        border: 2px solid #e2e8f0;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.2s;
-        user-select: none;
-      }
-
-      .option-item:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-      }
-
-      .option-item.selected {
-        background: #dbeafe;
-        border-color: #3b82f6;
-      }
-
-      .option-item.correct {
-        background: #dcfce7;
-        border-color: #22c55e;
-      }
-
-      .option-item.incorrect {
-        background: #fee2e2;
-        border-color: #ef4444;
-      }
-
-      .option-item.missed {
-        background: #fef3c7;
-        border-color: #f59e0b;
-      }
-
-      .option-checkbox {
-        width: 24px;
-        height: 24px;
-        border: 2px solid #94a3b8;
-        border-radius: 6px;
-        margin-right: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        flex-shrink: 0;
-        background: white;
-      }
-
-      .option-item.selected .option-checkbox {
-        background: #3b82f6;
-        border-color: #3b82f6;
-        color: white;
-      }
-
-      .option-item.correct .option-checkbox {
-        background: #22c55e;
-        border-color: #22c55e;
-        color: white;
-      }
-
-      .option-item.incorrect .option-checkbox {
-        background: #ef4444;
-        border-color: #ef4444;
-        color: white;
-      }
-
-      .option-text {
-        font-size: 0.95rem;
-        color: #334155;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 20px;
-      }
-
-      .btn {
-        border: none;
-        padding: 12px 25px;
-        border-radius: 25px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-        font-weight: 500;
-      }
-
-      .btn:hover {
-        transform: translateY(-2px);
-      }
-
-      .btn-check {
-        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
-      }
-
-      .btn-hint {
-        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-      }
-
-      .btn-reset {
-        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-      }
-
-      .feedback {
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 10px;
-        text-align: center;
-        font-weight: bold;
-        display: none;
-      }
-
-      .feedback.correct {
-        display: block;
-        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
-        color: white;
-      }
-
-      .feedback.incorrect {
-        display: block;
-        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
-        color: white;
-      }
-
-      .hint-box {
-        background: #e3f2fd;
-        border-left: 4px solid #2196f3;
-        padding: 15px 20px;
-        margin-top: 20px;
-        border-radius: 0 10px 10px 0;
-        display: none;
-      }
-
-      .hint-box h4 {
-        color: #1565c0;
-        margin-bottom: 10px;
-      }
-
-      .hint-item {
-        margin: 8px 0;
-        padding: 8px 12px;
-        background: rgba(33, 150, 243, 0.1);
-        border-radius: 6px;
-        font-size: 0.95rem;
-      }
-
-      .hint-item strong {
-        color: #1565c0;
-      }
-
-      .stats {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        margin-top: 20px;
-        flex-wrap: wrap;
-      }
-
-      .stat-item {
-        text-align: center;
-        padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 10px;
-      }
-
-      .stat-value {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #1e3c72;
-      }
-
-      .stat-label {
-        font-size: 0.85rem;
-        color: #666;
-      }
-
-      /* Визуальные индикаторы на линейке */
-      .ruler-indicator {
-        position: absolute;
-        top: 5px;
-        font-size: 0.7rem;
-        color: #3b82f6;
-        font-weight: bold;
-      }
-
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 1.3rem;
-        }
-
-        .document-area {
-          padding: 15px 20px;
-        }
-
-        .ruler-marks {
-          left: 20px;
-          right: 20px;
-        }
-
-        .options-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .btn {
-          padding: 10px 20px;
-          font-size: 0.9rem;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="vpr7-12.css" />
   </head>
   <body>
     <div class="container">
@@ -577,6 +85,7 @@
       </div>
     </div>
 
+    <script src="vpr7-12-generator.js"></script>
     <script>
       let currentTask = null;
       let selectedOptions = new Set();
@@ -584,30 +93,14 @@
       let stats = { correct: 0, total: 0 };
       let examTaskCompleted = false; // Флаг, что задание уже выполнено в режиме экзамена
 
-      // Значения отступов в сантиметрах (должны соответствовать CSS)
-      const indentValuesCm = {
-        firstLineIndent: 1.25,
-        hangingIndent: 2, // при выступе margin-left определяет позицию
-        leftIndent: 2,
-        rightIndent: 1.5,
-      };
+      // Получаем доступ к генератору
+      const generator = window.VPR7_Task12_Generator;
 
       // Расчётная функция для позиций маркеров и отступов текста
       function calculateRulerPositions() {
-        // Используем ширину области документа для расчёта
         const documentArea = document.querySelector(".document-area");
         const documentWidth = documentArea.offsetWidth;
-        // Область текста = ширина документа минус padding (50px слева + 50px справа = 100px)
-        const textWidth = documentWidth - 100;
-        const pxPerCm = textWidth / 15; // шкала от 0 до 15 см
-
-        return {
-          firstLineIndent: indentValuesCm.firstLineIndent * pxPerCm + "px",
-          hangingIndent: indentValuesCm.hangingIndent * pxPerCm + "px",
-          leftIndent: indentValuesCm.leftIndent * pxPerCm + "px",
-          rightIndent: indentValuesCm.rightIndent * pxPerCm + "px",
-          pxPerCm: pxPerCm,
-        };
+        return generator.calculateRulerPositions(documentWidth);
       }
 
       // Применение динамических отступов к тексту
@@ -637,99 +130,6 @@
         }
       }
 
-      // Все возможные элементы форматирования
-      const formattingTypes = {
-        firstLineIndent: {
-          name: "Отступ первой строки",
-          hint: "Первая строка абзаца сдвинута вправо относительно остальных строк. Видно по треугольнику на линейке сверху слева.",
-        },
-        hangingIndent: {
-          name: "Выступ первой строки",
-          hint: "Первая строка абзаца выступает влево относительно остальных строк. Остальные строки сдвинуты вправо.",
-        },
-        leftIndent: {
-          name: "Отступ слева",
-          hint: "Весь абзац сдвинут вправо от левого поля. На линейке видно, что левая граница текста не на нуле.",
-        },
-        rightIndent: {
-          name: "Отступ справа",
-          hint: "Весь абзац сдвинут влево от правого поля. На линейке видно, что правая граница текста не на краю.",
-        },
-        alignLeft: {
-          name: "Выравнивание по левому краю",
-          hint: "Текст выровнен по левому краю, правый край неровный. Строки заканчиваются на разных позициях.",
-        },
-        alignRight: {
-          name: "Выравнивание по правому краю",
-          hint: "Текст выровнен по правому краю, левый край неровный.",
-        },
-        alignCenter: {
-          name: "Выравнивание по центру",
-          hint: "Каждая строка центрирована относительно страницы.",
-        },
-        alignJustify: {
-          name: "Выравнивание по ширине",
-          hint: "Текст выровнен по обоим краям. Пробелы между словами растягиваются, чтобы заполнить строку.",
-        },
-      };
-
-      // Тексты для заданий
-      const paragraphs = [
-        {
-          text: "Информатика — это наука о методах и процессах сбора, хранения, обработки, передачи, анализа и оценки информации с применением компьютерных технологий. Она изучает способы представления информации, алгоритмы её обработки и программные средства для работы с данными.",
-          correctFormatting: ["firstLineIndent", "alignJustify"],
-        },
-        {
-          text: "АНАЛИТИЧЕСКАЯ СПРАВКА\nпо результатам проверки выполнения\nпрактических работ за 2025-2026 учебный год",
-          correctFormatting: ["alignCenter"],
-        },
-        {
-          text: "Директор школы: Петров А.Б.\nГлавный бухгалтер: Сидорова В.Г.\nОтветственный за выполнение: Иванов Д.Е.",
-          correctFormatting: ["alignRight"],
-        },
-        {
-          text: "Для подготовки к экзамену необходимо выполнить следующие действия: изучить теоретический материал по всем разделам курса, решить практические задания разных типов, повторить основные понятия и определения, пройти тестирование в режиме онлайн, проанализировать допущенные ошибки.",
-          correctFormatting: ["alignLeft"],
-        },
-        {
-          text: "В современном мире информационные технологии играют важную роль. Они проникают во все сферы человеческой деятельности и изменяют привычные способы работы с информацией, коммуникации и обучения.",
-          correctFormatting: ["firstLineIndent", "leftIndent", "alignJustify"],
-        },
-        {
-          text: "1. Первый пункт списка содержит важную информацию о структуре документа и его основных элементах, которые необходимо учитывать при оформлении.\n2. Второй пункт описывает требования к форматированию текста.",
-          correctFormatting: ["hangingIndent", "alignLeft"],
-        },
-        {
-          text: "Компьютер — устройство для автоматической обработки информации. Современные компьютеры могут выполнять миллиарды операций в секунду, что делает их незаменимыми инструментами в науке, образовании и бизнесе.",
-          correctFormatting: [
-            "firstLineIndent",
-            "leftIndent",
-            "rightIndent",
-            "alignJustify",
-          ],
-        },
-        {
-          text: "г. Москва\n15 марта 2026 года\nИсполнитель: специалист отдела Иванов И.И.",
-          correctFormatting: ["alignRight", "rightIndent"],
-        },
-        {
-          text: "ОТЧЁТ\nО ВЫПОЛНЕНИИ ПЛАНА РАБОТ\nза первый квартал 2026 года",
-          correctFormatting: ["alignCenter"],
-        },
-        {
-          text: "Программирование — процесс создания компьютерных программ с помощью языков программирования. Программисты разрабатывают алгоритмы и реализуют их в виде кода, который компьютер может выполнять для решения различных задач.",
-          correctFormatting: ["firstLineIndent", "alignJustify", "rightIndent"],
-        },
-        {
-          text: "Глава 1. Введение в информатику. В данной главе рассматриваются основные понятия информатики как науки, её место в системе естественных и технических наук, а также роль информационных технологий в современном обществе.",
-          correctFormatting: ["hangingIndent", "alignJustify"],
-        },
-        {
-          text: "Приложение А. Дополнительные материалы.\nВ данном приложении представлены справочные таблицы, схемы и примеры решения типовых задач, которые помогут в освоении курса информатики и подготовке к проверочным работам.",
-          correctFormatting: ["alignLeft", "leftIndent"],
-        },
-      ];
-
       // Инициализация линейки
       function initRuler() {
         const rulerMarks = document.getElementById("rulerMarks");
@@ -752,14 +152,8 @@
         document.getElementById("feedback").style.display = "none";
         document.getElementById("hintBox").style.display = "none";
 
-        // Выбираем случайный абзац
-        const taskData =
-          paragraphs[Math.floor(Math.random() * paragraphs.length)];
-
-        currentTask = {
-          text: taskData.text,
-          correctFormatting: new Set(taskData.correctFormatting),
-        };
+        // Генерируем задание через модуль
+        currentTask = generator.generateTask();
 
         // Устанавливаем текст и форматирование
         const paragraph = document.getElementById("documentParagraph");
@@ -775,22 +169,9 @@
 
         // Применяем форматирование визуально
         currentTask.correctFormatting.forEach((format) => {
-          if (format === "firstLineIndent") {
-            paragraph.classList.add("para-first-line-indent");
-          } else if (format === "hangingIndent") {
-            paragraph.classList.add("para-hanging-indent");
-          } else if (format === "leftIndent") {
-            paragraph.classList.add("para-indent-left");
-          } else if (format === "rightIndent") {
-            paragraph.classList.add("para-indent-right");
-          } else if (format === "alignLeft") {
-            paragraph.classList.add("para-align-left");
-          } else if (format === "alignRight") {
-            paragraph.classList.add("para-align-right");
-          } else if (format === "alignCenter") {
-            paragraph.classList.add("para-align-center");
-          } else if (format === "alignJustify") {
-            paragraph.classList.add("para-align-justify");
+          const cssClass = generator.getFormatClass(format);
+          if (cssClass) {
+            paragraph.classList.add(cssClass);
           }
         });
 
@@ -869,6 +250,8 @@
         const grid = document.getElementById("optionsGrid");
         grid.innerHTML = "";
 
+        const formattingTypes = generator.formattingTypes;
+
         Object.entries(formattingTypes).forEach(([key, value]) => {
           const item = document.createElement("div");
           item.className = "option-item";
@@ -911,34 +294,10 @@
           return;
         }
 
-        let html = "";
-
-        if (answered) {
-          // После проверки показываем правильный ответ с объяснением
-          html +=
-            '<div class="hint-item"><strong>✓ Правильный ответ:</strong></div>';
-
-          currentTask.correctFormatting.forEach((key) => {
-            const format = formattingTypes[key];
-            html += `<div class="hint-item"><strong>${format.name}:</strong> ${format.hint}</div>`;
-          });
-        } else {
-          // До проверки — подсказки с объяснением маркеров
-          html +=
-            '<div class="hint-item"><strong>📐 Маркеры на линейке в Word:</strong></div>';
-          html +=
-            '<div class="hint-item"><strong>▼ Треугольник вниз (сверху слева):</strong> — отступ первой строки. Первая строка сдвинута вправо.</div>';
-          html +=
-            '<div class="hint-item"><strong>▲ Треугольник вверх (сверху слева):</strong> — выступ первой строки. Первая строка выступает влево, остальные сдвинуты вправо.</div>';
-          html +=
-            '<div class="hint-item"><strong>▼ Треугольник вниз (снизу слева):</strong> — отступ слева. Весь абзац сдвинут вправо.</div>';
-          html +=
-            '<div class="hint-item"><strong>▼ Треугольник вниз (справа):</strong> — отступ справа. Весь абзац сдвинут влево.</div>';
-          html +=
-            '<div class="hint-item" style="margin-top: 12px;"><strong>🔍 Выравнивание:</strong> левый край ровный → выравнивание по левому краю; правый край ровный → по правому; оба края ровные → по ширине; строки по центру → по центру.</div>';
-        }
-
-        hintContent.innerHTML = html;
+        hintContent.innerHTML = generator.generateHintContent(
+          currentTask,
+          answered,
+        );
         hintBox.style.display = "block";
       }
 
@@ -949,12 +308,13 @@
         answered = true;
         stats.total++;
 
-        // Подсчёт правильных и неправильных
-        let correct = 0;
-        let incorrect = 0;
-        let missed = 0;
+        // Проверяем ответ через модуль
+        const result = generator.checkAnswer(
+          selectedOptions,
+          currentTask.correctFormatting,
+        );
 
-        // Проверяем выбранные опции
+        // Обновляем визуальное отображение опций
         document.querySelectorAll(".option-item").forEach((item) => {
           const key = item.dataset.key;
           const isSelected = selectedOptions.has(key);
@@ -963,44 +323,33 @@
           if (isSelected && shouldBeSelected) {
             item.classList.add("correct");
             item.querySelector(".option-checkbox").textContent = "✓";
-            correct++;
           } else if (isSelected && !shouldBeSelected) {
             item.classList.add("incorrect");
             item.querySelector(".option-checkbox").textContent = "✗";
-            incorrect++;
           } else if (!isSelected && shouldBeSelected) {
             item.classList.add("missed");
             item.querySelector(".option-checkbox").textContent = "!";
-            missed++;
           }
         });
 
         const feedback = document.getElementById("feedback");
         const feedbackText = document.getElementById("feedbackText");
 
-        // Определяем успех
-        const isPerfect = incorrect === 0 && missed === 0;
-        const isAcceptable =
-          incorrect <= 1 &&
-          missed <= 1 &&
-          correct >= currentTask.correctFormatting.size - 1;
-
-        if (isPerfect) {
+        if (result.isPerfect) {
           stats.correct++;
           feedback.className = "feedback correct";
           feedbackText.textContent =
             "🎉 Отлично! Все элементы форматирования определены правильно!";
-        } else if (isAcceptable) {
+        } else if (result.isAcceptable) {
           feedback.className = "feedback correct";
           feedbackText.textContent =
             "✓ Хорошо! Большинство элементов определено верно.";
         } else {
           feedback.className = "feedback incorrect";
 
-          let correctList = Array.from(currentTask.correctFormatting)
-            .map((key) => formattingTypes[key].name)
-            .join(", ");
-
+          const correctList = generator.getCorrectAnswerList(
+            currentTask.correctFormatting,
+          );
           feedbackText.innerHTML = `❌ Есть ошибки.<br>Правильный ответ: <strong>${correctList}</strong>`;
         }
 
@@ -1008,7 +357,7 @@
         updateStats();
 
         // Отправляем результат в родительское окно (режим экзамена)
-        sendExamResult(isPerfect || isAcceptable);
+        sendExamResult(result.isPerfect || result.isAcceptable);
       }
 
       // Обновление статистики

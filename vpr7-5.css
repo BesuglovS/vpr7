@@ -1,0 +1,155 @@
+/**
+ * VPR 7 - Task 5: Logic Tables
+ * Специфичные стили для задания 5 (Логические задачи)
+ */
+
+/* Импорт общих стилей */
+@import url("vpr7-common.css");
+
+/* ============================================
+   Logic Table
+   ============================================ */
+.logic-table-container {
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.logic-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.logic-table th,
+.logic-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+.logic-table th {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.logic-table .name-header {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+}
+
+.logic-table .name-cell {
+  background: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.logic-table .clickable {
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.2rem;
+  font-weight: bold;
+  min-width: 60px;
+}
+
+.logic-table .clickable:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.logic-table .clickable.plus {
+  background: rgba(17, 153, 142, 0.2);
+  color: #11998e;
+}
+
+.logic-table .clickable.minus {
+  background: rgba(235, 51, 73, 0.2);
+  color: #eb3349;
+}
+
+.logic-table .clickable.correct {
+  background: rgba(17, 153, 142, 0.3);
+  box-shadow: inset 0 0 0 2px #11998e;
+}
+
+.logic-table .clickable.correct-minus {
+  background: rgba(17, 153, 142, 0.2);
+}
+
+.logic-table .clickable.incorrect {
+  background: rgba(235, 51, 73, 0.3);
+  box-shadow: inset 0 0 0 2px #eb3349;
+}
+
+/* ============================================
+   Legend
+   ============================================ */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.legend-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 2px solid #e0e0e0;
+}
+
+.legend-box.empty {
+  background: white;
+}
+
+.legend-box.plus {
+  background: rgba(17, 153, 142, 0.2);
+  color: #11998e;
+  border-color: #11998e;
+}
+
+.legend-box.minus {
+  background: rgba(235, 51, 73, 0.2);
+  color: #eb3349;
+  border-color: #eb3349;
+}
+
+/* ============================================
+   Reasoning Steps
+   ============================================ */
+.reasoning-steps {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.reasoning-steps h4 {
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.reasoning-steps ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.reasoning-steps li {
+  margin: 8px 0;
+  color: #333;
+  line-height: 1.5;
+}

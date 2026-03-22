@@ -1,0 +1,173 @@
+/**
+ * VPR 7 - Task 4: URL Addresses
+ * Специфичные стили для задания 4
+ */
+
+/* Импорт общих стилей */
+@import url("vpr7-common.css");
+
+/* ============================================
+   Path Workspace
+   ============================================ */
+.path-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.path-parts-pool {
+  background: #f0f4f8;
+  border-radius: 12px;
+  padding: 15px;
+  border: 2px dashed #b0bec5;
+}
+
+.path-parts-pool h3 {
+  color: #546e7a;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.parts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  min-height: 50px;
+}
+
+.path-part {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  touch-action: none;
+}
+
+.path-part:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.path-part.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.path-part.protocol {
+  background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+}
+
+.path-part.domain {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
+}
+
+.path-part.path-segment {
+  background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+}
+
+.path-part.file {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.path-part.separator {
+  background: #607d8b;
+  padding: 10px 12px;
+  font-weight: bold;
+}
+
+/* ============================================
+   Path Assembly
+   ============================================ */
+.path-assembly {
+  background: #263238;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 80px;
+}
+
+.path-assembly h3 {
+  color: #b0bec5;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.assembly-zone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 50px;
+  padding: 10px;
+  border: 2px dashed #546e7a;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  align-items: center;
+}
+
+.assembly-zone.drag-over {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.parts-container.drag-over {
+  background: rgba(102, 126, 234, 0.15);
+  border-radius: 8px;
+}
+
+.assembly-zone .path-part {
+  margin: 2px;
+}
+
+/* ============================================
+   Result Display
+   ============================================ */
+.result-display {
+  background: #1a1a2e;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 1rem;
+  color: #4fc3f7;
+  word-break: break-all;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.result-display.correct {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+.result-display.incorrect {
+  background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+  color: white;
+  animation: shake 0.5s ease-in-out;
+}
+
+/* ============================================
+   Responsive overrides
+   ============================================ */
+@media (max-width: 600px) {
+  .path-part {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}

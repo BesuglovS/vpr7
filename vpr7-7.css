@@ -1,0 +1,125 @@
+/**
+ * VPR 7 - Task 7: Information Volume Calculation
+ * Специфичные стили для задания 7 (Вычисление объёма информации)
+ */
+
+/* Импорт общих стилей */
+@import url("vpr7-common.css");
+
+/* ============================================
+   Task Type Badge
+   ============================================ */
+.task-type {
+  display: inline-block;
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ============================================
+   Answer Section
+   ============================================ */
+.answer-section {
+  margin: 20px 0;
+}
+
+.answer-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.answer-input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.answer-input {
+  flex: 1;
+  max-width: 200px;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  transition: all 0.2s;
+}
+
+.answer-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.answer-input.correct {
+  border-color: #38ef7d;
+  background: rgba(17, 153, 142, 0.1);
+}
+
+.answer-input.incorrect {
+  border-color: #f45c43;
+  background: rgba(235, 51, 73, 0.1);
+}
+
+.answer-unit {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1e3c72;
+  min-width: 40px;
+}
+
+/* ============================================
+   Hint Box with Conversion Table
+   ============================================ */
+#hintSteps {
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.hint-step {
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+}
+
+.formula {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.15);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: "Consolas", monospace;
+  color: #667eea;
+}
+
+.conversion-table {
+  background: #f0f4f8;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 15px;
+}
+
+.conversion-table h5 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.conversion-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.conversion-table td {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #555;
+  border: 1px solid #e0e0e0;
+  background: white;
+}

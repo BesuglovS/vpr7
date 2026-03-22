@@ -1,0 +1,258 @@
+/**
+ * VPR 7 - Task 12: Text Formatting
+ * Специфичные стили для задания 12 (Форматирование текста)
+ */
+
+/* Импорт общих стилей */
+@import url("vpr7-common.css");
+
+/* ============================================
+   Word Simulator
+   ============================================ */
+.word-simulator {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  margin: 15px 0;
+}
+
+.word-toolbar {
+  display: flex;
+  background: #f0f4f8;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 8px 15px;
+  gap: 5px;
+}
+
+.toolbar-btn {
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #555;
+  cursor: default;
+}
+
+.toolbar-btn.active {
+  background: #667eea;
+  color: white;
+}
+
+/* ============================================
+   Ruler
+   ============================================ */
+.ruler {
+  background: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 5px 50px;
+  position: relative;
+  height: 25px;
+}
+
+.ruler-marks {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.ruler-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #999;
+  font-size: 0.7rem;
+}
+
+.ruler-mark::before {
+  content: "";
+  width: 1px;
+  height: 8px;
+  background: #ccc;
+}
+
+.ruler-mark.major::before {
+  height: 12px;
+  background: #999;
+}
+
+.ruler-indent {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 20px;
+  border-radius: 2px;
+}
+
+.indent-first-line {
+  background: #e74c3c;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.indent-hanging {
+  background: #3498db;
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+}
+
+.indent-left {
+  background: #27ae60;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.indent-right {
+  background: #9b59b6;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+/* ============================================
+   Document Area
+   ============================================ */
+.document-area {
+  padding: 30px 50px;
+  min-height: 120px;
+  background: white;
+}
+
+.document-paragraph {
+  font-family: "Times New Roman", serif;
+  font-size: 14pt;
+  line-height: 1.5;
+  color: #333;
+  margin: 0;
+}
+
+/* Formatting Classes */
+.para-bold {
+  font-weight: bold;
+}
+
+.para-italic {
+  font-style: italic;
+}
+
+.para-underline {
+  text-decoration: underline;
+}
+
+.para-align-left {
+  text-align: left;
+}
+
+.para-align-center {
+  text-align: center;
+}
+
+.para-align-right {
+  text-align: right;
+}
+
+.para-align-justify {
+  text-align: justify;
+}
+
+.para-indent-left {
+  /* margin-left applied dynamically */
+}
+
+.para-first-line-indent {
+  /* text-indent applied dynamically */
+}
+
+.para-hanging-indent {
+  /* hanging indent applied dynamically */
+}
+
+.para-indent-right {
+  /* margin-right applied dynamically */
+}
+
+/* ============================================
+   Formatting Options
+   ============================================ */
+.formatting-options {
+  margin: 15px 0;
+}
+
+.formatting-options h3 {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-item:hover {
+  border-color: #667eea;
+}
+
+.option-item.selected {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.option-item.correct {
+  border-color: #38ef7d;
+  background: rgba(17, 153, 142, 0.2);
+}
+
+.option-item.incorrect {
+  border-color: #f45c43;
+  background: rgba(235, 51, 73, 0.2);
+}
+
+.option-item.missed {
+  border-color: #f39c12;
+  background: rgba(243, 156, 18, 0.2);
+}
+
+.option-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.option-item.selected .option-checkbox {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.2);
+}
+
+.option-text {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* ============================================
+   Hint Box
+   ============================================ */
+#hintContent {
+  line-height: 1.6;
+}
+
+.hint-item {
+  padding: 8px 12px;
+  margin: 6px 0;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+}

@@ -4,388 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Типы файлов и расширения</title>
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(
-          135deg,
-          #1a1a2e 0%,
-          #16213e 50%,
-          #0f3460 100%
-        );
-        min-height: 100vh;
-        padding: 20px;
-      }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      h1 {
-        text-align: center;
-        color: white;
-        margin-bottom: 15px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        font-size: 1.5rem;
-      }
-
-      .back-link {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        text-decoration: none;
-        padding: 10px 20px;
-        border-radius: 25px;
-        margin-bottom: 20px;
-        transition: background 0.3s;
-      }
-
-      .back-link:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      .instructions {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 12px 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        text-align: center;
-        font-size: 0.95rem;
-        color: #333;
-      }
-
-      .extensions-pool {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      }
-
-      .extensions-pool h3 {
-        color: #333;
-        margin-bottom: 15px;
-        text-align: center;
-        font-size: 1rem;
-      }
-
-      .extensions-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-        min-height: 60px;
-        padding: 10px;
-        background: #f0f4f8;
-        border-radius: 10px;
-        border: 2px dashed #b0bec5;
-      }
-
-      .extension-item {
-        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 10px 18px;
-        border-radius: 8px;
-        cursor: grab;
-        user-select: none;
-        font-weight: 600;
-        font-size: 1rem;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-        touch-action: none;
-      }
-
-      .extension-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-      }
-
-      .extension-item.dragging {
-        opacity: 0.5;
-        cursor: grabbing;
-      }
-
-      .extension-item.placed {
-        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
-        box-shadow: 0 4px 12px rgba(17, 153, 142, 0.3);
-      }
-
-      .categories-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        margin-bottom: 20px;
-      }
-
-      @media (max-width: 900px) {
-        .categories-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (max-width: 600px) {
-        .categories-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .category-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s;
-      }
-
-      .category-card h4 {
-        color: #333;
-        font-size: 0.95rem;
-        margin-bottom: 10px;
-        text-align: center;
-        padding-bottom: 8px;
-        border-bottom: 2px solid #e0e0e0;
-      }
-
-      .category-dropzone {
-        min-height: 80px;
-        padding: 10px;
-        background: #f8f9fa;
-        border: 2px dashed #b0bec5;
-        border-radius: 8px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        align-items: flex-start;
-        align-content: flex-start;
-        transition:
-          background 0.2s,
-          border-color 0.2s;
-      }
-
-      .category-dropzone.drag-over {
-        background: rgba(102, 126, 234, 0.15);
-        border-color: #667eea;
-      }
-
-      .category-dropzone .extension-item {
-        padding: 6px 12px;
-        font-size: 0.9rem;
-      }
-
-      .category-card.correct h4 {
-        color: #11998e;
-        border-bottom-color: #38ef7d;
-      }
-
-      .category-card.incorrect h4 {
-        color: #eb3349;
-        border-bottom-color: #f45c43;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 20px;
-        margin-bottom: 20px;
-      }
-
-      .btn {
-        border: none;
-        padding: 12px 25px;
-        border-radius: 25px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
-        font-weight: 500;
-      }
-
-      .btn:hover {
-        transform: translateY(-2px);
-      }
-
-      .btn-check {
-        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
-      }
-
-      .btn-clear {
-        background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-      }
-
-      .btn-next {
-        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-      }
-
-      .btn-reset {
-        background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-      }
-
-      .btn-hint {
-        background: linear-gradient(145deg, #ffc107 0%, #ff9800 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
-      }
-
-      .hint-box {
-        background: #fff3cd;
-        border-left: 4px solid #ffc107;
-        padding: 12px 15px;
-        margin-bottom: 20px;
-        border-radius: 0 8px 8px 0;
-        font-size: 0.9rem;
-        display: none;
-      }
-
-      .hint-box strong {
-        color: #856404;
-      }
-
-      .score-board {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 20px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      }
-
-      .score {
-        font-size: 1.3rem;
-        font-weight: bold;
-        color: #333;
-      }
-
-      .score span {
-        color: #11998e;
-      }
-
-      .feedback {
-        margin-top: 15px;
-        padding: 15px;
-        border-radius: 10px;
-        text-align: center;
-        font-weight: bold;
-        display: none;
-      }
-
-      .feedback.correct {
-        display: block;
-        background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
-        color: white;
-      }
-
-      .feedback.incorrect {
-        display: block;
-        background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
-        color: white;
-      }
-
-      .results-detail {
-        margin-top: 15px;
-        padding: 15px;
-        background: #f8f9fa;
-        border-radius: 10px;
-        display: none;
-      }
-
-      .results-detail h4 {
-        color: #333;
-        margin-bottom: 10px;
-        text-align: center;
-      }
-
-      .result-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 5px 10px;
-        margin: 3px 0;
-        border-radius: 5px;
-        font-size: 0.9rem;
-      }
-
-      .result-item.correct {
-        background: rgba(17, 153, 142, 0.2);
-        color: #11998e;
-      }
-
-      .result-item.incorrect {
-        background: rgba(235, 51, 73, 0.2);
-        color: #eb3349;
-      }
-
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 1.2rem;
-        }
-
-        .extension-item {
-          padding: 8px 14px;
-          font-size: 0.9rem;
-        }
-
-        .btn {
-          padding: 10px 20px;
-          font-size: 0.9rem;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="vpr7-3.css" />
     <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-      (function (m, e, t, r, i, k, a) {
-        m[i] =
-          m[i] ||
-          function () {
-            (m[i].a = m[i].a || []).push(arguments);
-          };
-        m[i].l = 1 * new Date();
-        for (var j = 0; j < document.scripts.length; j++) {
-          if (document.scripts[j].src === r) {
-            return;
-          }
-        }
-        ((k = e.createElement(t)),
-          (a = e.getElementsByTagName(t)[0]),
-          (k.async = 1),
-          (k.src = r),
-          a.parentNode.insertBefore(k, a));
-      })(
-        window,
-        document,
-        "script",
-        "https://mc.yandex.ru/metrika/tag.js?id=107146125",
-        "ym",
-      );
-
-      ym(107146125, "init", {
-        ssr: true,
-        webvisor: true,
-        clickmap: true,
-        ecommerce: "dataLayer",
-        referrer: document.referrer,
-        url: location.href,
-        accurateTrackBounce: true,
-        trackLinks: true,
-      });
-    </script>
+    <script src="metrika.js"></script>
     <noscript
       ><div>
         <img
@@ -395,6 +16,7 @@
         /></div
     ></noscript>
     <!-- /Yandex.Metrika counter -->
+    <script src="vpr7-3-generator.js"></script>
   </head>
   <body>
     <div class="container">
@@ -441,51 +63,20 @@
     </div>
 
     <script>
+      // Используем модуль генератора VPR7_Task3_Generator
+      const Generator = window.VPR7_Task3_Generator;
+
       let categories = {};
       let currentExtensions = [];
+      let currentTask = null;
       let answered = false;
       let correctCount = 0;
       let examTaskCompleted = false; // Флаг, что задание уже выполнено в режиме экзамена
 
-      // Загрузка данных из файла
+      // Загрузка данных из файла с использованием модуля
       async function loadData() {
-        try {
-          const response = await fetch("vpr7-3.txt");
-          const text = await response.text();
-          parseData(text);
-          startGame();
-        } catch (error) {
-          console.error("Ошибка загрузки данных:", error);
-          // Fallback данные
-          categories = {
-            "текстовый файл": [".odt", ".doc", ".docx", ".pdf", ".txt"],
-            презентация: [".odp", ".ppt", ".pptx"],
-            "электронная таблица": [".ods", ".xls", ".xlsx"],
-            "графический файл": [".bmp", ".gif", ".jpg", ".png", ".tiff"],
-            аудиофайл: [".aac", ".flac", ".mp3", ".ogg", ".wav"],
-            видеофайл: [".avi", ".mkv", ".mov", ".mp4", ".webm"],
-            архив: [".7z", ".rar", ".zip"],
-            "веб-страница": [".htm", ".html"],
-            "исполняемый файл": [".exe"],
-          };
-          startGame();
-        }
-      }
-
-      // Парсинг данных из файла
-      function parseData(text) {
-        const lines = text.split("\n");
-        let currentCategory = "";
-
-        lines.forEach((line) => {
-          line = line.trim();
-          if (line.startsWith("@")) {
-            currentCategory = line.substring(1).trim();
-            categories[currentCategory] = [];
-          } else if (line && currentCategory) {
-            categories[currentCategory].push(line);
-          }
-        });
+        categories = await Generator.loadExtensionData("vpr7-3.txt");
+        startGame();
       }
 
       // Начало игры
@@ -493,7 +84,7 @@
         generateTask();
       }
 
-      // Генерация задания
+      // Генерация задания с использованием модуля
       function generateTask() {
         answered = false;
         document.getElementById("feedback").className = "feedback";
@@ -501,32 +92,12 @@
         document.getElementById("resultsDetail").style.display = "none";
         document.getElementById("hintBox").style.display = "none";
 
-        // Собираем все расширения
-        let allExtensions = [];
-        Object.keys(categories).forEach((cat) => {
-          categories[cat].forEach((ext) => {
-            allExtensions.push({ extension: ext, category: cat });
-          });
-        });
-
-        // Перемешиваем и выбираем 12 расширений
-        shuffleArray(allExtensions);
-        currentExtensions = allExtensions.slice(0, 12);
-
-        // Перемешиваем выбранные расширения для отображения
-        const shuffledForDisplay = [...currentExtensions];
-        shuffleArray(shuffledForDisplay);
+        // Генерируем задание через модуль
+        currentTask = Generator.generateExtensionsTask(categories, 12);
+        currentExtensions = currentTask.selectedExtensions;
 
         renderCategories();
-        renderExtensions(shuffledForDisplay);
-      }
-
-      // Перемешивание массива
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
+        renderExtensions(currentExtensions);
       }
 
       // Отрисовка категорий
@@ -848,11 +419,8 @@
         const hintText = document.getElementById("hintText");
 
         if (hintBox.style.display === "none") {
-          // Формируем подсказку с правильными категориями для текущих расширений
-          const hints = currentExtensions.map((ext) => {
-            return `${ext.extension} → ${ext.category}`;
-          });
-          hintText.textContent = hints.join("; ");
+          // Используем функцию generateHints из модуля
+          hintText.textContent = Generator.generateHints(currentExtensions);
           hintBox.style.display = "block";
         } else {
           hintBox.style.display = "none";

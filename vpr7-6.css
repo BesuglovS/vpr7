@@ -1,0 +1,164 @@
+/**
+ * VPR 7 - Task 6: Decoding Messages (Fano Codes)
+ * Специфичные стили для задания 6 (Декодирование сообщений)
+ */
+
+/* Импорт общих стилей */
+@import url("vpr7-common.css");
+
+/* ============================================
+   Fano Toggle
+   ============================================ */
+.fano-toggle {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.fano-toggle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.fano-toggle-title {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.fano-toggle-icon {
+  transition: transform 0.3s;
+}
+
+.fano-toggle.open .fano-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.fano-content {
+  padding: 0 15px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.fano-toggle.open .fano-content {
+  padding: 15px;
+  max-height: 500px;
+}
+
+/* ============================================
+   Code Table
+   ============================================ */
+.code-table-container {
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.code-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.code-table th,
+.code-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+.code-table th {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.code-table td {
+  font-family: "Consolas", monospace;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* ============================================
+   Answer Section
+   ============================================ */
+.answer-section {
+  margin: 15px 0;
+}
+
+.answer-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.answer-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.answer-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.answer-input.correct {
+  border-color: #38ef7d;
+  background: rgba(17, 153, 142, 0.1);
+}
+
+.answer-input.incorrect {
+  border-color: #f45c43;
+  background: rgba(235, 51, 73, 0.1);
+}
+
+/* ============================================
+   Hint Steps
+   ============================================ */
+#hintSteps {
+  line-height: 1.6;
+}
+
+.hint-step {
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.code-part {
+  font-family: "Consolas", monospace;
+  background: rgba(102, 126, 234, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #667eea;
+}
+
+.letter-part {
+  font-weight: bold;
+  color: #11998e;
+}
+
+.result {
+  display: block;
+  margin-top: 10px;
+  padding: 10px;
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.1rem;
+}
