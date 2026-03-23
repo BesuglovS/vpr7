@@ -79,8 +79,12 @@
             ✓ Проверить
           </button>
           <button class="btn btn-clear" onclick="clearAll()">✕ Очистить</button>
+          <button class="btn btn-hint" onclick="showHint()">
+            💡 Подсказка
+          </button>
+          <a href="vpr7-5-t.html" class="btn btn-theory">📚 Теория</a>
           <button class="btn btn-reset" onclick="resetGame()">
-            🔄 Новая задача
+            🔄 Новое задание
           </button>
         </div>
       </div>
@@ -320,6 +324,18 @@
       // Сброс игры
       function resetGame() {
         startGame();
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        if (hintBox.style.display === "block") {
+          hintBox.style.display = "none";
+        } else {
+          document.getElementById("hintText").textContent =
+            "Анализируйте условия по одному. Если в строке или столбце уже есть плюс, остальные ячейки должны быть минусами.";
+          hintBox.style.display = "block";
+        }
       }
 
       // Приём сообщений от родительского окна (режим экзамена)

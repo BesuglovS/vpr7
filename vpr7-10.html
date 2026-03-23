@@ -20,13 +20,7 @@
   </head>
   <body>
     <div class="container">
-      <div
-        class="nav-links"
-        style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap"
-      >
-        <a href="vpr7.html" class="back-link">← На главную</a>
-        <a href="vpr7-10-t.html" class="back-link">📚 Теория</a>
-      </div>
+      <a href="vpr7.html" class="back-link">← На главную</a>
       <h1>📊 Объём информации в предложении</h1>
 
       <div class="instructions">
@@ -78,11 +72,15 @@
           <button class="btn btn-check" onclick="checkAnswer()">
             ✓ Проверить
           </button>
+          <button class="btn btn-clear" onclick="clearAnswer()">
+            ✕ Очистить
+          </button>
           <button class="btn btn-hint" onclick="showHint()">
             💡 Подсказка
           </button>
+          <a href="vpr7-10-t.html" class="btn btn-theory">📚 Теория</a>
           <button class="btn btn-reset" onclick="resetGame()">
-            🔄 Новая задача
+            🔄 Новое задание
           </button>
         </div>
 
@@ -181,6 +179,15 @@
       // Сброс игры
       function resetGame() {
         generateTask();
+      }
+
+      // Очистка поля ввода
+      function clearAnswer() {
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        answered = false;
       }
 
       // Приём сообщений от родительского окна (режим экзамена)

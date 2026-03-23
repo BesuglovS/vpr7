@@ -67,20 +67,11 @@
           <button class="btn btn-hint" onclick="showHint()">
             💡 Подсказка
           </button>
-          <a
-            href="vpr7-2-t.html"
-            class="btn btn-next"
-            style="text-decoration: none"
-          >
-            📚 Теория
-          </a>
+          <a href="vpr7-2-t.html" class="btn btn-theory">📚 Теория</a>
+          <button class="btn btn-reset" onclick="resetGame()">
+            🔄 Новое задание
+          </button>
         </div>
-      </div>
-
-      <div class="score-board">
-        <button class="btn btn-reset" onclick="resetGame()">
-          🔄 Новое задание
-        </button>
       </div>
     </div>
 
@@ -397,6 +388,45 @@
             path += part.dataset.text;
           });
           document.getElementById("resultDisplay").textContent = path;
+        }
+      }
+
+      // Очистка зоны сборки (возврат всех элементов в пул)
+      function clearAssembly() {
+        const pool = document.getElementById("partsPool");
+        const zone = document.getElementById("assemblyZone");
+        const parts = zone.querySelectorAll(".path-part");
+
+        parts.forEach((part) => {
+          pool.appendChild(part);
+        });
+
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("correctAnswer").textContent = "";
+        document.getElementById("resultDisplay").textContent =
+          "Перетащите элементы для сборки пути";
+        document.getElementById("resultDisplay").className = "result-display";
+        answered = false;
+      }
+
+      // Показать подсказку
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        const hintText = document.getElementById("hintText");
+
+        if (hintBox.style.display === "block") {
+          hintBox.style.display = "none";
+        } else {
+          if (currentTask && currentTask.informativeHint) {
+            hintText.textContent = currentTask.informativeHint;
+          } else if (currentTask && currentTask.hint) {
+            hintText.textContent = currentTask.hint;
+          } else {
+            hintText.textContent =
+              "Соберите путь из предложенных элементов, начиная с диска.";
+          }
+          hintBox.style.display = "block";
         }
       }
 

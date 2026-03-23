@@ -152,6 +152,14 @@ h1 {
   box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
 }
 
+.btn-theory {
+  background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+  text-decoration: none;
+  display: inline-block;
+}
+
 /* ============================================
    Feedback Messages
    ============================================ */

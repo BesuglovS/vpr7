@@ -21,7 +21,6 @@
   <body>
     <div class="container">
       <a href="vpr7.html" class="back-link">← На главную</a>
-      <a href="vpr7-6-t.html" class="back-link">📚 Теория</a>
       <h1>📻 Декодирование сообщений</h1>
 
       <div class="instructions">
@@ -75,11 +74,15 @@
           <button class="btn btn-check" onclick="checkAnswer()">
             ✓ Проверить
           </button>
+          <button class="btn btn-clear" onclick="clearAnswer()">
+            ✕ Очистить
+          </button>
           <button class="btn btn-hint" onclick="showHint()">
             💡 Подсказка
           </button>
+          <a href="vpr7-6-t.html" class="btn btn-theory">📚 Теория</a>
           <button class="btn btn-reset" onclick="resetGame()">
-            🔄 Новая задача
+            🔄 Новое задание
           </button>
         </div>
 
@@ -317,6 +320,14 @@
         // Закрываем подсказку Фано при новой задаче
         document.getElementById("fanoToggle").classList.remove("open");
         generateTaskUI();
+      }
+
+      // Очистка поля ввода
+      function clearAnswer() {
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+        document.getElementById("feedback").style.display = "none";
+        answered = false;
       }
 
       // Приём сообщений от родительского окна (режим экзамена)

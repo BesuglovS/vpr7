@@ -226,20 +226,10 @@
           <button class="btn btn-hint" onclick="showHint()">
             💡 Подсказка
           </button>
+          <a href="vpr7-11-t.html" class="btn btn-theory">📚 Теория</a>
           <button class="btn btn-reset" onclick="resetGame()">
-            🔄 Новая задача
+            🔄 Новое задание
           </button>
-          <a
-            href="vpr7-11-t.html"
-            class="btn"
-            style="
-              background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
-              color: white;
-              box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
-              text-decoration: none;
-            "
-            >📚 Теория</a
-          >
         </div>
 
         <div class="stats">
@@ -408,6 +398,17 @@
           ".buttons",
         ]);
       });
+
+      // Добавляем обработчики событий для слайдеров миксера
+      document
+        .getElementById("redSlider")
+        .addEventListener("input", updateMixer);
+      document
+        .getElementById("greenSlider")
+        .addEventListener("input", updateMixer);
+      document
+        .getElementById("blueSlider")
+        .addEventListener("input", updateMixer);
 
       // Запуск
       generateTask();

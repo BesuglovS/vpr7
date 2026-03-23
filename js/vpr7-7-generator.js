@@ -89,11 +89,25 @@
 
     const taskText = `На ${set.deviceName} объёмом <span class="highlight">${set.deviceSize} ${units[set.deviceUnit].name}</span> записывают видеофайлы размером <span class="highlight">${set.fileSize} ${units[set.fileUnit].name}</span> каждый. Сколько <span class="highlight">${units[set.answerUnit].name.toLowerCase()}</span> свободного места останется после записи максимально возможного количества файлов?`;
 
+    const hintSteps = [
+      "<p><strong>Шаг 1:</strong> Переведём все значения в МБ:</p>",
+      `<p>${set.deviceSize} ${units[set.deviceUnit].name} = ${set.deviceSize} × ${units[set.deviceUnit].factor / 1024} = ${deviceSizeMB} МБ</p>`,
+      `<p>${set.fileSize} ${units[set.fileUnit].name} = ${fileSizeMB} МБ</p>`,
+      "<p><strong>Шаг 2:</strong> Найдём максимальное количество файлов:</p>",
+      `<p>${deviceSizeMB} ÷ ${fileSizeMB} = ${filesCount} файлов</p>`,
+      "<p><strong>Шаг 3:</strong> Вычислим занятое место:</p>",
+      `<p>${filesCount} × ${fileSizeMB} = ${usedSpaceMB} МБ</p>`,
+      "<p><strong>Шаг 4:</strong> Найдём свободное место:</p>",
+      `<p>${deviceSizeMB} − ${usedSpaceMB} = ${remainMB} МБ</p>`,
+      `<p><strong>Ответ:</strong> ${answer} ${units[set.answerUnit].name}</p>`,
+    ];
+
     return {
       type: "📂 Файлы на устройстве",
       text: taskText,
       answer: answer,
       answerUnit: set.answerUnit,
+      hintSteps: hintSteps,
     };
   }
 
@@ -122,11 +136,23 @@
 
     const taskText = `Игра занимает <span class="highlight">${pair.a.size} ${units[pair.a.unit].name}</span>, а её обновление увеличивает объём игры на <span class="highlight">${pair.b.size} ${units[pair.b.unit].name}</span>. Сколько ${units[pair.sum].name.toLowerCase()} будет весить игра после обновления?`;
 
+    const hintSteps = [
+      "<p><strong>Шаг 1:</strong> Переведём все значения в МБ:</p>",
+      `<p>${pair.a.size} ${units[pair.a.unit].name} = ${aMB} МБ</p>`,
+      `<p>${pair.b.size} ${units[pair.b.unit].name} = ${bMB} МБ</p>`,
+      "<p><strong>Шаг 2:</strong> Сложим объёмы:</p>",
+      `<p>${aMB} + ${bMB} = ${sumMB} МБ</p>`,
+      "<p><strong>Шаг 3:</strong> Переведём результат в нужные единицы:</p>",
+      `<p>${sumMB} МБ = ${answer} ${units[pair.sum].name}</p>`,
+      `<p><strong>Ответ:</strong> ${answer} ${units[pair.sum].name}</p>`,
+    ];
+
     return {
       type: "➕ Сложение объёмов",
       text: taskText,
       answer: answer,
       answerUnit: pair.sum,
+      hintSteps: hintSteps,
     };
   }
 
@@ -162,11 +188,23 @@
 
     const taskText = `На флешке <span class="highlight">${set.free.size} ${units[set.free.unit].name}</span> свободного места. Пользователь хочет записать файл размером <span class="highlight">${set.file.size} ${units[set.file.unit].name}</span>. Сколько ${units[set.remain].name.toLowerCase()} останется после записи?`;
 
+    const hintSteps = [
+      "<p><strong>Шаг 1:</strong> Переведём все значения в МБ:</p>",
+      `<p>${set.free.size} ${units[set.free.unit].name} = ${freeMB} МБ</p>`,
+      `<p>${set.file.size} ${units[set.file.unit].name} = ${fileMB} МБ</p>`,
+      "<p><strong>Шаг 2:</strong> Вычтем объём файла из свободного места:</p>",
+      `<p>${freeMB} − ${fileMB} = ${remainMB} МБ</p>`,
+      "<p><strong>Шаг 3:</strong> Переведём результат в нужные единицы:</p>",
+      `<p>${remainMB} МБ = ${answer} ${units[set.remain].name}</p>`,
+      `<p><strong>Ответ:</strong> ${answer} ${units[set.remain].name}</p>`,
+    ];
+
     return {
       type: "➖ Вычитание объёмов",
       text: taskText,
       answer: answer,
       answerUnit: set.remain,
+      hintSteps: hintSteps,
     };
   }
 
@@ -184,11 +222,20 @@
 
     const taskText = `В папке <span class="highlight">${set.count} фотографий</span>, каждая размером <span class="highlight">${set.size} ${units[set.sizeUnit].name}</span>. Какой общий объём в ${units[set.totalUnit].name.toLowerCase()}?`;
 
+    const hintSteps = [
+      "<p><strong>Шаг 1:</strong> Переведём размер одной фотографии в нужные единицы:</p>",
+      `<p>${set.size} ${units[set.sizeUnit].name} = ${sizeInTotalUnit} ${units[set.totalUnit].name}</p>`,
+      "<p><strong>Шаг 2:</strong> Умножим на количество файлов:</p>",
+      `<p>${set.count} × ${sizeInTotalUnit} = ${answer} ${units[set.totalUnit].name}</p>`,
+      `<p><strong>Ответ:</strong> ${answer} ${units[set.totalUnit].name}</p>`,
+    ];
+
     return {
       type: "✖️ Умножение объёмов",
       text: taskText,
       answer: answer,
       answerUnit: set.totalUnit,
+      hintSteps: hintSteps,
     };
   }
 
@@ -218,11 +265,21 @@
 
     const taskText = `Виктор скачал два файла: первый занимает <span class="highlight">${set.a.size} ${units[set.a.unit].name}</span>, второй — <span class="highlight">${set.b.size} ${units[set.b.unit].name}</span>. На сколько ${units[set.diffUnit].name.toLowerCase()} второй файл больше первого?`;
 
+    const hintSteps = [
+      "<p><strong>Шаг 1:</strong> Переведём оба размера в одну единицу измерения:</p>",
+      `<p>Первый файл: ${set.a.size} ${units[set.a.unit].name} = ${aInDiff} ${units[set.diffUnit].name}</p>`,
+      `<p>Второй файл: ${set.b.size} ${units[set.b.unit].name} = ${bInDiff} ${units[set.diffUnit].name}</p>`,
+      "<p><strong>Шаг 2:</strong> Найдём разницу:</p>",
+      `<p>${bInDiff} − ${aInDiff} = ${answer} ${units[set.diffUnit].name}</p>`,
+      `<p><strong>Ответ:</strong> ${answer} ${units[set.diffUnit].name}</p>`,
+    ];
+
     return {
       type: "⚖️ Сравнение объёмов",
       text: taskText,
       answer: answer,
       answerUnit: set.diffUnit,
+      hintSteps: hintSteps,
     };
   }
 
