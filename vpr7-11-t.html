@@ -971,6 +971,186 @@
         </table>
 
         <h3 style="margin: 25px 0 15px; color: #333">
+          🎨 Дополнительные цвета
+        </h3>
+        <p style="color: #555; line-height: 1.7; margin-bottom: 15px">
+          В заданиях ВПР могут встречаться и другие цвета. Важно понимать
+          принцип их образования!
+        </p>
+        <table class="color-table">
+          <thead>
+            <tr>
+              <th>Цвет</th>
+              <th>R</th>
+              <th>G</th>
+              <th>B</th>
+              <th>Образец</th>
+              <th>Как образуется</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Оранжевый</strong></td>
+              <td>255</td>
+              <td>128</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(255, 128, 0)"
+                ></span>
+              </td>
+              <td>Красный + половина Зелёного</td>
+            </tr>
+            <tr>
+              <td><strong>Розовый</strong></td>
+              <td>255</td>
+              <td>192</td>
+              <td>203</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(255, 192, 203)"
+                ></span>
+              </td>
+              <td>Красный + немного Зелёного и Синего</td>
+            </tr>
+            <tr>
+              <td><strong>Фиолетовый</strong></td>
+              <td>128</td>
+              <td>0</td>
+              <td>128</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(128, 0, 128)"
+                ></span>
+              </td>
+              <td>Половина Красного + Синий</td>
+            </tr>
+            <tr>
+              <td><strong>Кремовый</strong></td>
+              <td>255</td>
+              <td>255</td>
+              <td>128</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(255, 255, 128)"
+                ></span>
+              </td>
+              <td>Жёлтый + половина Синего</td>
+            </tr>
+            <tr>
+              <td><strong>Бирюзовый</strong></td>
+              <td>0</td>
+              <td>128</td>
+              <td>128</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(0, 128, 128)"
+                ></span>
+              </td>
+              <td>Половина Зелёного + Синий</td>
+            </tr>
+            <tr>
+              <td><strong>Оливковый</strong></td>
+              <td>128</td>
+              <td>128</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(128, 128, 0)"
+                ></span>
+              </td>
+              <td>Половина Красного + Зелёный</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
+          🌑 Тёмные оттенки основных цветов
+        </h3>
+        <p style="color: #555; line-height: 1.7; margin-bottom: 15px">
+          Когда один компонент имеет среднее значение (около 128), а остальные
+          равны нулю, получается тёмный оттенок этого цвета:
+        </p>
+        <table class="color-table">
+          <thead>
+            <tr>
+              <th>Цвет</th>
+              <th>R</th>
+              <th>G</th>
+              <th>B</th>
+              <th>Образец</th>
+              <th>Принцип</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Тёмно-красный</strong></td>
+              <td>128</td>
+              <td>0</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(128, 0, 0)"
+                ></span>
+              </td>
+              <td>Половина Красного</td>
+            </tr>
+            <tr>
+              <td><strong>Тёмно-зелёный</strong></td>
+              <td>0</td>
+              <td>128</td>
+              <td>0</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(0, 128, 0)"
+                ></span>
+              </td>
+              <td>Половина Зелёного</td>
+            </tr>
+            <tr>
+              <td><strong>Тёмно-синий</strong></td>
+              <td>0</td>
+              <td>0</td>
+              <td>128</td>
+              <td>
+                <span
+                  class="color-cell"
+                  style="background: rgb(0, 0, 128)"
+                ></span>
+              </td>
+              <td>Половина Синего</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-box">
+          <h4>💡 Как запомнить принцип образования цветов</h4>
+          <ul>
+            <li>
+              <strong>Значение 255</strong> — максимум, компонент "включён
+              полностью"
+            </li>
+            <li>
+              <strong>Значение 128</strong> — половина, компонент "включён
+              наполовину"
+            </li>
+            <li><strong>Значение 0</strong> — минимум, компонент "выключен"</li>
+            <li>
+              Чем <strong>меньше значение</strong> активного компонента, тем
+              <strong>темнее</strong> получается оттенок
+            </li>
+          </ul>
+        </div>
+
+        <h3 style="margin: 25px 0 15px; color: #333">
           🔄 Смешение основных цветов
         </h3>
         <div class="color-diagram">
@@ -1260,6 +1440,111 @@
             </ol>
             <strong style="display: block; margin-top: 10px">
               Ответ: Тёмно-зелёный
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 6 -->
+        <div class="example-card">
+          <h4>📋 Пример 6: Оранжевый цвет</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(255, 128, 0)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 255 — красный на максимуме</li>
+              <li>G = 128 — зелёный на половине интенсивности</li>
+              <li>B = 0 — синий отсутствует</li>
+              <li>Красный + половина Зелёного = Оранжевый</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Оранжевый
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 7 -->
+        <div class="example-card">
+          <h4>📋 Пример 7: Фиолетовый цвет</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(128, 0, 128)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 128 — красный на половине интенсивности</li>
+              <li>G = 0 — зелёный отсутствует</li>
+              <li>B = 128 — синий на половине интенсивности</li>
+              <li>Половина Красного + Синий = Фиолетовый (тёмный пурпурный)</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Фиолетовый
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 8 -->
+        <div class="example-card">
+          <h4>📋 Пример 8: Бирюзовый цвет</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(0, 128, 128)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 0 — красный отсутствует</li>
+              <li>G = 128 — зелёный на половине интенсивности</li>
+              <li>B = 128 — синий на половине интенсивности</li>
+              <li>Половина Зелёного + Синий = Бирюзовый (тёмный циан)</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Бирюзовый
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 9 -->
+        <div class="example-card">
+          <h4>📋 Пример 9: Оливковый цвет</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(128, 128, 0)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 128 — красный на половине интенсивности</li>
+              <li>G = 128 — зелёный на половине интенсивности</li>
+              <li>B = 0 — синий отсутствует</li>
+              <li>Половина Красного + Зелёный = Оливковый (тёмный жёлтый)</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Оливковый
+            </strong>
+          </div>
+        </div>
+
+        <!-- Пример 10 -->
+        <div class="example-card">
+          <h4>📋 Пример 10: Кремовый цвет</h4>
+          <div class="example-task">
+            <strong>Задание:</strong> Какой цвет в цветовой модели RGB
+            кодируется как <span class="highlight">RGB(255, 255, 128)</span>?
+          </div>
+          <div class="example-solution">
+            <strong>Решение:</strong>
+            <ol style="margin-left: 20px; line-height: 1.8">
+              <li>R = 255 — красный на максимуме</li>
+              <li>G = 255 — зелёный на максимуме</li>
+              <li>B = 128 — синий на половине интенсивности</li>
+              <li>Жёлтый (R+G) + немного Синего = Кремовый (светлый жёлтый)</li>
+            </ol>
+            <strong style="display: block; margin-top: 10px">
+              Ответ: Кремовый
             </strong>
           </div>
         </div>

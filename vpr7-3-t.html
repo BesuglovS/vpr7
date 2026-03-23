@@ -638,6 +638,10 @@
             <span class="ext-name">.pdf</span>
             <span class="ext-desc">PDF документ</span>
           </div>
+          <div class="extension-item" onclick="showExtensionInfo('.rtf')">
+            <span class="ext-name">.rtf</span>
+            <span class="ext-desc">Формат. текст</span>
+          </div>
         </div>
 
         <div class="programs-section">
@@ -767,6 +771,10 @@
             <span class="ext-name">.tiff</span>
             <span class="ext-desc">Высокое качество</span>
           </div>
+          <div class="extension-item" onclick="showExtensionInfo('.svg')">
+            <span class="ext-name">.svg</span>
+            <span class="ext-desc">Векторная графика</span>
+          </div>
         </div>
 
         <div class="programs-section">
@@ -816,6 +824,10 @@
             <span class="ext-name">.flac</span>
             <span class="ext-desc">Без потерь</span>
           </div>
+          <div class="extension-item" onclick="showExtensionInfo('.wma')">
+            <span class="ext-name">.wma</span>
+            <span class="ext-desc">Windows Media</span>
+          </div>
         </div>
 
         <div class="programs-section">
@@ -862,6 +874,10 @@
           <div class="extension-item" onclick="showExtensionInfo('.webm')">
             <span class="ext-name">.webm</span>
             <span class="ext-desc">Для веба</span>
+          </div>
+          <div class="extension-item" onclick="showExtensionInfo('.wmv')">
+            <span class="ext-name">.wmv</span>
+            <span class="ext-desc">Windows Media</span>
           </div>
         </div>
 
@@ -1007,7 +1023,7 @@
               <td><strong>📄 Текстовый файл</strong></td>
               <td>
                 <code>.txt</code> <code>.doc</code> <code>.docx</code>
-                <code>.odt</code> <code>.pdf</code>
+                <code>.odt</code> <code>.pdf</code> <code>.rtf</code>
               </td>
             </tr>
             <tr>
@@ -1022,21 +1038,21 @@
               <td><strong>🖼️ Графический файл</strong></td>
               <td>
                 <code>.jpg</code> <code>.png</code> <code>.gif</code>
-                <code>.bmp</code> <code>.tiff</code>
+                <code>.bmp</code> <code>.tiff</code> <code>.svg</code>
               </td>
             </tr>
             <tr>
               <td><strong>🎵 Аудиофайл</strong></td>
               <td>
                 <code>.mp3</code> <code>.wav</code> <code>.ogg</code>
-                <code>.aac</code> <code>.flac</code>
+                <code>.aac</code> <code>.flac</code> <code>.wma</code>
               </td>
             </tr>
             <tr>
               <td><strong>🎬 Видеофайл</strong></td>
               <td>
                 <code>.mp4</code> <code>.avi</code> <code>.mkv</code>
-                <code>.mov</code> <code>.webm</code>
+                <code>.mov</code> <code>.webm</code> <code>.wmv</code
               </td>
             </tr>
             <tr>
@@ -1242,6 +1258,19 @@
             <h5>Тип файла: текстовый файл</h5>
           `,
         },
+        ".rtf": {
+          title: ".rtf — Rich Text Format",
+          body: `
+            <p>Формат для обмена форматированными текстами.</p>
+            <h5>Особенности:</h5>
+            <ul>
+              <li>Поддерживает форматирование (шрифты, цвета)</li>
+              <li>Универсальный формат от Microsoft</li>
+              <li>Открывается в большинстве текстовых редакторов</li>
+            </ul>
+            <h5>Тип файла: текстовый файл</h5>
+          `,
+        },
         ".ppt": {
           title: ".ppt — Презентация PowerPoint 97-2003",
           body: `
@@ -1371,6 +1400,20 @@
             <h5>Тип файла: графический файл</h5>
           `,
         },
+        ".svg": {
+          title: ".svg — Scalable Vector Graphics",
+          body: `
+            <p>Формат векторной графики.</p>
+            <h5>Особенности:</h5>
+            <ul>
+              <li>Векторный формат — можно масштабировать без потери качества</li>
+              <li>Основан на XML</li>
+              <li>Идеален для иконок, логотипов, схем</li>
+              <li>Открывается в браузерах</li>
+            </ul>
+            <h5>Тип файла: графический файл</h5>
+          `,
+        },
         ".mp3": {
           title: ".mp3 — MPEG Audio Layer 3",
           body: `
@@ -1434,6 +1477,19 @@
             <h5>Тип файла: аудиофайл</h5>
           `,
         },
+        ".wma": {
+          title: ".wma — Windows Media Audio",
+          body: `
+            <p>Аудиоформат от Microsoft.</p>
+            <h5>Особенности:</h5>
+            <ul>
+              <li>Разработан Microsoft</li>
+              <li>Хорошее качество при небольшом размере</li>
+              <li>Работает в Windows Media Player</li>
+            </ul>
+            <h5>Тип файла: аудиофайл</h5>
+          `,
+        },
         ".mp4": {
           title: ".mp4 — MPEG-4 Video",
           body: `
@@ -1493,6 +1549,19 @@
               <li>Оптимизирован для веба</li>
               <li>Открытый бесплатный формат</li>
               <li>Поддерживается всеми браузерами</li>
+            </ul>
+            <h5>Тип файла: видеофайл</h5>
+          `,
+        },
+        ".wmv": {
+          title: ".wmv — Windows Media Video",
+          body: `
+            <p>Видеоформат от Microsoft.</p>
+            <h5>Особенности:</h5>
+            <ul>
+              <li>Разработан Microsoft</li>
+              <li>Хорошее сжатие</li>
+              <li>Работает в Windows Media Player</li>
             </ul>
             <h5>Тип файла: видеофайл</h5>
           `,
