@@ -46,7 +46,8 @@ function generateTask1() {
 
     const taskText = `Установите соответствие между устройствами и их типом. К каждой позиции первого столбца подберите соответствующую позицию из второго столбца.<br><br>
     <b>Устройства:</b> ${devicesList}<br><br>
-    <b>Типы устройств:</b><br>${categoriesList}`;
+    <b>Типы устройств:</b><br>${categoriesList}<br><br>
+    Запишите в ответе буквы в порядке нумерации устройств (без пробелов и запятых).`;
 
     // Build answer string
     const answer = taskData.selectedDevices
@@ -107,7 +108,8 @@ function generateTask1Fallback() {
     А) устройства ввода<br>
     Б) устройства вывода<br>
     В) устройства хранения<br>
-    Г) устройства обработки`;
+    Г) устройства обработки<br><br>
+    Запишите в ответе буквы в порядке нумерации устройств (без пробелов и запятых).`;
 
   const answerMap = {};
   allDevices.forEach((d, i) => {
@@ -242,7 +244,8 @@ function generateTask3() {
 
     const taskText = `Установите соответствие между расширениями файлов и их типом. К каждой позиции первого столбца подберите соответствующую позицию из второго столбца.<br><br>
     <b>Расширения:</b> ${extensionsList}<br><br>
-    <b>Типы файлов:</b><br>${categoriesList}`;
+    <b>Типы файлов:</b><br>${categoriesList}<br><br>
+    Запишите в ответе буквы в порядке нумерации расширений (без пробелов и запятых).`;
 
     // Build answer string
     const answer = taskData.selectedExtensions
@@ -278,10 +281,11 @@ function generateTask3Fallback() {
 
   const allExtensions = shuffleArray(selectedExtensions);
 
-  const taskText = `Установите соответствие между расширениями файлов и их типом.<br><br>
+  const taskText = `Установите соответствие между расширениями файлов и их типом. К каждой позиции первого столбца подберите соответствующую позицию из второго столбца.<br><br>
     <b>Расширения:</b> ${allExtensions.map((e, i) => `${i + 1}) .${e}`).join("   ")}<br><br>
     <b>Типы файлов:</b><br>
-    ${selectedTypes.map((t, i) => `${String.fromCharCode(65 + i)}) ${t}`).join("<br>")}`;
+    ${selectedTypes.map((t, i) => `${String.fromCharCode(65 + i)}) ${t}`).join("<br>")}<br><br>
+    Запишите в ответе буквы в порядке нумерации расширений (без пробелов и запятых).`;
 
   const answerMap = {};
   allExtensions.forEach((ext, i) => {
@@ -394,7 +398,8 @@ function generateTask5Fallback() {
   const taskText = `Три друга — ${selectedNames.join(", ")} — заняли первые три места в соревнованиях. 
     ${selectedNames[0]} занял не ${order[0]}-е и не ${order[1]}-е место. 
     ${selectedNames[1]} занял не ${order[1]}-е место. 
-    Какое место занял каждый из друзей?`;
+    Какое место занял каждый из друзей?<br><br>
+    Запишите ответ в формате: Имя — место (например: Иван — 1-е, Пётр — 2-е, Сергей — 3-е).`;
 
   const answer = `${selectedNames[0]} — ${order[2]}-е, ${selectedNames[1]} — ${order[0]}-е, ${selectedNames[2]} — ${order[1]}-е`;
 
@@ -447,7 +452,8 @@ function generateTask6() {
 
     const taskText = `Для кодирования букв используется неравномерный двоичный код (${task.symbolName}). ${fanoText}<br><br>
       Кодовые слова:<br>${codeTableHtml}<br>
-      Декодируйте сообщение: <b>${encodedWithSpaces}</b>`;
+      Декодируйте сообщение: <b>${encodedWithSpaces}</b><br><br>
+      Запишите полученное слово заглавными буквами.`;
 
     return { text: taskText, answer: task.word };
   }
@@ -513,7 +519,8 @@ function generateTask6Fallback() {
 
   const taskText = `Для кодирования букв используется неравномерный двоичный код, удовлетворяющий условию Фано. 
     Кодовые слова:<br>${codeTable}<br>
-    Декодируйте сообщение: <b>${encodedWithSpaces}</b>`;
+    Декодируйте сообщение: <b>${encodedWithSpaces}</b><br><br>
+    Запишите полученное слово заглавными буквами.`;
 
   return { text: taskText, answer: word };
 }
@@ -659,7 +666,8 @@ function generateTask11Fallback() {
   const color = randomChoice(colors);
 
   const taskText = `В цветовой модели RGB цвет кодируется тремя числами от 0 до 255, обозначающими интенсивность красной, зелёной и синей составляющих.<br><br>
-    Определите, какой цвет получится при значениях R = ${color.r}, G = ${color.g}, B = ${color.b}.`;
+    Определите, какой цвет получится при значениях R = ${color.r}, G = ${color.g}, B = ${color.b}.<br><br>
+    Запишите название цвета.`;
 
   return { text: taskText, answer: color.name };
 }
