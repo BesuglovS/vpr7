@@ -228,29 +228,40 @@ function generateTask3() {
       8,
     );
 
-    // Select 4 random categories for the task
+    // Get all unique categories from selected extensions
     const usedCategories = [
       ...new Set(Object.values(taskData.extensionCategories)),
     ];
-    const selectedCategories = usedCategories.slice(0, 4);
 
     // Build task text
     const extensionsList = taskData.selectedExtensions
       .map((e, i) => `${i + 1}) ${e.extension}`)
       .join("   ");
-    const categoriesList = selectedCategories
-      .map((c, i) => `${String.fromCharCode(65 + i)}) ${c}`)
-      .join("<br>");
+
+    // Build categories list in 2 columns
+    let categoriesList =
+      '<table style="border-collapse: collapse; margin: 10px 0;">';
+    for (let i = 0; i < usedCategories.length; i += 2) {
+      categoriesList += "<tr>";
+      categoriesList += `<td style="padding: 4px 20px 4px 0; font-weight: normal;">${String.fromCharCode(65 + i)}) ${usedCategories[i]}</td>`;
+      if (usedCategories[i + 1]) {
+        categoriesList += `<td style="padding: 4px 20px 4px 0; font-weight: normal;">${String.fromCharCode(65 + i + 1)}) ${usedCategories[i + 1]}</td>`;
+      } else {
+        categoriesList += "<td></td>";
+      }
+      categoriesList += "</tr>";
+    }
+    categoriesList += "</table>";
 
     const taskText = `Установите соответствие между расширениями файлов и их типом. К каждой позиции первого столбца подберите соответствующую позицию из второго столбца.<br><br>
     <b>Расширения:</b> ${extensionsList}<br><br>
-    <b>Типы файлов:</b><br>${categoriesList}<br><br>
+    <b>Типы файлов:</b><br>${categoriesList}<br>
     Запишите в ответе буквы в порядке нумерации расширений (без пробелов и запятых).`;
 
     // Build answer string
     const answer = taskData.selectedExtensions
       .map((item) => {
-        const catIndex = selectedCategories.indexOf(item.category);
+        const catIndex = usedCategories.indexOf(item.category);
         return String.fromCharCode(65 + catIndex);
       })
       .join("");
@@ -281,10 +292,24 @@ function generateTask3Fallback() {
 
   const allExtensions = shuffleArray(selectedExtensions);
 
+  // Build categories list in 2 columns
+  let categoriesList =
+    '<table style="border-collapse: collapse; margin: 10px 0;">';
+  for (let i = 0; i < selectedTypes.length; i += 2) {
+    categoriesList += "<tr>";
+    categoriesList += `<td style="padding: 4px 20px 4px 0; font-weight: normal;">${String.fromCharCode(65 + i)}) ${selectedTypes[i]}</td>`;
+    if (selectedTypes[i + 1]) {
+      categoriesList += `<td style="padding: 4px 20px 4px 0; font-weight: normal;">${String.fromCharCode(65 + i + 1)}) ${selectedTypes[i + 1]}</td>`;
+    } else {
+      categoriesList += "<td></td>";
+    }
+    categoriesList += "</tr>";
+  }
+  categoriesList += "</table>";
+
   const taskText = `Установите соответствие между расширениями файлов и их типом. К каждой позиции первого столбца подберите соответствующую позицию из второго столбца.<br><br>
     <b>Расширения:</b> ${allExtensions.map((e, i) => `${i + 1}) .${e}`).join("   ")}<br><br>
-    <b>Типы файлов:</b><br>
-    ${selectedTypes.map((t, i) => `${String.fromCharCode(65 + i)}) ${t}`).join("<br>")}<br><br>
+    <b>Типы файлов:</b><br>${categoriesList}<br>
     Запишите в ответе буквы в порядке нумерации расширений (без пробелов и запятых).`;
 
   const answerMap = {};
