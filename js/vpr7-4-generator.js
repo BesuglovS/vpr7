@@ -307,10 +307,9 @@ notes.txt`;
     });
 
     // Path parts
-    task.pathParts.forEach((path, index) => {
-      const isLast = index === task.pathParts.length - 1;
+    task.pathParts.forEach((path) => {
       parts.push({
-        text: isLast ? path + "/" : path + "/",
+        text: path + "/",
         type: "path",
       });
     });
@@ -327,6 +326,12 @@ notes.txt`;
     const decoyDomains = useCyrillic
       ? data.domainsCyrillic.filter((d) => d !== task.domain)
       : data.domainsLatin.filter((d) => d !== task.domain);
+    const decoyPaths = useCyrillic
+      ? data.pathsCyrillic.filter((p) => !task.pathParts.includes(p))
+      : data.pathsLatin.filter((p) => !task.pathParts.includes(p));
+    const decoyFiles = useCyrillic
+      ? data.filesCyrillic.filter((f) => f !== task.file)
+      : data.filesLatin.filter((f) => f !== task.file);
 
     // Add 1-2 decoy protocols
     const shuffledDecoyProtocols = shuffleArray(decoyProtocols);
@@ -343,6 +348,24 @@ notes.txt`;
       parts.push({
         text: shuffledDecoyDomains[i] + "/",
         type: "domain decoy",
+      });
+    }
+
+    // Add 1-2 decoy paths
+    const shuffledDecoyPaths = shuffleArray(decoyPaths);
+    for (let i = 0; i < Math.min(2, shuffledDecoyPaths.length); i++) {
+      parts.push({
+        text: shuffledDecoyPaths[i] + "/",
+        type: "path decoy",
+      });
+    }
+
+    // Add 1-2 decoy files
+    const shuffledDecoyFiles = shuffleArray(decoyFiles);
+    for (let i = 0; i < Math.min(2, shuffledDecoyFiles.length); i++) {
+      parts.push({
+        text: shuffledDecoyFiles[i],
+        type: "file decoy",
       });
     }
 

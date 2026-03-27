@@ -11,6 +11,7 @@
 .docx
 .pdf
 .txt
+.rtf
 
 @презентация
 .odp
@@ -28,6 +29,7 @@
 .jpg
 .png
 .tiff
+.svg
 
 @аудиофайл
 .aac
@@ -35,6 +37,7 @@
 .mp3
 .ogg
 .wav
+.wma
 
 @видеофайл
 .avi
@@ -42,6 +45,7 @@
 .mov
 .mp4
 .webm
+.wmv
 
 @архив
 .7z

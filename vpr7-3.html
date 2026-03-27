@@ -147,7 +147,7 @@
         el.textContent = item.extension;
         el.draggable = true;
         el.dataset.extension = item.extension;
-        el.dataset.correctCategory = item.category;
+        // Правильная категория хранится только в currentTask.extensionCategories
 
         // Drag events
         el.addEventListener("dragstart", handleDragStart);
@@ -317,6 +317,7 @@
         answered = true;
         let correctAnswers = 0;
         const results = [];
+        const totalExtensions = currentTask.totalExtensions;
 
         // Проверяем каждую категорию
         document.querySelectorAll(".category-card").forEach((card) => {
@@ -328,15 +329,17 @@
           let categoryTotal = items.length;
 
           items.forEach((item) => {
-            const isCorrect = item.dataset.correctCategory === category;
+            const extension = item.dataset.extension;
+            const correctCategory = currentTask.extensionCategories[extension];
+            const isCorrect = correctCategory === category;
             if (isCorrect) {
               correctAnswers++;
               categoryCorrect++;
             }
             results.push({
-              extension: item.dataset.extension,
+              extension: extension,
               userCategory: category,
-              correctCategory: item.dataset.correctCategory,
+              correctCategory: correctCategory,
               isCorrect: isCorrect,
             });
           });
@@ -358,20 +361,20 @@
         const feedback = document.getElementById("feedback");
         const feedbackText = document.getElementById("feedbackText");
 
-        if (correctAnswers === 12) {
+        if (correctAnswers === totalExtensions) {
           correctCount++;
           feedback.className = "feedback correct";
           feedbackText.textContent =
             "🎉 Отлично! Все расширения распределены правильно!";
         } else {
           feedback.className = "feedback incorrect";
-          feedbackText.textContent = `❌ Правильно: ${correctAnswers} из 12`;
+          feedbackText.textContent = `❌ Правильно: ${correctAnswers} из ${totalExtensions}`;
         }
 
         feedback.style.display = "block";
 
         // Отправляем результат в родительское окно (режим экзамена)
-        VPR7_ExamUtils.sendExamResult(correctAnswers === 12);
+        VPR7_ExamUtils.sendExamResult(correctAnswers === totalExtensions);
 
         // Показываем подробные результаты
         const resultsDetail = document.getElementById("resultsDetail");

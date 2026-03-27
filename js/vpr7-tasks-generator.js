@@ -273,12 +273,15 @@ function generateTask3() {
 
 function generateTask3Fallback() {
   const fileTypes = {
-    "текстовые документы": ["doc", "docx", "txt", "rtf", "odt", "pdf"],
-    "графические изображения": ["jpg", "png", "gif", "bmp", "svg", "tiff"],
-    аудиофайлы: ["mp3", "wav", "ogg", "flac", "wma", "aac"],
-    видеофайлы: ["mp4", "avi", "mkv", "mov", "wmv", "webm"],
-    презентации: ["ppt", "pptx", "odp"],
-    "электронные таблицы": ["xls", "xlsx", "ods"],
+    "текстовый файл": [".doc", ".docx", ".txt", ".odt", ".pdf", ".rtf"],
+    "графический файл": [".jpg", ".png", ".gif", ".bmp", ".tiff", ".svg"],
+    аудиофайл: [".mp3", ".wav", ".ogg", ".flac", ".aac", ".wma"],
+    видеофайл: [".mp4", ".avi", ".mkv", ".mov", ".webm", ".wmv"],
+    презентация: [".ppt", ".pptx", ".odp"],
+    "электронная таблица": [".xls", ".xlsx", ".ods"],
+    архив: [".zip", ".rar", ".7z"],
+    "веб-страница": [".html", ".htm"],
+    "исполняемый файл": [".exe"],
   };
 
   const typeNames = Object.keys(fileTypes);
@@ -287,7 +290,9 @@ function generateTask3Fallback() {
   const selectedExtensions = [];
   selectedTypes.forEach((type) => {
     const exts = shuffleArray(fileTypes[type]).slice(0, 2);
-    selectedExtensions.push(...exts);
+    exts.forEach((ext) => {
+      selectedExtensions.push({ extension: ext, category: type });
+    });
   });
 
   const allExtensions = shuffleArray(selectedExtensions);
@@ -308,23 +313,16 @@ function generateTask3Fallback() {
   categoriesList += "</table>";
 
   const taskText = `Установите соответствие между расширениями файлов и их типом. К каждой позиции первого столбца подберите соответствующую позицию из второго столбца.<br><br>
-    <b>Расширения:</b> ${allExtensions.map((e, i) => `${i + 1}) .${e}`).join("   ")}<br><br>
+    <b>Расширения:</b> ${allExtensions.map((e, i) => `${i + 1}) ${e.extension}`).join("   ")}<br><br>
     <b>Типы файлов:</b><br>${categoriesList}<br>
     Запишите в ответе буквы в порядке нумерации расширений (без пробелов и запятых).`;
 
-  const answerMap = {};
-  allExtensions.forEach((ext, i) => {
-    for (const [type, exts] of Object.entries(fileTypes)) {
-      if (exts.includes(ext)) {
-        const typeIndex = selectedTypes.indexOf(type);
-        if (typeIndex >= 0) {
-          answerMap[i + 1] = String.fromCharCode(65 + typeIndex);
-        }
-      }
-    }
-  });
-
-  const answer = allExtensions.map((_, i) => answerMap[i + 1]).join("");
+  const answer = allExtensions
+    .map((item) => {
+      const typeIndex = selectedTypes.indexOf(item.category);
+      return String.fromCharCode(65 + typeIndex);
+    })
+    .join("");
 
   return { text: taskText, answer: answer };
 }
@@ -352,45 +350,32 @@ function generateTask4() {
 
 function generateTask4Fallback() {
   const protocols = ["http", "https", "ftp"];
-  const domains = ["school", "edu", "gov", "info", "test"];
-  const tlds = ["ru", "com", "org", "net", "edu"];
-  const paths = ["lessons", "courses", "materials", "tasks"];
-  const fileNames = ["index", "lesson", "task", "page"];
-  const extensions = ["html", "htm", "php", "txt"];
+  const domains = [
+    "school.edu",
+    "docs.info",
+    "files.net",
+    "portal.ru",
+    "site.com",
+  ];
+  const paths = ["lessons", "courses", "materials", "tasks", "documents"];
+  const files = [
+    "index.html",
+    "readme.txt",
+    "document.pdf",
+    "report.docx",
+    "data.xml",
+  ];
 
   const protocol = randomChoice(protocols);
   const domain = randomChoice(domains);
-  const tld = randomChoice(tlds);
   const path = randomChoice(paths);
-  const fileName = randomChoice(fileNames);
-  const extension = randomChoice(extensions);
+  const file = randomChoice(files);
 
-  const ids = shuffleArray([1, 2, 3, 4, 5, 6, 7]);
+  const correctUrl = `${protocol}://${domain}/${path}/${file}`;
 
-  const fragments = [
-    { id: ids[0], text: `.${extension}`, position: 7 },
-    { id: ids[1], text: "://", position: 2 },
-    { id: ids[2], text: fileName, position: 6 },
-    { id: ids[3], text: tld, position: 4 },
-    { id: ids[4], text: `/${path}/`, position: 5 },
-    { id: ids[5], text: protocol, position: 1 },
-    { id: ids[6], text: `${domain}.`, position: 3 },
-  ];
+  const taskText = `Доступ к файлу <b>${file}</b>, находящемуся на сервере <b>${domain}</b> в каталоге <b>${path}</b>, осуществляется по протоколу <b>${protocol}</b>. Запишите полный URL-адрес файла.`;
 
-  const correctOrder = fragments
-    .sort((a, b) => a.position - b.position)
-    .map((f) => f.id);
-
-  const sortedForDisplay = [...fragments].sort((a, b) => a.id - b.id);
-  const fragmentsList = sortedForDisplay
-    .map((f) => `${f.id}.&nbsp;&nbsp;&nbsp;&nbsp;${f.text}`)
-    .join("<br>");
-
-  const taskText = `Доступ к файлу <b>${fileName}.${extension}</b>, находящемуся на сервере <b>${domain}.${tld}</b> в папке <b>${path}</b>, осуществляется по протоколу <b>${protocol}</b>. Фрагменты адреса файла закодированы цифрами от 1 до 7.<br>
-    Запишите в ответе последовательность этих цифр, кодирующую адрес указанного файла в сети Интернет.<br><br>
-    ${fragmentsList}`;
-
-  return { text: taskText, answer: correctOrder.join("") };
+  return { text: taskText, answer: correctUrl };
 }
 
 // ============================================
