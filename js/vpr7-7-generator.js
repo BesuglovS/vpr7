@@ -91,8 +91,10 @@
 
     const hintSteps = [
       "<p><strong>Шаг 1:</strong> Переведём все значения в МБ:</p>",
-      `<p>${set.deviceSize} ${units[set.deviceUnit].name} = ${set.deviceSize} × ${units[set.deviceUnit].factor / 1024} = ${deviceSizeMB} МБ</p>`,
-      `<p>${set.fileSize} ${units[set.fileUnit].name} = ${fileSizeMB} МБ</p>`,
+      `<p>${set.deviceSize} ${units[set.deviceUnit].name} = ${set.deviceSize} × 1024 = ${deviceSizeMB} МБ</p>`,
+      set.fileUnit === "GB"
+        ? `<p>${set.fileSize} ${units[set.fileUnit].name} = ${set.fileSize} × 1024 = ${fileSizeMB} МБ</p>`
+        : `<p>${set.fileSize} ${units[set.fileUnit].name} = ${fileSizeMB} МБ</p>`,
       "<p><strong>Шаг 2:</strong> Найдём максимальное количество файлов:</p>",
       `<p>${deviceSizeMB} ÷ ${fileSizeMB} = ${filesCount} файлов</p>`,
       "<p><strong>Шаг 3:</strong> Вычислим занятое место:</p>",
