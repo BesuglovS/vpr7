@@ -214,22 +214,16 @@
           person2,
           surnames: condSurnames,
         } = condition.relevantInfo;
-        const otherSurname = names.find((n) => n !== person1 && n !== person2);
-        if (otherSurname) {
-          possible[otherSurname].delete(condSurnames[0]);
-          possible[otherSurname].delete(condSurnames[1]);
+        const otherName = names.find((n) => n !== person1 && n !== person2);
+        if (otherName) {
+          possible[otherName].delete(condSurnames[0]);
+          possible[otherName].delete(condSurnames[1]);
         }
       } else if (condition.type === "sameFirstLetterOwn") {
         const { name, surname } = condition.relevantInfo;
         possible[name] = new Set([surname]);
         names.forEach((n) => {
           if (n !== name) possible[n].delete(surname);
-        });
-      } else if (condition.type === "sameFirstLetter") {
-        const { name2, surname2 } = condition.relevantInfo;
-        possible[name2] = new Set([surname2]);
-        names.forEach((n) => {
-          if (n !== name2) possible[n].delete(surname2);
         });
       }
     }
@@ -312,18 +306,14 @@
             surnames: condSurnames,
           } = condition.relevantInfo;
           const upperLetter = letter.toUpperCase();
-          steps.push(
-            `<span class="highlight">${person1}</span> и <span class="highlight">${person2}</span> имеют в фамилии букву «${upperLetter}». Значит, их фамилии – <span class="highlight">${condSurnames[0]}</span> и <span class="highlight">${condSurnames[1]}</span>.`,
+          // Находим третье имя и фамилию
+          const thirdName = names.find((n) => n !== person1 && n !== person2);
+          const thirdSurname = surnames.find(
+            (s) => s !== condSurnames[0] && s !== condSurnames[1],
           );
-          break;
-        }
-
-        case "sameFirstLetter": {
-          const { name1, name2, surname2 } = condition.relevantInfo;
           steps.push(
-            `У <span class="highlight">${name1}</span> имя начинается с «${name1[0].toUpperCase()}», значит фамилия <span class="highlight">${name2}</span> – <span class="highlight">${surname2}</span>.`,
+            `Букву «${upperLetter}» содержат только фамилии <span class="highlight">${condSurnames[0]}</span> и <span class="highlight">${condSurnames[1]}</span> (в фамилии ${thirdSurname} этой буквы нет). Значит, <span class="highlight">${person1}</span> и <span class="highlight">${person2}</span> – это <span class="highlight">${condSurnames[0]}</span> и <span class="highlight">${condSurnames[1]}</span> (в каком-то порядке), а <span class="highlight">${thirdName}</span> – <span class="highlight">${thirdSurname}</span>.`,
           );
-          knownMatches.set(name2, surname2);
           break;
         }
 
@@ -555,6 +545,12 @@
     const names = useFemale ? data.femaleNames : data.maleNames;
     const surnames = useFemale ? data.femaleSurnames : data.maleSurnames;
     const personType = useFemale ? "девочки" : "мальчики";
+
+    // Проверка на минимальное количество данных
+    if (!names || !surnames || names.length < 3 || surnames.length < 3) {
+      console.error("Недостаточно данных для генерации задачи");
+      return null;
+    }
 
     const selectedIndices = [];
     while (selectedIndices.length < 3) {
