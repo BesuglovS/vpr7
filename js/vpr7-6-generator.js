@@ -237,7 +237,7 @@
     const usedCodes = [...existingCodes];
 
     const shuffledLetters = [...letters].sort(() => Math.random() - 0.5);
-    const allCodes = generateAllCodes(symbols, 2, 4);
+    const allCodes = generateAllCodes(symbols, 2, 5);
     allCodes.sort(() => Math.random() - 0.5);
 
     for (let i = 0; i < shuffledLetters.length; i++) {
@@ -264,7 +264,7 @@
     const usedCodes = [...existingCodes];
     const shuffledLetters = [...letters].sort(() => Math.random() - 0.5);
 
-    const allCodes = generateAllCodes(symbols, 2, 4);
+    const allCodes = generateAllCodes(symbols, 2, 5);
     allCodes.sort(() => Math.random() - 0.5);
 
     for (let i = 0; i < shuffledLetters.length; i++) {
@@ -293,7 +293,17 @@
   /**
    * Generate a decoding task
    */
+  let attemptCount = 0;
+  const MAX_ATTEMPTS = 100;
+
   function generateTask() {
+    attemptCount++;
+    if (attemptCount > MAX_ATTEMPTS) {
+      attemptCount = 0;
+      console.error("Failed to generate task after", MAX_ATTEMPTS, "attempts");
+      return null;
+    }
+
     // Select word set and symbol pair
     const wordSet = randomChoice(wordSets);
     const symbolPair = randomChoice(symbolPairs);
@@ -310,6 +320,12 @@
     } else {
       codes = generateReverseFanoCodes(wordSet.letters, symbolPair.symbols);
       fanoType = "reverse";
+    }
+
+    // Check that all letters have codes
+    const missingLetters = wordSet.letters.filter((l) => !codes[l]);
+    if (missingLetters.length > 0) {
+      return generateTask();
     }
 
     // Add 1-2 extra letters not used in words
@@ -358,6 +374,9 @@
     }
 
     const selectedWord = randomChoice(validWords);
+
+    // Reset attempt counter on success
+    attemptCount = 0;
 
     // Encode the word
     const encodedMessage = selectedWord

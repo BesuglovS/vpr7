@@ -169,13 +169,15 @@
 .message-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   margin: 15px 0;
   padding: 15px;
   background: #f8f9fa;
   border-radius: 8px;
   font-family: "Consolas", "Courier New", monospace;
+  white-space: nowrap;
 }
 
 .message-char {
