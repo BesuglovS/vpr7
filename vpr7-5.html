@@ -1,9 +1,14 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Логические задачи</title>
+    `n
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    `n
+    <link rel="manifest" href="manifest.json" />
+    type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="css/vpr7-5.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
@@ -273,6 +278,14 @@
         if (correctCount === totalCells) {
           feedback.className = "feedback correct";
           feedbackText.textContent = "🎉 Отлично! Все ячейки заполнены верно!";
+
+          let correctAnswer = "Правильные ответы: ";
+          currentTask.correctMatches.forEach((m, i) => {
+            correctAnswer += `${m.name} - ${m.surname}`;
+            if (i < currentTask.correctMatches.length - 1)
+              correctAnswer += ", ";
+          });
+          document.getElementById("correctAnswer").textContent = correctAnswer;
         } else {
           feedback.className = "feedback incorrect";
           feedbackText.textContent = `❌ Правильно: ${correctCount} из ${totalCells}`;

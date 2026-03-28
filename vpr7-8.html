@@ -1,9 +1,14 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Определение объёма текстовой информации</title>
+    `n
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    `n
+    <link rel="manifest" href="manifest.json" />
+    type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="css/vpr7-8.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
@@ -207,6 +212,16 @@
           ".buttons",
         ]);
       });
+
+      // Добавляем обработчик Enter для поля ввода
+      document
+        .getElementById("answerInput")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            checkAnswer();
+          }
+        });
 
       // Запуск
       generateTask();

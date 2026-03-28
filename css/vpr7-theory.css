@@ -1,0 +1,413 @@
+/**
+ * VPR 7 Class - Theory Page Styles
+ * Стили для теоретических страниц
+ */
+
+@import url("vpr7-main.css");
+
+/* Theory Container */
+.container {
+  max-width: 1200px;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+/* Theory Intro */
+.theory-intro {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.theory-intro h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+.theory-intro p {
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+/* Category Section */
+.category-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid;
+}
+
+.category-header.input {
+  border-color: #4facfe;
+}
+
+.category-header.output {
+  border-color: #38ef7d;
+}
+
+.category-header.storage {
+  border-color: #f093fb;
+}
+
+.category-header.processing {
+  border-color: #ff6b6b;
+}
+
+.category-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.category-icon.input {
+  background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.category-icon.output {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+}
+
+.category-icon.storage {
+  background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+}
+
+.category-icon.processing {
+  background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+}
+
+.category-title {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.category-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+/* Devices Grid */
+.devices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+/* Device Card */
+.device-card {
+  background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.device-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.device-card.active {
+  border-color: #667eea;
+  background: white;
+}
+
+.device-image {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.device-image img {
+  max-width: 90%;
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.device-image svg {
+  width: 60px;
+  height: 60px;
+}
+
+.device-name {
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* Device Detail Modal */
+.device-detail {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.device-detail.show {
+  display: flex;
+}
+
+.device-detail-content {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.device-detail-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f0f0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.device-detail-close:hover {
+  background: #e0e0e0;
+}
+
+.device-detail-image {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.device-detail-image img {
+  max-width: 90%;
+  max-height: 130px;
+  object-fit: contain;
+}
+
+.device-detail-image svg {
+  width: 100px;
+  height: 100px;
+}
+
+.device-detail-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.device-detail-category {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.device-detail-category span {
+  display: inline-block;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+}
+
+.device-detail-category span.input {
+  background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.device-detail-category span.output {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+}
+
+.device-detail-category span.storage {
+  background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+}
+
+.device-detail-category span.processing {
+  background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+}
+
+.device-detail-description {
+  color: #555;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* Filter Buttons */
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: white;
+  color: #667eea;
+}
+
+/* Quick Navigation */
+.quick-nav {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.quick-nav-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.quick-nav-btn:hover {
+  transform: scale(1.1);
+}
+
+.quick-nav-btn.top {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.quick-nav-btn.practice {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .devices-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .device-image {
+    height: 60px;
+    font-size: 2.5rem;
+  }
+
+  .category-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .quick-nav {
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .quick-nav-btn {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
