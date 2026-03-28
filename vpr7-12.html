@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Форматирование текста — Задание 12</title>`n    <link rel="icon" type="image/svg+xml" href="favicon.svg" />`n    <link rel="manifest" href="manifest.json" /> type="image/svg+xml" href="favicon.svg" />
+    <title>Форматирование текста — Задание 12</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="manifest" href="manifest.json" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
     <script src="js/vpr7-exam-utils.js"></script>
@@ -211,7 +213,8 @@
         if (currentTask.correctFormatting.has("firstLineIndent")) {
           const indicator = document.createElement("div");
           indicator.className = "ruler-indent indent-first-line";
-          // Маркер отступа первой строки позиционируется от отступа слева
+          // Маркер отступа первой строки позиционируется относительно отступа слева
+          // (показывает только дополнительный отступ, а не абсолютную позицию)
           indicator.style.left =
             rulerPadding +
             baseLeftIndent +
@@ -384,13 +387,11 @@
       // Инициализация
       initRuler();
       generateTask();
-      hideExamNavigation();
+      VPR7_ExamUtils.hideExamNavigation();
 
       // Отправляем высоту после загрузки страницы
-      window.addEventListener("load", sendContentHeight);
-      window.addEventListener("resize", sendContentHeight);
+      window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+      window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
     </script>
   </body>
 </html>
-
-

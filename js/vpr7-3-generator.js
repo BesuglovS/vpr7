@@ -175,9 +175,23 @@
    * @returns {string} - Hint text with extension -> category mappings
    */
   function generateHints(selectedExtensions) {
-    return selectedExtensions
-      .map((ext) => `${ext.extension} → ${ext.category}`)
-      .join("; ");
+    // Группируем подсказки по категориям для удобства
+    const groupedHints = {};
+    selectedExtensions.forEach((ext) => {
+      if (!groupedHints[ext.category]) {
+        groupedHints[ext.category] = [];
+      }
+      groupedHints[ext.category].push(ext.extension);
+    });
+
+    // Формируем текст подсказки
+    let hint = "Категории и их расширения:\n";
+    Object.keys(groupedHints).forEach((category) => {
+      hint += `\n${category}:\n`;
+      hint += groupedHints[category].join(", ") + "\n";
+    });
+
+    return hint;
   }
 
   /**

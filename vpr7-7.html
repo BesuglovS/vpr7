@@ -4,11 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Вычисление объёма информации</title>
-    `n
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    `n
     <link rel="manifest" href="manifest.json" />
-    type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="css/vpr7-7.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
@@ -173,14 +170,16 @@
       function checkAnswer() {
         if (answered) return;
 
-        const userAnswer = parseFloat(
-          document.getElementById("answerInput").value.replace(",", "."),
-        );
+        const rawValue = document.getElementById("answerInput").value.trim();
 
-        if (isNaN(userAnswer)) {
-          alert("Введите числовой ответ!");
+        // Проверка на корректность ввода: только цифры, одна запятая или точка
+        const validNumberRegex = /^[0-9]+([.,][0-9]+)?$/;
+        if (!validNumberRegex.test(rawValue)) {
+          alert("Введите корректное число!\nПример: 75 или 12,5");
           return;
         }
+
+        const userAnswer = parseFloat(rawValue.replace(",", "."));
 
         answered = true;
         stats.total++;
@@ -194,7 +193,7 @@
         const correctUnit = currentTask.answerUnit;
 
         // Сравниваем только числовое значение
-        const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.01;
+        const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.001;
 
         // Получаем название единицы для отображения
         const unitName = Gen.units[correctUnit]
@@ -264,11 +263,11 @@
       loadStats();
       updateStats();
       generateTask();
-      hideExamNavigation();
+      VPR7_ExamUtils.hideExamNavigation();
 
       // Отправляем высоту после загрузки страницы
-      window.addEventListener("load", sendContentHeight);
-      window.addEventListener("resize", sendContentHeight);
+      window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+      window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
     </script>
   </body>
 </html>

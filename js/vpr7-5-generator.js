@@ -359,18 +359,26 @@
       const surname2 = perm[1];
       const surname3 = perm[2];
 
+      // Находим общую букву между surname2 и surname3
       let commonLetter = null;
+      let commonLetterCount = 0;
+
+      // Проверяем каждую букву surname2
       for (const letter of surname2.toLowerCase()) {
         if (surname3.toLowerCase().includes(letter)) {
-          commonLetter = letter;
-          break;
+          if (commonLetter === null) {
+            commonLetter = letter;
+          }
+          commonLetterCount++;
         }
       }
 
-      if (!commonLetter) {
+      // Если нет общей буквы или общих букв больше одной - пропускаем
+      if (!commonLetter || commonLetterCount > 1) {
         continue;
       }
 
+      // Проверяем, что первая фамилия НЕ содержит общую букву
       if (surname1.toLowerCase().includes(commonLetter)) {
         continue;
       }

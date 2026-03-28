@@ -542,21 +542,13 @@ function generateTask6Fallback() {
 function generateTask7() {
   if (typeof window.VPR7_Task7_Generator !== "undefined") {
     const task = window.VPR7_Task7_Generator.generateTask();
-    // Format answer with unit for PDF
-    const units = window.VPR7_Task7_Generator.units;
-    const answerText = `${task.answer} ${units[task.answerUnit].name}`;
-    return { text: task.text, answer: answerText };
+    // Return only numeric answer for consistency with interactive version
+    return { text: task.text, answer: task.answer };
   }
   return generateTask7Fallback();
 }
 
 function generateTask7Fallback() {
-  const units = {
-    KB: { name: "КБ", factor: 1024 },
-    MB: { name: "МБ", factor: 1024 * 1024 },
-    GB: { name: "ГБ", factor: 1024 * 1024 * 1024 },
-  };
-
   const fileSizeMB = randomChoice([350, 700, 512, 256]);
   const deviceSizeGB = randomChoice([2, 4, 8]);
   const fileSizeBytes = fileSizeMB * 1024 * 1024;
@@ -568,7 +560,7 @@ function generateTask7Fallback() {
 
   const taskText = `На Flash-карте объёмом <b>${deviceSizeGB} ГБ</b> записывают видеофайлы размером <b>${fileSizeMB} МБ</b> каждый. Сколько мегабайт свободного места останется после записи максимально возможного количества файлов?`;
 
-  return { text: taskText, answer: `${Math.round(remainMB)} МБ` };
+  return { text: taskText, answer: Math.round(remainMB) };
 }
 
 // ============================================
@@ -634,7 +626,7 @@ function generateTask10() {
 function generateTask10Fallback() {
   const sentences = [
     { text: "Информатика — наука об информации", chars: 33 },
-    { text: "Компьютер обрабатывает данные", chars: 27 },
+    { text: "Компьютер обрабатывает данные", chars: 29 },
     { text: "Программирование — важный навык", chars: 31 },
   ];
 
@@ -665,19 +657,139 @@ function generateTask11() {
 
 function generateTask11Fallback() {
   const colors = [
-    { name: "красный", r: 255, g: 0, b: 0 },
-    { name: "зелёный", r: 0, g: 255, b: 0 },
-    { name: "синий", r: 0, g: 0, b: 255 },
-    { name: "жёлтый", r: 255, g: 255, b: 0 },
-    { name: "белый", r: 255, g: 255, b: 255 },
-    { name: "чёрный", r: 0, g: 0, b: 0 },
+    {
+      r: 255,
+      g: 255,
+      b: 255,
+      name: "Белый",
+      description: "Все компоненты максимальны",
+    },
+    {
+      r: 0,
+      g: 0,
+      b: 0,
+      name: "Чёрный",
+      description: "Все компоненты минимальны",
+    },
+    {
+      r: 255,
+      g: 0,
+      b: 0,
+      name: "Красный",
+      description: "Только красный компонент",
+    },
+    {
+      r: 0,
+      g: 255,
+      b: 0,
+      name: "Зелёный",
+      description: "Только зелёный компонент",
+    },
+    {
+      r: 0,
+      g: 0,
+      b: 255,
+      name: "Синий",
+      description: "Только синий компонент",
+    },
+    { r: 255, g: 255, b: 0, name: "Жёлтый", description: "Красный + Зелёный" },
+    {
+      r: 0,
+      g: 255,
+      b: 255,
+      name: "Голубой (Циан)",
+      description: "Зелёный + Синий",
+    },
+    {
+      r: 255,
+      g: 0,
+      b: 255,
+      name: "Пурпурный (Маджента)",
+      description: "Красный + Синий",
+    },
+    {
+      r: 128,
+      g: 128,
+      b: 128,
+      name: "Серый",
+      description: "Все компоненты равны",
+    },
+    {
+      r: 255,
+      g: 128,
+      b: 0,
+      name: "Оранжевый",
+      description: "Красный + половина Зелёного",
+    },
+    {
+      r: 255,
+      g: 192,
+      b: 203,
+      name: "Розовый",
+      description: "Красный с добавлением других",
+    },
+    {
+      r: 128,
+      g: 0,
+      b: 128,
+      name: "Фиолетовый",
+      description: "Половина Красного + Синий",
+    },
+    {
+      r: 255,
+      g: 255,
+      b: 128,
+      name: "Кремовый",
+      description: "Жёлтый с половиной синего (кремовый оттенок)",
+    },
+    {
+      r: 0,
+      g: 128,
+      b: 0,
+      name: "Тёмно-зелёный",
+      description: "Половина Зелёного",
+    },
+    { r: 0, g: 0, b: 128, name: "Тёмно-синий", description: "Половина Синего" },
+    {
+      r: 128,
+      g: 0,
+      b: 0,
+      name: "Тёмно-красный",
+      description: "Половина Красного",
+    },
+    {
+      r: 192,
+      g: 192,
+      b: 192,
+      name: "Светло-серый",
+      description: "Серый с высоким значением",
+    },
+    {
+      r: 64,
+      g: 64,
+      b: 64,
+      name: "Тёмно-серый",
+      description: "Серый с низким значением",
+    },
+    {
+      r: 0,
+      g: 128,
+      b: 128,
+      name: "Бирюзовый",
+      description: "Половина Зелёного + Синий",
+    },
+    {
+      r: 128,
+      g: 128,
+      b: 0,
+      name: "Оливковый",
+      description: "Половина Красного + Зелёный",
+    },
   ];
 
   const color = randomChoice(colors);
 
-  const taskText = `В цветовой модели RGB цвет кодируется тремя числами от 0 до 255, обозначающими интенсивность красной, зелёной и синей составляющих.<br><br>
-    Определите, какой цвет получится при значениях R = ${color.r}, G = ${color.g}, B = ${color.b}.<br><br>
-    Запишите название цвета.`;
+  const taskText = `Какой цвет в цветовой модели RGB кодируется как (${color.r}, ${color.g}, ${color.b})?`;
 
   return { text: taskText, answer: color.name };
 }
@@ -755,19 +867,41 @@ function formatTask12Text(task, formattingTypes) {
     rulerMarksHtml += `<div style="position: absolute; left: ${positionPct}%; bottom: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #6b7280;"><div style="width: 1px; height: ${isMajor ? 12 : 8}px; background: ${isMajor ? "#4b5563" : "#9ca3af"};"></div>${isMajor ? `<span style="margin-top: 2px;">${i}</span>` : ""}</div>`;
   }
 
-  // Build markers
+  // Calculate marker positions dynamically
+  const rulerPadding = 50; // padding in px for ruler
+  const rulerWidth = 100; // percentage
+  const leftIndentPct = 13.33; // 2cm / 15cm * 100
+  const firstLineIndentPct = 8.33; // 1.25cm / 15cm * 100
+  const hangingIndentPct = 13.33; // 2cm / 15cm * 100
+
+  // Build markers with dynamic positioning
   let rulerMarkers = "";
+
   if (task.correctFormatting.has("firstLineIndent")) {
-    rulerMarkers += `<div style="position: absolute; top: 0; left: 21.66%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid #3b82f6;"></div>`;
+    // First line indent marker position depends on leftIndent
+    let firstLinePos = leftIndentPct + firstLineIndentPct;
+    if (task.correctFormatting.has("leftIndent")) {
+      firstLinePos = leftIndentPct + firstLineIndentPct;
+    } else {
+      firstLinePos = firstLineIndentPct;
+    }
+    rulerMarkers += `<div style="position: absolute; top: 0; left: ${firstLinePos}%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid #3b82f6;"></div>`;
   }
+
   if (task.correctFormatting.has("hangingIndent")) {
-    rulerMarkers += `<div style="position: absolute; top: 0; left: 26.66%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid #ef4444;"></div>`;
+    // Hanging indent marker
+    rulerMarkers += `<div style="position: absolute; top: 0; left: ${hangingIndentPct}%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid #ef4444;"></div>`;
   }
+
   if (task.correctFormatting.has("leftIndent")) {
-    rulerMarkers += `<div style="position: absolute; bottom: 0; left: 13.33%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 10px solid #4b5563;"></div>`;
+    // Left indent marker
+    rulerMarkers += `<div style="position: absolute; bottom: 0; left: ${leftIndentPct}%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 10px solid #4b5563;"></div>`;
   }
+
   if (task.correctFormatting.has("rightIndent")) {
-    rulerMarkers += `<div style="position: absolute; bottom: 0; left: 90%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 10px solid #4b5563;"></div>`;
+    // Right indent marker
+    const rightIndentPct = 90; // 13.5cm / 15cm * 100
+    rulerMarkers += `<div style="position: absolute; bottom: 0; right: ${100 - rightIndentPct}%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 10px solid #9b59b6;"></div>`;
   }
 
   const taskText = `В текстовом редакторе имеется следующий абзац:<br><br>

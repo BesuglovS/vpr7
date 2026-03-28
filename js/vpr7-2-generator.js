@@ -108,17 +108,36 @@ lesson.htm`;
     const disk = String.fromCharCode(67 + Math.floor(Math.random() * 3)) + ":";
 
     // Create initial path (3-5 folders)
-    const depth = 3 + Math.floor(Math.random() * 3);
+    const maxDepth = Math.min(5, folders.length);
+    const depth = 3 + Math.floor(Math.random() * (maxDepth - 2));
     const pathParts = [];
     const usedFolders = new Set();
 
-    for (let i = 0; i < depth; i++) {
-      let folder;
-      do {
-        folder = folders[Math.floor(Math.random() * folders.length)];
-      } while (usedFolders.has(folder));
-      usedFolders.add(folder);
-      pathParts.push(folder);
+    // Проверяем, что достаточно уникальных папок
+    if (folders.length < depth) {
+      console.warn("Недостаточно уникальных папок для генерации пути");
+      // Используем все доступные папки
+      for (let i = 0; i < folders.length; i++) {
+        pathParts.push(folders[i]);
+      }
+    } else {
+      for (let i = 0; i < depth; i++) {
+        let folder;
+        let attempts = 0;
+        const maxAttempts = folders.length * 2;
+
+        do {
+          folder = folders[Math.floor(Math.random() * folders.length)];
+          attempts++;
+          if (attempts > maxAttempts) {
+            // Если не можем найти уникальную папку, используем любую
+            break;
+          }
+        } while (usedFolders.has(folder));
+
+        usedFolders.add(folder);
+        pathParts.push(folder);
+      }
     }
 
     const startPath = disk + "\\" + pathParts.join("\\");
@@ -500,7 +519,8 @@ lesson.htm`;
       }
     }
 
-    // Add separators for wrong elements
+    // Add separators for wrong elements (только один разделитель на каждый неправильный элемент)
+    // Это уменьшает количество разделителей в пуле
     wrongParts.forEach((part) => {
       parts.push({ text: "\\", type: "separator" });
       parts.push(part);

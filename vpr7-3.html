@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Типы файлов и расширения</title>`n    <link rel="icon" type="image/svg+xml" href="favicon.svg" />`n    <link rel="manifest" href="manifest.json" /> type="image/svg+xml" href="favicon.svg" />
+    <title>Типы файлов и расширения</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="css/vpr7-3.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
@@ -319,6 +321,9 @@
         const results = [];
         const totalExtensions = currentTask.totalExtensions;
 
+        // Собираем все размещённые расширения
+        const allPlacedExtensions = [];
+
         // Проверяем каждую категорию
         document.querySelectorAll(".category-card").forEach((card) => {
           const category = card.dataset.category;
@@ -332,16 +337,18 @@
             const extension = item.dataset.extension;
             const correctCategory = currentTask.extensionCategories[extension];
             const isCorrect = correctCategory === category;
+
+            allPlacedExtensions.push({
+              extension,
+              userCategory: category,
+              correctCategory,
+              isCorrect,
+            });
+
             if (isCorrect) {
               correctAnswers++;
               categoryCorrect++;
             }
-            results.push({
-              extension: extension,
-              userCategory: category,
-              correctCategory: correctCategory,
-              isCorrect: isCorrect,
-            });
           });
 
           if (categoryTotal > 0) {
@@ -381,7 +388,7 @@
         const resultsList = document.getElementById("resultsList");
         resultsList.innerHTML = "";
 
-        results.forEach((r) => {
+        allPlacedExtensions.forEach((r) => {
           const item = document.createElement("div");
           item.className = `result-item ${r.isCorrect ? "correct" : "incorrect"}`;
           item.innerHTML = `
@@ -424,7 +431,9 @@
 
         if (hintBox.style.display === "none") {
           // Используем функцию generateHints из модуля
-          hintText.textContent = Generator.generateHints(currentExtensions);
+          const hint = Generator.generateHints(currentExtensions);
+          // Заменяем переносы строк на HTML-теги для корректного отображения
+          hintText.innerHTML = hint.replace(/\n/g, "<br>").replace(/:/g, ": ");
           hintBox.style.display = "block";
         } else {
           hintBox.style.display = "none";
@@ -448,5 +457,3 @@
     </script>
   </body>
 </html>
-
-

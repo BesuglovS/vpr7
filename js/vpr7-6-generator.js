@@ -297,101 +297,108 @@
   const MAX_ATTEMPTS = 100;
 
   function generateTask() {
-    attemptCount++;
-    if (attemptCount > MAX_ATTEMPTS) {
-      attemptCount = 0;
-      console.error("Failed to generate task after", MAX_ATTEMPTS, "attempts");
-      return null;
-    }
+    // Use loop instead of recursion to prevent stack overflow
+    while (attemptCount < MAX_ATTEMPTS) {
+      attemptCount++;
 
-    // Select word set and symbol pair
-    const wordSet = randomChoice(wordSets);
-    const symbolPair = randomChoice(symbolPairs);
+      try {
+        // Select word set and symbol pair
+        const wordSet = randomChoice(wordSets);
+        const symbolPair = randomChoice(symbolPairs);
 
-    // Randomly choose Fano condition type
-    const useDirectFano = Math.random() > 0.3;
+        // Randomly choose Fano condition type
+        const useDirectFano = Math.random() > 0.3;
 
-    let codes;
-    let fanoType;
+        let codes;
+        let fanoType;
 
-    if (useDirectFano) {
-      codes = generateFanoCodes(wordSet.letters, symbolPair.symbols);
-      fanoType = "direct";
-    } else {
-      codes = generateReverseFanoCodes(wordSet.letters, symbolPair.symbols);
-      fanoType = "reverse";
-    }
+        if (useDirectFano) {
+          codes = generateFanoCodes(wordSet.letters, symbolPair.symbols);
+          fanoType = "direct";
+        } else {
+          codes = generateReverseFanoCodes(wordSet.letters, symbolPair.symbols);
+          fanoType = "reverse";
+        }
 
-    // Check that all letters have codes
-    const missingLetters = wordSet.letters.filter((l) => !codes[l]);
-    if (missingLetters.length > 0) {
-      return generateTask();
-    }
+        // Check that all letters have codes
+        const missingLetters = wordSet.letters.filter((l) => !codes[l]);
+        if (missingLetters.length > 0) {
+          continue; // Try again with new random selection
+        }
 
-    // Add 1-2 extra letters not used in words
-    const usedLetters = wordSet.letters;
-    const availableExtraLetters = extraLetters.filter(
-      (l) => !usedLetters.includes(l),
-    );
-    const numExtra = Math.random() < 0.5 ? 1 : 2;
-    const shuffledExtra = [...availableExtraLetters].sort(
-      () => Math.random() - 0.5,
-    );
-    const extraLettersToAdd = shuffledExtra.slice(0, numExtra);
-
-    // Generate codes for extra letters considering existing codes
-    if (extraLettersToAdd.length > 0) {
-      const existingCodesArray = Object.values(codes);
-
-      if (fanoType === "direct") {
-        const extraCodes = generateFanoCodes(
-          extraLettersToAdd,
-          symbolPair.symbols,
-          existingCodesArray,
+        // Add 1-2 extra letters not used in words
+        const usedLetters = wordSet.letters;
+        const availableExtraLetters = extraLetters.filter(
+          (l) => !usedLetters.includes(l),
         );
-        Object.assign(codes, extraCodes);
-      } else {
-        const extraCodes = generateReverseFanoCodes(
-          extraLettersToAdd,
-          symbolPair.symbols,
-          existingCodesArray,
+        const numExtra = Math.random() < 0.5 ? 1 : 2;
+        const shuffledExtra = [...availableExtraLetters].sort(
+          () => Math.random() - 0.5,
         );
-        Object.assign(codes, extraCodes);
+        const extraLettersToAdd = shuffledExtra.slice(0, numExtra);
+
+        // Generate codes for extra letters considering existing codes
+        if (extraLettersToAdd.length > 0) {
+          const existingCodesArray = Object.values(codes);
+
+          if (fanoType === "direct") {
+            const extraCodes = generateFanoCodes(
+              extraLettersToAdd,
+              symbolPair.symbols,
+              existingCodesArray,
+            );
+            Object.assign(codes, extraCodes);
+          } else {
+            const extraCodes = generateReverseFanoCodes(
+              extraLettersToAdd,
+              symbolPair.symbols,
+              existingCodesArray,
+            );
+            Object.assign(codes, extraCodes);
+          }
+        }
+
+        // Select word for encoding (only 4 to 7 letters)
+        const validWords = wordSet.words.filter(
+          (word) =>
+            word.length >= 4 &&
+            word.length <= 7 &&
+            word.split("").every((letter) => codes[letter]),
+        );
+
+        if (validWords.length === 0) {
+          continue; // Try again with new random selection
+        }
+
+        const selectedWord = randomChoice(validWords);
+
+        // Reset attempt counter on success
+        attemptCount = 0;
+
+        // Encode the word
+        const encodedMessage = selectedWord
+          .split("")
+          .map((letter) => codes[letter])
+          .join("");
+
+        return {
+          word: selectedWord,
+          encoded: encodedMessage,
+          codes: codes,
+          fanoType: fanoType,
+          symbols: symbolPair.symbols,
+          symbolName: symbolPair.name,
+        };
+      } catch (error) {
+        console.error("Error generating task:", error);
+        continue; // Try again on error
       }
     }
 
-    // Select word for encoding (only 4 to 7 letters)
-    const validWords = wordSet.words.filter(
-      (word) =>
-        word.length >= 4 &&
-        word.length <= 7 &&
-        word.split("").every((letter) => codes[letter]),
-    );
-
-    if (validWords.length === 0) {
-      // Try again
-      return generateTask();
-    }
-
-    const selectedWord = randomChoice(validWords);
-
-    // Reset attempt counter on success
+    // If we reach here, we failed to generate a task
     attemptCount = 0;
-
-    // Encode the word
-    const encodedMessage = selectedWord
-      .split("")
-      .map((letter) => codes[letter])
-      .join("");
-
-    return {
-      word: selectedWord,
-      encoded: encodedMessage,
-      codes: codes,
-      fanoType: fanoType,
-      symbols: symbolPair.symbols,
-      symbolName: symbolPair.name,
-    };
+    console.error("Failed to generate task after", MAX_ATTEMPTS, "attempts");
+    return null;
   }
 
   /**

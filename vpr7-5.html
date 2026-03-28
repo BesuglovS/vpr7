@@ -4,11 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Логические задачи</title>
-    `n
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    `n
     <link rel="manifest" href="manifest.json" />
-    type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="css/vpr7-5.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
@@ -115,12 +112,26 @@
       }
 
       // Генерация задания
+      let generateAttempts = 0;
+      const MAX_GENERATE_ATTEMPTS = 100;
+
       function generateTask() {
         answered = false;
         document.getElementById("feedback").className = "feedback";
         document.getElementById("feedback").style.display = "none";
         document.getElementById("hintBox").style.display = "none";
         document.getElementById("reasoningSteps").style.display = "none";
+
+        generateAttempts++;
+        if (generateAttempts > MAX_GENERATE_ATTEMPTS) {
+          console.error(
+            "Не удалось сгенерировать задание после",
+            MAX_GENERATE_ATTEMPTS,
+            "попыток",
+          );
+          generateAttempts = 0;
+          return;
+        }
 
         // Генерируем задачу с условиями через модуль генератора
         const task = VPR7_Task5_Generator.generateTask(generatorData);
@@ -131,6 +142,7 @@
           return;
         }
 
+        generateAttempts = 0;
         currentTask = task;
         renderTask();
       }
@@ -240,18 +252,9 @@
 
         answered = true;
 
-        // Строим правильную матрицу ответов (в оригинальных индексах)
-        const correctMatrix = [];
-        currentTask.names.forEach((name, rowIdx) => {
-          const row = [];
-          currentTask.surnames.forEach((surname, colIdx) => {
-            const match = currentTask.correctMatches.find(
-              (m) => m.name === name,
-            );
-            row.push(match.surname === surname ? "plus" : "minus");
-          });
-          correctMatrix.push(row);
-        });
+        // Строим правильную матрицу ответов (в оригинальных индексах) с использованием функции из генератора
+        const correctMatrix =
+          VPR7_Task5_Generator.buildCorrectMatrix(currentTask);
 
         // Проверяем каждую ячейку, используя оригинальные индексы
         cells.forEach((cell) => {
@@ -310,7 +313,16 @@
           const reasoningList = document.getElementById("reasoningList");
           reasoningList.innerHTML = "";
 
-          currentTask.reasoning.forEach((step) => {
+          // Адаптируем рассуждения к перемешанному порядку отображения
+          const adaptedReasoning = adaptReasoningToDisplayOrder(
+            currentTask.reasoning,
+            currentTask.names,
+            currentTask.surnames,
+            currentTask.displayNameOrder,
+            currentTask.displaySurnameOrder,
+          );
+
+          adaptedReasoning.forEach((step) => {
             const li = document.createElement("li");
             li.innerHTML = step;
             reasoningList.appendChild(li);
@@ -337,6 +349,61 @@
       // Сброс игры
       function resetGame() {
         startGame();
+      }
+
+      // Адаптация рассуждений к перемешанному порядку отображения
+      function adaptReasoningToDisplayOrder(
+        reasoning,
+        originalNames,
+        originalSurnames,
+        nameOrder,
+        surnameOrder,
+      ) {
+        // Создаем маппинг: оригинальное имя -> отображаемое имя
+        const nameMapping = {};
+        const surnameMapping = {};
+
+        nameOrder.forEach((originalIdx, displayIdx) => {
+          nameMapping[originalNames[originalIdx]] = originalNames[originalIdx];
+        });
+
+        surnameOrder.forEach((originalIdx, displayIdx) => {
+          surnameMapping[originalSurnames[originalIdx]] =
+            originalSurnames[originalIdx];
+        });
+
+        // Адаптируем каждый шаг рассуждений
+        return reasoning.map((step) => {
+          let adaptedStep = step;
+
+          // Заменяем имена и фамилии на отображаемые (если они отличаются)
+          // Но так как мы перемешиваем только порядок отображения, а не сами имена,
+          // то рассуждения остаются корректными - они описывают логику для конкретных имен
+          // Проблема в том, что ученик видит имена в другом порядке в таблице
+
+          // Добавляем пояснение к рассуждениям
+          if (step.includes("Ответ:")) {
+            // Это финальный шаг с ответом - адаптируем его
+            let answerStep = step;
+            originalNames.forEach((name, i) => {
+              const surname = originalSurnames[i];
+              // Заменяем на отображаемые имена и фамилии
+              const displayName =
+                originalNames[nameOrder[nameOrder.indexOf(i)]];
+              const displaySurname =
+                originalSurnames[surnameOrder[surnameOrder.indexOf(i)]];
+              if (displayName !== name || displaySurname !== surname) {
+                answerStep = answerStep.replace(
+                  `${name}</span> – <span class="highlight">${surname}`,
+                  `${displayName}</span> – <span class="highlight">${displaySurname}`,
+                );
+              }
+            });
+            return answerStep;
+          }
+
+          return adaptedStep;
+        });
       }
 
       // Показать подсказку

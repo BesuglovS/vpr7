@@ -4,11 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Декодирование сообщений</title>
-    `n
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    `n
     <link rel="manifest" href="manifest.json" />
-    type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="css/vpr7-6.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
@@ -152,44 +149,6 @@
         }
 
         document.getElementById("taskText").innerHTML = taskText;
-
-        // Создаём интерактивное сообщение с разделителями
-        createInteractiveMessage(currentTask.encoded);
-      }
-
-      // Создание интерактивного сообщения с разделителями
-      function createInteractiveMessage(encoded) {
-        const container = document.getElementById("messageContainer");
-        if (!container) return;
-
-        container.innerHTML = "";
-
-        for (let i = 0; i < encoded.length; i++) {
-          // Создаём слот для разделителя перед символом
-          const dividerSlot = document.createElement("div");
-          dividerSlot.className = "message-divider-slot";
-          dividerSlot.dataset.position = i;
-          dividerSlot.onclick = () => toggleDivider(dividerSlot);
-          container.appendChild(dividerSlot);
-
-          // Создаём символ
-          const char = document.createElement("span");
-          char.className = "message-char";
-          char.textContent = encoded[i];
-          container.appendChild(char);
-        }
-
-        // Добавляем слот для разделителя в конце
-        const endDividerSlot = document.createElement("div");
-        endDividerSlot.className = "message-divider-slot";
-        endDividerSlot.dataset.position = encoded.length;
-        endDividerSlot.onclick = () => toggleDivider(endDividerSlot);
-        container.appendChild(endDividerSlot);
-      }
-
-      // Переключение разделителя
-      function toggleDivider(slot) {
-        slot.classList.toggle("has-divider");
       }
 
       // Генерация подсказки
@@ -205,66 +164,8 @@
           return;
         }
 
-        let steps = [];
-
-        if (currentTask.fanoType === "direct") {
-          steps.push(
-            `<div class="hint-step"><strong>Декодируем с начала сообщения:</strong></div>`,
-          );
-
-          let remaining = currentTask.encoded;
-          let stepNum = 1;
-
-          while (remaining.length > 0) {
-            let found = false;
-            for (const [letter, code] of Object.entries(currentTask.codes)) {
-              if (remaining.startsWith(code)) {
-                const before = remaining;
-                remaining = remaining.slice(code.length);
-                steps.push(
-                  `<div class="hint-step">${stepNum}. <span class="code-part">${before}</span> → начинаемся с <span class="code-part">${code}</span> = <span class="letter-part">${letter}</span>, остаток: <span class="code-part">${remaining || "(пусто)"}</span></div>`,
-                );
-                stepNum++;
-                found = true;
-                break;
-              }
-            }
-            if (!found) break;
-          }
-
-          steps.push(
-            `<div class="hint-step"><span class="result">Ответ: ${currentTask.word}</span></div>`,
-          );
-        } else {
-          steps.push(
-            `<div class="hint-step"><strong>Декодируем с конца сообщения (обратное условие Фано):</strong></div>`,
-          );
-
-          let remaining = currentTask.encoded;
-          let stepNum = 1;
-
-          while (remaining.length > 0) {
-            let found = false;
-            for (const [letter, code] of Object.entries(currentTask.codes)) {
-              if (remaining.endsWith(code)) {
-                const before = remaining;
-                remaining = remaining.slice(0, -code.length);
-                steps.push(
-                  `<div class="hint-step">${stepNum}. <span class="code-part">${before}</span> → заканчивается на <span class="code-part">${code}</span> = <span class="letter-part">${letter}</span>, остаток: <span class="code-part">${remaining || "(пусто)"}</span></div>`,
-                );
-                stepNum++;
-                found = true;
-                break;
-              }
-            }
-            if (!found) break;
-          }
-
-          steps.push(
-            `<div class="hint-step"><span class="result">Ответ: ${currentTask.word}</span></div>`,
-          );
-        }
-
+        // Используем функцию из генератора для一致性
+        const steps = VPR7_Task6_Generator.generateHintSteps(currentTask);
         hintSteps.innerHTML = steps.join("");
         hintBox.style.display = "block";
       }
@@ -359,11 +260,11 @@
 
       // Запуск
       generateTaskUI();
-      hideExamNavigation();
+      VPR7_ExamUtils.hideExamNavigation();
 
       // Отправляем высоту после загрузки страницы
-      window.addEventListener("load", sendContentHeight);
-      window.addEventListener("resize", sendContentHeight);
+      window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+      window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
     </script>
   </body>
 </html>

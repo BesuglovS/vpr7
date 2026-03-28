@@ -4,11 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Передача информации</title>
-    `n
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    `n
     <link rel="manifest" href="manifest.json" />
-    type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="css/vpr7-9.css" />
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
@@ -230,8 +227,8 @@
       VPR7_ExamUtils.setupExamMessageListener((correct) => {
         examTaskCompleted = true;
         VPR7_ExamUtils.showCompletedMessage(correct, ".container", [
-          ".game-area",
-          ".score-board",
+          ".task-card",
+          ".stats",
           ".buttons",
         ]);
       });
@@ -248,11 +245,11 @@
 
       // Запуск
       generateTask();
-      hideExamNavigation();
+      VPR7_ExamUtils.hideExamNavigation();
 
       // Отправляем высоту после загрузки страницы
-      window.addEventListener("load", sendContentHeight);
-      window.addEventListener("resize", sendContentHeight);
+      window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+      window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
     </script>
   </body>
 </html>
