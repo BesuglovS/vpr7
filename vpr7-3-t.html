@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/vpr7-theory.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="manifest" href="manifest.json" />
-    
     <!-- Yandex.Metrika counter -->
     <script src="metrika.js"></script>
     <noscript
@@ -72,8 +71,8 @@
 
       <!-- Текстовые файлы -->
       <div class="category-section" data-category="documents" id="text">
-        <div class="category-header text">
-          <div class="category-icon text">📄</div>
+        <div class="category-header">
+          <div class="category-icon">📄</div>
           <div>
             <h2 class="category-title">Текстовые файлы</h2>
           </div>
@@ -125,8 +124,8 @@
 
       <!-- Презентации -->
       <div class="category-section" data-category="documents" id="presentation">
-        <div class="category-header presentation">
-          <div class="category-icon presentation">📊</div>
+        <div class="category-header">
+          <div class="category-icon">📊</div>
           <div>
             <h2 class="category-title">Презентации</h2>
           </div>
@@ -165,8 +164,8 @@
 
       <!-- Электронные таблицы -->
       <div class="category-section" data-category="documents" id="table">
-        <div class="category-header table">
-          <div class="category-icon table">📈</div>
+        <div class="category-header">
+          <div class="category-icon">📈</div>
           <div>
             <h2 class="category-title">Электронные таблицы</h2>
           </div>
@@ -205,8 +204,8 @@
 
       <!-- Графические файлы -->
       <div class="category-section" data-category="media" id="image">
-        <div class="category-header image">
-          <div class="category-icon image">🖼️</div>
+        <div class="category-header">
+          <div class="category-icon">🖼️</div>
           <div>
             <h2 class="category-title">Графические файлы (изображения)</h2>
           </div>
@@ -258,8 +257,8 @@
 
       <!-- Аудиофайлы -->
       <div class="category-section" data-category="media" id="audio">
-        <div class="category-header audio">
-          <div class="category-icon audio">🎵</div>
+        <div class="category-header">
+          <div class="category-icon">🎵</div>
           <div>
             <h2 class="category-title">Аудиофайлы</h2>
           </div>
@@ -310,8 +309,8 @@
 
       <!-- Видеофайлы -->
       <div class="category-section" data-category="media" id="video">
-        <div class="category-header video">
-          <div class="category-icon video">🎬</div>
+        <div class="category-header">
+          <div class="category-icon">🎬</div>
           <div>
             <h2 class="category-title">Видеофайлы</h2>
           </div>
@@ -361,8 +360,8 @@
 
       <!-- Архивы -->
       <div class="category-section" data-category="other" id="archive">
-        <div class="category-header archive">
-          <div class="category-icon archive">📦</div>
+        <div class="category-header">
+          <div class="category-icon">📦</div>
           <div>
             <h2 class="category-title">Архивы</h2>
           </div>
@@ -400,8 +399,8 @@
 
       <!-- Веб-страницы -->
       <div class="category-section" data-category="other" id="web">
-        <div class="category-header web">
-          <div class="category-icon web">🌐</div>
+        <div class="category-header">
+          <div class="category-icon">🌐</div>
           <div>
             <h2 class="category-title">Веб-страницы</h2>
           </div>
@@ -435,8 +434,8 @@
 
       <!-- Исполняемые файлы -->
       <div class="category-section" data-category="other" id="executable">
-        <div class="category-header executable">
-          <div class="category-icon executable">⚙️</div>
+        <div class="category-header">
+          <div class="category-icon">⚙️</div>
           <div>
             <h2 class="category-title">Исполняемые файлы</h2>
           </div>
@@ -519,7 +518,7 @@
               <td><strong>🎬 Видеофайл</strong></td>
               <td>
                 <code>.mp4</code> <code>.avi</code> <code>.mkv</code>
-                <code>.mov</code> <code>.webm</code> <code>.wmv</code
+                <code>.mov</code> <code>.webm</code> <code>.wmv</code>
               </td>
             </tr>
             <tr>
@@ -660,8 +659,7 @@
       const extensionsInfo = {
         ".txt": {
           title: ".txt — Текстовый файл",
-          body: `
-            <p>Простейший формат текстового файла без форматирования.</p>
+          body: `<p>Простейший формат текстового файла без форматирования.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Содержит только «чистый» текст</li>
@@ -669,52 +667,44 @@
               <li>Очень маленький размер файла</li>
               <li>Открывается в любом текстовом редакторе</li>
             </ul>
-            <h5>Тип файла: текстовый файл</h5>
-          `,
+            <h5>Тип файла: текстовый файл</h5>`,
         },
         ".doc": {
           title: ".doc — Документ Word 97-2003",
-          body: `
-            <p>Формат документов Microsoft Word до версии 2007.</p>
+          body: `<p>Формат документов Microsoft Word до версии 2007.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Двоичный формат файла</li>
               <li>Поддерживает форматирование, таблицы, изображения</li>
               <li>Устаревший формат, заменён на .docx</li>
             </ul>
-            <h5>Тип файла: текстовый файл</h5>
-          `,
+            <h5>Тип файла: текстовый файл</h5>`,
         },
         ".docx": {
           title: ".docx — Документ Word 2007+",
-          body: `
-            <p>Современный формат документов Microsoft Word.</p>
+          body: `<p>Современный формат документов Microsoft Word.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Основан на XML (Office Open XML)</li>
               <li>Меньший размер по сравнению с .doc</li>
               <li>Лучшее восстановление повреждённых файлов</li>
             </ul>
-            <h5>Тип файла: текстовый файл</h5>
-          `,
+            <h5>Тип файла: текстовый файл</h5>`,
         },
         ".odt": {
           title: ".odt — OpenDocument Text",
-          body: `
-            <p>Открытый формат текстовых документов.</p>
+          body: `<p>Открытый формат текстовых документов.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Международный открытый стандарт</li>
               <li>Используется в LibreOffice, OpenOffice</li>
               <li>Аналог .docx от других разработчиков</li>
             </ul>
-            <h5>Тип файла: текстовый файл</h5>
-          `,
+            <h5>Тип файла: текстовый файл</h5>`,
         },
         ".pdf": {
           title: ".pdf — Portable Document Format",
-          body: `
-            <p>Универсальный формат для обмена документами.</p>
+          body: `<p>Универсальный формат для обмена документами.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Сохраняет точный вид документа на любом устройстве</li>
@@ -722,89 +712,73 @@
               <li>Поддерживает текст, изображения, формы</li>
               <li>Создан компанией Adobe</li>
             </ul>
-            <h5>Тип файла: текстовый файл</h5>
-          `,
+            <h5>Тип файла: текстовый файл</h5>`,
         },
         ".rtf": {
           title: ".rtf — Rich Text Format",
-          body: `
-            <p>Формат для обмена форматированными текстами.</p>
+          body: `<p>Формат для обмена форматированными текстами.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Поддерживает форматирование (шрифты, цвета)</li>
               <li>Универсальный формат от Microsoft</li>
               <li>Открывается в большинстве текстовых редакторов</li>
             </ul>
-            <h5>Тип файла: текстовый файл</h5>
-          `,
+            <h5>Тип файла: текстовый файл</h5>`,
         },
         ".ppt": {
           title: ".ppt — Презентация PowerPoint 97-2003",
-          body: `
-            <p>Формат презентаций Microsoft PowerPoint до версии 2007.</p>
-            <h5>Тип файла: презентация</h5>
-          `,
+          body: `<p>Формат презентаций Microsoft PowerPoint до версии 2007.</p>
+            <h5>Тип файла: презентация</h5>`,
         },
         ".pptx": {
           title: ".pptx — Презентация PowerPoint 2007+",
-          body: `
-            <p>Современный формат презентаций Microsoft PowerPoint.</p>
+          body: `<p>Современный формат презентаций Microsoft PowerPoint.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Основан на XML</li>
               <li>Поддерживает мультимедиа, анимации, переходы</li>
             </ul>
-            <h5>Тип файла: презентация</h5>
-          `,
+            <h5>Тип файла: презентация</h5>`,
         },
         ".odp": {
           title: ".odp — OpenDocument Presentation",
-          body: `
-            <p>Открытый формат презентаций.</p>
+          body: `<p>Открытый формат презентаций.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Международный открытый стандарт</li>
               <li>Используется в LibreOffice Impress, OpenOffice</li>
             </ul>
-            <h5>Тип файла: презентация</h5>
-          `,
+            <h5>Тип файла: презентация</h5>`,
         },
         ".xls": {
           title: ".xls — Таблица Excel 97-2003",
-          body: `
-            <p>Формат электронных таблиц Microsoft Excel до версии 2007.</p>
-            <h5>Тип файла: электронная таблица</h5>
-          `,
+          body: `<p>Формат электронных таблиц Microsoft Excel до версии 2007.</p>
+            <h5>Тип файла: электронная таблица</h5>`,
         },
         ".xlsx": {
           title: ".xlsx — Таблица Excel 2007+",
-          body: `
-            <p>Современный формат электронных таблиц Microsoft Excel.</p>
+          body: `<p>Современный формат электронных таблиц Microsoft Excel.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Основан на XML</li>
               <li>Поддерживает формулы, графики, сводные таблицы</li>
               <li>Более 1 миллиона строк</li>
             </ul>
-            <h5>Тип файла: электронная таблица</h5>
-          `,
+            <h5>Тип файла: электронная таблица</h5>`,
         },
         ".ods": {
           title: ".ods — OpenDocument Spreadsheet",
-          body: `
-            <p>Открытый формат электронных таблиц.</p>
+          body: `<p>Открытый формат электронных таблиц.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Международный открытый стандарт</li>
               <li>Используется в LibreOffice Calc, OpenOffice</li>
             </ul>
-            <h5>Тип файла: электронная таблица</h5>
-          `,
+            <h5>Тип файла: электронная таблица</h5>`,
         },
         ".jpg": {
           title: ".jpg — JPEG Image",
-          body: `
-            <p>Самый популярный формат для фотографий.</p>
+          body: `<p>Самый популярный формат для фотографий.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Сжатие с потерями качества</li>
@@ -812,65 +786,55 @@
               <li>Идеален для фотографий</li>
               <li>Не поддерживает прозрачность</li>
             </ul>
-            <h5>Тип файла: графический файл</h5>
-          `,
+            <h5>Тип файла: графический файл</h5>`,
         },
         ".png": {
           title: ".png — Portable Network Graphics",
-          body: `
-            <p>Формат изображений с поддержкой прозрачности.</p>
+          body: `<p>Формат изображений с поддержкой прозрачности.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Сжатие без потерь</li>
               <li>Поддерживает прозрачность</li>
               <li>Идеален для графики, логотипов, схем</li>
             </ul>
-            <h5>Тип файла: графический файл</h5>
-          `,
+            <h5>Тип файла: графический файл</h5>`,
         },
         ".gif": {
           title: ".gif — Graphics Interchange Format",
-          body: `
-            <p>Формат для анимированных изображений.</p>
+          body: `<p>Формат для анимированных изображений.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Поддерживает анимацию</li>
               <li>Ограниченная палитра (256 цветов)</li>
               <li>Поддерживает прозрачность</li>
             </ul>
-            <h5>Тип файла: графический файл</h5>
-          `,
+            <h5>Тип файла: графический файл</h5>`,
         },
         ".bmp": {
           title: ".bmp — Bitmap Image",
-          body: `
-            <p>Растровый формат без сжатия.</p>
+          body: `<p>Растровый формат без сжатия.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Нет сжатия — большой размер файла</li>
               <li>Высокое качество</li>
               <li>Простой формат, поддерживается везде</li>
             </ul>
-            <h5>Тип файла: графический файл</h5>
-          `,
+            <h5>Тип файла: графический файл</h5>`,
         },
         ".tiff": {
           title: ".tiff — Tagged Image File Format",
-          body: `
-            <p>Формат для изображений высокого качества.</p>
+          body: `<p>Формат для изображений высокого качества.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Используется в полиграфии</li>
               <li>Поддерживает сжатие без потерь</li>
               <li>Может содержать несколько изображений</li>
             </ul>
-            <h5>Тип файла: графический файл</h5>
-          `,
+            <h5>Тип файла: графический файл</h5>`,
         },
         ".svg": {
           title: ".svg — Scalable Vector Graphics",
-          body: `
-            <p>Формат векторной графики.</p>
+          body: `<p>Формат векторной графики.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Векторный формат — можно масштабировать без потери качества</li>
@@ -878,236 +842,199 @@
               <li>Идеален для иконок, логотипов, схем</li>
               <li>Открывается в браузерах</li>
             </ul>
-            <h5>Тип файла: графический файл</h5>
-          `,
+            <h5>Тип файла: графический файл</h5>`,
         },
         ".mp3": {
           title: ".mp3 — MPEG Audio Layer 3",
-          body: `
-            <p>Самый популярный формат аудиофайлов.</p>
+          body: `<p>Самый популярный формат аудиофайлов.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Сжатие с потерями</li>
               <li>Маленький размер при хорошем качестве</li>
               <li>Поддерживается всеми устройствами</li>
             </ul>
-            <h5>Тип файла: аудиофайл</h5>
-          `,
+            <h5>Тип файла: аудиофайл</h5>`,
         },
         ".wav": {
           title: ".wav — Waveform Audio",
-          body: `
-            <p>Стандартный формат аудио без сжатия.</p>
+          body: `<p>Стандартный формат аудио без сжатия.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Высокое качество звука</li>
               <li>Большой размер файла</li>
               <li>Используется в профессиональной записи</li>
             </ul>
-            <h5>Тип файла: аудиофайл</h5>
-          `,
+            <h5>Тип файла: аудиофайл</h5>`,
         },
         ".ogg": {
           title: ".ogg — Ogg Vorbis",
-          body: `
-            <p>Свободный формат аудио.</p>
+          body: `<p>Свободный формат аудио.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Открытый бесплатный формат</li>
               <li>Лучшее качество, чем mp3 при том же размере</li>
             </ul>
-            <h5>Тип файла: аудиофайл</h5>
-          `,
+            <h5>Тип файла: аудиофайл</h5>`,
         },
         ".aac": {
           title: ".aac — Advanced Audio Coding",
-          body: `
-            <p>Современный формат аудио.</p>
+          body: `<p>Современный формат аудио.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Лучшее качество, чем mp3</li>
               <li>Используется в iTunes, YouTube</li>
             </ul>
-            <h5>Тип файла: аудиофайл</h5>
-          `,
+            <h5>Тип файла: аудиофайл</h5>`,
         },
         ".flac": {
           title: ".flac — Free Lossless Audio Codec",
-          body: `
-            <p>Формат аудио без потери качества.</p>
+          body: `<p>Формат аудио без потери качества.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Сжатие без потерь</li>
               <li>Идеальное качество звука</li>
               <li>Больше размер, чем mp3</li>
             </ul>
-            <h5>Тип файла: аудиофайл</h5>
-          `,
+            <h5>Тип файла: аудиофайл</h5>`,
         },
         ".wma": {
           title: ".wma — Windows Media Audio",
-          body: `
-            <p>Аудиоформат от Microsoft.</p>
+          body: `<p>Аудиоформат от Microsoft.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Разработан Microsoft</li>
               <li>Хорошее качество при небольшом размере</li>
               <li>Работает в Windows Media Player</li>
             </ul>
-            <h5>Тип файла: аудиофайл</h5>
-          `,
+            <h5>Тип файла: аудиофайл</h5>`,
         },
         ".mp4": {
           title: ".mp4 — MPEG-4 Video",
-          body: `
-            <p>Самый популярный формат видеофайлов.</p>
+          body: `<p>Самый популярный формат видеофайлов.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Универсальный формат</li>
               <li>Хорошее качество при небольшом размере</li>
               <li>Поддерживается всеми устройствами и браузерами</li>
             </ul>
-            <h5>Тип файла: видеофайл</h5>
-          `,
+            <h5>Тип файла: видеофайл</h5>`,
         },
         ".avi": {
           title: ".avi — Audio Video Interleave",
-          body: `
-            <p>Классический формат видео от Microsoft.</p>
+          body: `<p>Классический формат видео от Microsoft.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Один из старейших форматов</li>
               <li>Может использовать разные кодеки</li>
             </ul>
-            <h5>Тип файла: видеофайл</h5>
-          `,
+            <h5>Тип файла: видеофайл</h5>`,
         },
         ".mkv": {
           title: ".mkv — Matroska Video",
-          body: `
-            <p>Современный контейнер для видео.</p>
+          body: `<p>Современный контейнер для видео.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Поддерживает множество видео/аудио дорожек</li>
               <li>Поддерживает субтитры</li>
               <li>Открытый формат</li>
             </ul>
-            <h5>Тип файла: видеофайл</h5>
-          `,
+            <h5>Тип файла: видеофайл</h5>`,
         },
         ".mov": {
           title: ".mov — QuickTime Movie",
-          body: `
-            <p>Формат видео от Apple.</p>
+          body: `<p>Формат видео от Apple.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Разработан Apple</li>
               <li>Часто используется для записи с iPhone</li>
             </ul>
-            <h5>Тип файла: видеофайл</h5>
-          `,
+            <h5>Тип файла: видеофайл</h5>`,
         },
         ".webm": {
           title: ".webm — WebM Video",
-          body: `
-            <p>Формат видео для интернета.</p>
+          body: `<p>Формат видео для интернета.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Оптимизирован для веба</li>
               <li>Открытый бесплатный формат</li>
               <li>Поддерживается всеми браузерами</li>
             </ul>
-            <h5>Тип файла: видеофайл</h5>
-          `,
+            <h5>Тип файла: видеофайл</h5>`,
         },
         ".wmv": {
           title: ".wmv — Windows Media Video",
-          body: `
-            <p>Видеоформат от Microsoft.</p>
+          body: `<p>Видеоформат от Microsoft.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Разработан Microsoft</li>
               <li>Хорошее сжатие</li>
               <li>Работает в Windows Media Player</li>
             </ul>
-            <h5>Тип файла: видеофайл</h5>
-          `,
+            <h5>Тип файла: видеофайл</h5>`,
         },
         ".zip": {
           title: ".zip — ZIP Archive",
-          body: `
-            <p>Самый популярный формат архивов.</p>
+          body: `<p>Самый популярный формат архивов.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Универсальный формат</li>
               <li>Поддерживается встроенными средствами Windows</li>
               <li>Сжимает файлы для экономии места</li>
             </ul>
-            <h5>Тип файла: архив</h5>
-          `,
+            <h5>Тип файла: архив</h5>`,
         },
         ".rar": {
           title: ".rar — RAR Archive",
-          body: `
-            <p>Формат архива от WinRAR.</p>
+          body: `<p>Формат архива от WinRAR.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Лучшее сжатие, чем zip</li>
               <li>Требует программу WinRAR или 7-Zip</li>
             </ul>
-            <h5>Тип файла: архив</h5>
-          `,
+            <h5>Тип файла: архив</h5>`,
         },
         ".7z": {
           title: ".7z — 7-Zip Archive",
-          body: `
-            <p>Формат архива с высоким сжатием.</p>
+          body: `<p>Формат архива с высоким сжатием.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Открытый бесплатный формат</li>
               <li>Лучшее сжатие среди популярных форматов</li>
               <li>Требует программу 7-Zip</li>
             </ul>
-            <h5>Тип файла: архив</h5>
-          `,
+            <h5>Тип файла: архив</h5>`,
         },
         ".html": {
           title: ".html — HTML Document",
-          body: `
-            <p>Формат веб-страницы.</p>
+          body: `<p>Формат веб-страницы.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Содержит HTML-код страницы</li>
               <li>Открывается в браузере</li>
               <li>Можно редактировать в текстовом редакторе</li>
             </ul>
-            <h5>Тип файла: веб-страница</h5>
-          `,
+            <h5>Тип файла: веб-страница</h5>`,
         },
         ".htm": {
           title: ".htm — HTML Document",
-          body: `
-            <p>Краткая форма расширения .html.</p>
+          body: `<p>Краткая форма расширения .html.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>То же самое, что .html</li>
               <li>Использовалась в старых системах (DOS)</li>
             </ul>
-            <h5>Тип файла: веб-страница</h5>
-          `,
+            <h5>Тип файла: веб-страница</h5>`,
         },
         ".exe": {
           title: ".exe — Executable File",
-          body: `
-            <p>Исполняемый файл программы.</p>
+          body: `<p>Исполняемый файл программы.</p>
             <h5>Особенности:</h5>
             <ul>
               <li>Программа, которую можно запустить</li>
               <li>Работает только в Windows</li>
               <li>Может содержать вирусы!</li>
             </ul>
-            <h5>Тип файла: исполняемый файл</h5>
-          `,
+            <h5>Тип файла: исполняемый файл</h5>`,
         },
       };
 
@@ -1145,19 +1072,15 @@
       // Фильтрация секций
       document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-          // Обновляем активную кнопку
           document
             .querySelectorAll(".filter-btn")
             .forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
-
           const filter = btn.dataset.filter;
           const sections = document.querySelectorAll(".category-section");
-
           sections.forEach((section) => {
             if (filter === "all" || section.dataset.category === filter) {
               section.style.display = "block";
-              // Анимация появления
               section.style.animation = "fadeIn 0.3s ease-out";
             } else {
               section.style.display = "none";
@@ -1166,23 +1089,9 @@
         });
       });
 
-      // Прокрутка наверх
       function scrollToTop() {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-
-      // Добавляем стиль для анимации
-      const style = document.createElement("style");
-      style.textContent = `
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `;
-      document.head.appendChild(style);
     </script>
   </body>
 </html>
-
-
-

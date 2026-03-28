@@ -63,8 +63,8 @@
 
       <!-- Структура пути -->
       <div class="category-section" data-category="structure" id="structure">
-        <div class="category-header structure">
-          <div class="category-icon structure">📁</div>
+        <div class="category-header">
+          <div class="category-icon">📁</div>
           <div>
             <h2 class="category-title">Структура полного пути</h2>
           </div>
@@ -162,8 +162,8 @@
 
       <!-- Навигация -->
       <div class="category-section" data-category="navigation" id="navigation">
-        <div class="category-header navigation">
-          <div class="category-icon navigation">🔄</div>
+        <div class="category-header">
+          <div class="category-icon">🔄</div>
           <div>
             <h2 class="category-title">Навигация по файловой системе</h2>
           </div>
@@ -264,8 +264,8 @@
 
       <!-- Примеры задач -->
       <div class="category-section" data-category="examples" id="examples">
-        <div class="category-header examples">
-          <div class="category-icon examples">📝</div>
+        <div class="category-header">
+          <div class="category-icon">📝</div>
           <div>
             <h2 class="category-title">Примеры решения задач</h2>
           </div>
@@ -420,8 +420,8 @@
 
       <!-- Советы -->
       <div class="category-section" data-category="tips" id="tips">
-        <div class="category-header tips">
-          <div class="category-icon tips">💡</div>
+        <div class="category-header">
+          <div class="category-icon">💡</div>
           <div>
             <h2 class="category-title">Советы и частые ошибки</h2>
           </div>
@@ -556,19 +556,15 @@
       // Фильтрация секций
       document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-          // Обновляем активную кнопку
           document
             .querySelectorAll(".filter-btn")
             .forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
-
           const filter = btn.dataset.filter;
           const sections = document.querySelectorAll(".category-section");
-
           sections.forEach((section) => {
             if (filter === "all" || section.dataset.category === filter) {
               section.style.display = "block";
-              // Анимация появления
               section.style.animation = "fadeIn 0.3s ease-out";
             } else {
               section.style.display = "none";
@@ -577,29 +573,16 @@
         });
       });
 
-      // Прокрутка наверх
       function scrollToTop() {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      // Добавляем стиль для анимации
-      const style = document.createElement("style");
-      style.textContent = `
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `;
-      document.head.appendChild(style);
-
       // Подсветка элементов дерева при наведении
       document.querySelectorAll(".tree-item").forEach((item) => {
         item.addEventListener("click", () => {
-          // Снимаем выделение со всех
           document.querySelectorAll(".tree-item").forEach((i) => {
             i.style.background = "";
           });
-          // Выделяем текущий
           item.style.background = "rgba(102, 126, 234, 0.2)";
         });
       });

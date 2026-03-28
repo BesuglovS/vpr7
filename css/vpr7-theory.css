@@ -400,6 +400,465 @@
   }
 }
 
+/* Formula Box */
+.formula-box {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.formula-box h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.formula {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 1.3rem;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  text-align: center;
+  line-height: 2;
+}
+
+/* Path Parts */
+.path-part {
+  display: inline;
+}
+
+.path-part.disk {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.path-part.separator {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.path-part.folder {
+  color: #81d4fa;
+}
+
+.path-part.file {
+  color: #a5d6a7;
+}
+
+/* Path Example */
+.path-example {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 15px 0;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 1.1rem;
+  line-height: 2;
+  border-left: 4px solid #667eea;
+}
+
+.path-example .path-part.disk {
+  color: #e94560;
+  font-weight: bold;
+}
+
+.path-example .path-part.separator {
+  color: #666;
+}
+
+.path-example .path-part.folder {
+  color: #4facfe;
+}
+
+.path-example .path-part.file {
+  color: #11998e;
+}
+
+/* Comparison Table */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-table thead {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.comparison-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.comparison-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.comparison-table code {
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* Example Card */
+.example-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid #667eea;
+}
+
+.example-card h4 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.example-task {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.example-solution {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* Success Box */
+.success-box {
+  background: linear-gradient(145deg, #d4edda 0%, #c3e6cb 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  border-left: 4px solid #28a745;
+}
+
+.success-box h4 {
+  color: #155724;
+  margin-bottom: 15px;
+}
+
+.success-box ul,
+.success-box ol {
+  color: #155724;
+  line-height: 1.8;
+}
+
+/* Warning Box */
+.warning-box {
+  background: linear-gradient(145deg, #fff3cd 0%, #ffeeba 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  border-left: 4px solid #ffc107;
+}
+
+.warning-box h4 {
+  color: #856404;
+  margin-bottom: 15px;
+}
+
+.warning-box ul {
+  color: #856404;
+  line-height: 1.8;
+  margin-left: 20px;
+}
+
+/* Step List */
+.step-list {
+  counter-reset: step-counter;
+  list-style: none;
+  padding-left: 0;
+}
+
+.step-list li {
+  counter-increment: step-counter;
+  padding: 10px 0 10px 50px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.step-list li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Interactive Diagram */
+.interactive-diagram {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.tree-structure {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.tree-item {
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.tree-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.tree-item.disk {
+  color: #e94560;
+  font-weight: bold;
+}
+
+.tree-item.folder {
+  color: #4facfe;
+}
+
+.tree-item.file {
+  color: #11998e;
+}
+
+/* Extensions Grid */
+.extensions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.extension-item {
+  background: linear-gradient(145deg, #f5f7fa 0%, #e4e8eb 100%);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.extension-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
+
+.ext-name {
+  display: block;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.ext-desc {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Programs Section */
+.programs-section {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+.programs-section h4 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.programs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.program-badge {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Tip Box */
+.tip-box {
+  background: linear-gradient(145deg, #e8f4fd 0%, #d1ecf1 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  border-left: 4px solid #17a2b8;
+}
+
+.tip-box h4 {
+  color: #0c5460;
+  margin-bottom: 15px;
+}
+
+.tip-box ul {
+  color: #0c5460;
+  line-height: 1.8;
+  margin-left: 20px;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f0f0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.modal-close:hover {
+  background: #e0e0e0;
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 20px;
+  padding-right: 30px;
+}
+
+.modal-body {
+  color: #555;
+  line-height: 1.7;
+}
+
+.modal-body h5 {
+  color: #333;
+  margin: 15px 0 10px;
+  font-size: 1rem;
+}
+
+.modal-body ul {
+  margin-left: 20px;
+  line-height: 1.8;
+}
+
+/* Category Headers for Theory 2 & 3 */
+.category-header.structure,
+.category-header.navigation,
+.category-header.examples,
+.category-header.tips,
+.category-header.text,
+.category-header.presentation,
+.category-header.table,
+.category-header.image,
+.category-header.audio,
+.category-header.video,
+.category-header.archive,
+.category-header.web,
+.category-header.executable {
+  border-color: #667eea;
+}
+
+.category-icon.structure,
+.category-icon.navigation,
+.category-icon.examples,
+.category-icon.tips,
+.category-icon.text,
+.category-icon.presentation,
+.category-icon.table,
+.category-icon.image,
+.category-icon.audio,
+.category-icon.video,
+.category-icon.archive,
+.category-icon.web,
+.category-icon.executable {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+}
+
 /* Fade In Animation */
 @keyframes fadeIn {
   from {
@@ -410,4 +869,9 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Theory Intro List */
+.theory-intro ul {
+  margin-left: 30px;
 }
