@@ -5,6 +5,17 @@
 
 @import url("vpr7-main.css");
 
+html,
+body {
+  height: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+}
+
 /* Header */
 .header {
   background: rgba(255, 255, 255, 0.95);
@@ -95,16 +106,19 @@
   flex: 1;
   background: white;
   border-radius: 15px;
-  overflow: visible;
+  overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .task-frame {
   width: 100%;
-  height: 800px;
-  min-height: 600px;
+  height: 100% !important;
   border: none;
   display: block;
+  min-height: 600px;
 }
 
 /* Navigation */

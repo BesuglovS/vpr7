@@ -130,8 +130,8 @@
 
       // Инициализация
       function init() {
-        // Очищаем результаты при новом запуске экзамена
-        localStorage.removeItem("vpr7-exam-results");
+        // Загружаем сохранённые результаты
+        loadResults();
         renderTaskIndicators();
         loadTask(currentTaskIndex);
         updateUI();
@@ -216,14 +216,7 @@
       // Автоматическое изменение высоты iframe
       function resizeIframe() {
         const frame = document.getElementById("taskFrame");
-        try {
-          const doc = frame.contentDocument || frame.contentWindow.document;
-          const height = doc.body.scrollHeight;
-          frame.style.height = Math.max(height + 50, 600) + "px";
-        } catch (e) {
-          // Если iframe ещё не загрузился или кросс-домен
-          frame.style.height = "800px";
-        }
+        frame.style.height = "900px";
       }
 
       // Слушатель загрузки iframe
@@ -398,14 +391,15 @@
 
       // Приём сообщений от iframe
       window.addEventListener("message", function (event) {
+        // Отключаем автоматическое изменение высоты - исключаем циклический рост
         // Обработка высоты контента
-        if (event.data && event.data.type === "vpr7-content-height") {
-          const frame = document.getElementById("taskFrame");
-          const height = event.data.height;
-          if (height && height > 400) {
-            frame.style.height = height + 20 + "px";
-          }
-        }
+        // if (event.data && event.data.type === "vpr7-content-height") {
+        //   const frame = document.getElementById("taskFrame");
+        //   const height = event.data.height;
+        //   if (height && height > 400) {
+        //     frame.style.height = height + 20 + "px";
+        //   }
+        // }
 
         // Проверяем тип сообщения
         if (event.data && event.data.type === "vpr7-task-result") {
