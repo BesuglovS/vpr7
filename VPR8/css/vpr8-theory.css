@@ -1,0 +1,220 @@
+/**
+ * VPR 8 Class - Theory Page Styles
+ * Стили для теоретических страниц
+ */
+
+@import url("vpr8-common.css");
+
+/* Base Reset and Body Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 2rem;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.theory-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.theory-section {
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.theory-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.theory-section h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+.theory-section p {
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.theory-section ul {
+  margin-left: 25px;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.theory-section li {
+  margin-bottom: 8px;
+}
+
+.important {
+  background: #e8f4fd;
+  border-left: 4px solid #17a2b8;
+  border-radius: 0 10px 10px 0;
+  padding: 15px 20px;
+  margin: 20px 0;
+}
+
+.important h3 {
+  color: #0c5460;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.important ul,
+.important ol {
+  margin-left: 25px;
+  margin-bottom: 0;
+}
+
+.example {
+  background: #f8f9fa;
+  border-left: 4px solid #667eea;
+  border-radius: 0 10px 10px 0;
+  padding: 15px 20px;
+  margin: 20px 0;
+  font-family: Consolas, Monaco, monospace;
+}
+
+.example p {
+  margin-bottom: 8px;
+}
+
+.example p:last-child {
+  margin-bottom: 0;
+}
+
+.example ol {
+  margin-left: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.example li {
+  margin-bottom: 8px;
+}
+
+.step-list {
+  margin-left: 25px;
+  padding-left: 0;
+}
+
+.step-list h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  margin-left: -25px;
+  margin-bottom: 12px;
+}
+
+.step-list ol {
+  margin-left: 20px;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.step-list li {
+  margin-bottom: 8px;
+}
+
+code {
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+sub {
+  font-size: 0.8rem;
+}
+
+sup {
+  font-size: 0.8rem;
+}
+
+.conversion-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.conversion-table thead {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.conversion-table th,
+.conversion-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+  color: #333;
+}
+
+.conversion-table th {
+  font-weight: 600;
+  color: white;
+}
+
+.conversion-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.conversion-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .theory-content {
+    padding: 20px;
+  }
+
+  .theory-section h2 {
+    font-size: 1.2rem;
+  }
+
+  .conversion-table th,
+  .conversion-table td {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+}

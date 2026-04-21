@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Сравнение чисел в системах счисления - Практика</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-2.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+    <script src="../js/vpr7-exam-utils.js"></script>
+    <script src="js/vpr8-2-generator.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>🔢 Сравнение чисел в системах счисления</h1>
+
+      <div class="instructions">
+        Выберите номер правильного варианта ответа.
+      </div>
+
+      <div class="task-card">
+        <div class="task-text" id="taskText">
+          Какое из чисел, записанных в двоичной системе счисления, удовлетворяет
+          условию<br />
+          <span class="highlight">В2</span>₁₆ <strong><</strong> <em>а</em>
+          <strong><</strong> <span class="highlight">264</span>₈?
+        </div>
+
+        <div class="options">
+          <button class="option-btn" data-value="1">1) 10110001</button>
+          <button class="option-btn" data-value="2">2) 10110011</button>
+          <button class="option-btn" data-value="3">3) 10110101</button>
+          <button class="option-btn" data-value="4">4) 10100010</button>
+        </div>
+
+        <input type="hidden" id="selectedAnswer" value="" />
+
+        <div class="feedback" id="feedback"></div>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-check" id="checkBtn">✓ Проверить</button>
+        <button class="btn btn-clear" id="clearBtn">✕ Очистить</button>
+        <button class="btn btn-hint" id="hintBtn">💡 Подсказка</button>
+        <a href="vpr8-2-t.html" class="btn btn-theory">📚 Теория</a>
+        <button class="btn btn-reset" id="newTaskBtn">🔄 Новое задание</button>
+      </div>
+    </div>
+
+    <script>
+      // Инициализация при загрузке страницы
+      document.addEventListener("DOMContentLoaded", function () {
+        initTask2();
+      });
+    </script>
+  </body>
+</html>

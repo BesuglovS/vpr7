@@ -1,0 +1,61 @@
+/**
+ * VPR 8 Class - Task 2 Styles
+ * Стили для задания 2: Сравнение чисел в системах счисления
+ */
+
+@import url("vpr8-common.css");
+
+.options {
+  margin-top: 30px;
+  display: grid;
+  gap: 12px;
+}
+
+.option-btn {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  font-family: "Courier New", monospace;
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: #667eea;
+  background-color: #f8f9ff;
+}
+
+.option-btn.selected {
+  border-color: #667eea;
+  background-color: #eef2ff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.option-btn.correct {
+  border-color: #10b981;
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.option-btn.incorrect {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.option-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .option-btn {
+    font-size: 1rem;
+    padding: 12px 15px;
+  }
+}
