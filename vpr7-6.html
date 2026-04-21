@@ -149,6 +149,31 @@
         }
 
         document.getElementById("taskText").innerHTML = taskText;
+
+        // Заполняем контейнер с закодированным сообщением
+        const messageContainer = document.getElementById("messageContainer");
+        messageContainer.innerHTML = "";
+
+        // Разбиваем закодированное сообщение на отдельные символы
+        for (const char of currentTask.encoded) {
+          const charSpan = document.createElement("span");
+          charSpan.className = "message-char";
+          charSpan.textContent = char;
+          messageContainer.appendChild(charSpan);
+
+          // Добавляем разделитель между символами
+          const separator = document.createElement("span");
+          separator.className = "message-divider-slot";
+          separator.onclick = function () {
+            this.classList.toggle("has-divider");
+          };
+          messageContainer.appendChild(separator);
+        }
+
+        // Удаляем последний лишний разделитель
+        if (messageContainer.lastChild) {
+          messageContainer.removeChild(messageContainer.lastChild);
+        }
       }
 
       // Генерация подсказки
