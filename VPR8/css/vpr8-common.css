@@ -75,9 +75,13 @@ h1 {
 .task-card {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 15px;
-  padding: 25px;
   margin-bottom: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Отступ только для карточек заданий на страницах отдельных заданий */
+.container > .task-card {
+  padding: 25px;
 }
 
 .task-text {
@@ -93,6 +97,35 @@ h1 {
   padding: 2px 8px;
   border-radius: 5px;
   font-weight: bold;
+}
+
+/* Answer input field */
+.answer-area {
+  margin-top: 20px;
+}
+
+.answer-area label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #333;
+}
+
+.answer-area input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.answer-area input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 /* ============================================

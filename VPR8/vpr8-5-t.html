@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Логические высказывания - Теория</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-theory.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>📚 Логические высказывания</h1>
+
+      <div class="theory-content">
+        <div class="theory-section">
+          <h2>🔹 Что такое логическое высказывание?</h2>
+          <p>
+            <strong>Высказывание</strong> — это повествовательное предложение,
+            про которое можно однозначно сказать, истинно оно или ложно.
+          </p>
+
+          <div class="important">
+            <h3>Логические значения:</h3>
+            <ul>
+              <li><strong>Истина (И, True, 1)</strong> — высказывание верно</li>
+              <li>
+                <strong>Ложь (Л, False, 0)</strong> — высказывание неверно
+              </li>
+            </ul>
+          </div>
+
+          <div class="example">
+            <p><strong>Примеры:</strong></p>
+            <p>✅ "Земля круглая" — истинное высказывание</p>
+            <p>✅ "2 + 2 = 5" — ложное высказывание</p>
+            <p>❌ "Сколько времени?" — не является высказыванием</p>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Логические операции</h2>
+
+          <h3>✖️ Конъюнкция (И, ∧, AND)</h3>
+          <p>
+            Составное высказывание <strong>A И B</strong> истинно только тогда,
+            когда истинны оба простых высказывания одновременно.
+          </p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A ∧ B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>➕ Дизъюнкция (ИЛИ, ∨, OR)</h3>
+          <p>
+            Составное высказывание <strong>A ИЛИ B</strong> ложно только тогда,
+            когда ложны оба простых высказывания одновременно.
+          </p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A ∨ B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>❌ Отрицание (НЕ, ¬, NOT)</h3>
+          <p>
+            Высказывание <strong>НЕ A</strong> принимает значение,
+            противоположное значению высказывания A.
+          </p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>¬ A</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Приоритет операций</h2>
+          <p>
+            При вычислении логических выражений операции выполняются в порядке:
+          </p>
+          <div class="step-list">
+            <ol>
+              <li>Отрицание (НЕ)</li>
+              <li>Конъюнкция (И)</li>
+              <li>Дизъюнкция (ИЛИ)</li>
+              <li>Скобки меняют порядок выполнения</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Алгоритм решения типовых задач</h2>
+          <div class="step-list">
+            <h3>Задача: Найти, для кого ЛОЖНО высказывание:</h3>
+            <p>
+              <strong
+                >НЕ (Первая буква гласная) ИЛИ (Последняя буква гласная)</strong
+              >
+            </p>
+            <ol>
+              <li>Помним: выражение ложно только когда обе части ложны</li>
+              <li>Часть 1 ложна → Первая буква действительно гласная</li>
+              <li>Часть 2 ложна → Последняя буква НЕ гласная</li>
+              <li>
+                Ищем имя, у которого первая буква гласная, а последняя согласная
+              </li>
+            </ol>
+          </div>
+
+          <div class="example">
+            <p><strong>Ответ к примеру из задания:</strong> Олег</p>
+            <p>Первая буква 'О' — гласная, последняя буква 'г' — согласная</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <a href="vpr8-5.html" class="btn btn-next">▶ Перейти к практике</a>
+      </div>
+    </div>
+  </body>
+</html>
