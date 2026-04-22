@@ -1,0 +1,30 @@
+/* Стили для задания 3 - Сложение в системах счисления */
+
+.task-text {
+  font-size: 22px;
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.answer-input {
+  text-align: center;
+  margin: 30px 0;
+}
+
+#answerInput {
+  font-size: 28px;
+  padding: 12px 20px;
+  width: 200px;
+  text-align: center;
+  border: 3px solid #3498db;
+  border-radius: 8px;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+#answerInput:focus {
+  outline: none;
+  border-color: #2980b9;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+}
