@@ -1,0 +1,290 @@
+/**
+ * VPR 8 Class - Main Page Styles
+ * Стили для главной страницы и страницы экзамена
+ */
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Typography */
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 2.2rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+/* Navigation */
+.back-link {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+
+.back-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Tasks Grid */
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Task Card */
+.task-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+a.task-card {
+  padding: 30px;
+}
+
+.task-card > a.task-card-link {
+  padding: 30px 30px 15px 30px;
+}
+
+.task-card > a:not(.task-card-link) {
+  padding: 30px;
+}
+
+.task-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.task-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.theory-link {
+  display: block;
+  margin-top: auto;
+  padding: 15px 20px;
+  background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 0 0 20px 20px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  transition: filter 0.2s;
+}
+
+.theory-link:hover {
+  filter: brightness(1.1);
+}
+
+/* Task Number */
+.task-number {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.task-card:nth-child(2) .task-number {
+  background: linear-gradient(145deg, #e94560 0%, #ff6b6b 100%);
+  box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+}
+
+.task-card:nth-child(3) .task-number {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+}
+
+.task-card:nth-child(4) .task-number {
+  background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
+}
+
+.task-card:nth-child(5) .task-number {
+  background: linear-gradient(145deg, #ff9a56 0%, #ff6b35 100%);
+  box-shadow: 0 8px 20px rgba(255, 154, 86, 0.4);
+}
+
+.task-card:nth-child(6) .task-number {
+  background: linear-gradient(145deg, #2c3e50 0%, #4ca1af 100%);
+  box-shadow: 0 8px 20px rgba(76, 161, 175, 0.4);
+}
+
+.task-card:nth-child(7) .task-number {
+  background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+  box-shadow: 0 8px 20px rgba(30, 60, 114, 0.4);
+}
+
+.task-card:nth-child(8) .task-number {
+  background: linear-gradient(145deg, #134e5e 0%, #71b280 100%);
+  box-shadow: 0 8px 20px rgba(19, 78, 94, 0.4);
+}
+
+.task-card:nth-child(9) .task-number {
+  background: linear-gradient(145deg, #0f2027 0%, #2c5364 100%);
+  box-shadow: 0 8px 20px rgba(15, 32, 39, 0.4);
+}
+
+.task-card:nth-child(10) .task-number {
+  background: linear-gradient(145deg, #1a1a2e 0%, #0f3460 100%);
+  box-shadow: 0 8px 20px rgba(26, 26, 46, 0.4);
+}
+
+.task-card:nth-child(11) .task-number {
+  background: linear-gradient(145deg, #e53935 0%, #ff6f00 100%);
+  box-shadow: 0 8px 20px rgba(229, 57, 53, 0.4);
+}
+
+.task-card:nth-child(12) .task-number {
+  background: linear-gradient(145deg, #0f4c75 0%, #3282b8 100%);
+  box-shadow: 0 8px 20px rgba(15, 76, 117, 0.4);
+}
+
+/* Task Content */
+.task-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.task-description {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.task-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-instruction {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 10px;
+}
+
+.footer-copyright {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s;
+}
+
+.footer-github:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.footer-github svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .task-card {
+    padding: 25px 20px;
+  }
+
+  .task-number {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .task-title {
+    font-size: 1.1rem;
+  }
+
+  .task-description {
+    font-size: 0.9rem;
+  }
+}

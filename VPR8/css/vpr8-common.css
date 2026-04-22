@@ -1,0 +1,340 @@
+/**
+ * VPR 8 Class - Common Styles
+ * Общие стили для всех страниц проекта ВПР 8 класс
+ */
+
+/* ============================================
+   Reset & Base Styles
+   ============================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* ============================================
+   Container & Layout
+   ============================================ */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 1.6rem;
+}
+
+/* ============================================
+   Navigation
+   ============================================ */
+.back-link {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+
+.back-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   Instructions
+   ============================================ */
+.instructions {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* ============================================
+   Task Card
+   ============================================ */
+.task-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.task-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.task-text .highlight {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.btn {
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  font-weight: 500;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-check {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+}
+
+.btn-clear {
+  background: linear-gradient(145deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.btn-next {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-reset {
+  background: linear-gradient(145deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+}
+
+.btn-hint {
+  background: linear-gradient(145deg, #ffc107 0%, #ff9800 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-theory {
+  background: linear-gradient(145deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* ============================================
+   Feedback Messages
+   ============================================ */
+.feedback {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  display: none;
+}
+
+.feedback.correct {
+  display: block;
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+.feedback.incorrect {
+  display: block;
+  background: linear-gradient(145deg, #eb3349 0%, #f45c43 100%);
+  color: white;
+}
+
+.correct-answer {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+/* ============================================
+   Hint Box
+   ============================================ */
+.hint-box {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 12px 15px;
+  margin-top: 15px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.hint-box strong {
+  color: #856404;
+}
+
+/* ============================================
+   Score Board
+   ============================================ */
+.score-board {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.score {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.score span {
+  color: #11998e;
+}
+
+/* ============================================
+   Stats
+   ============================================ */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* ============================================
+   Task Counter
+   ============================================ */
+.task-counter {
+  text-align: center;
+  color: #e94560;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+/* ============================================
+   Results Detail
+   ============================================ */
+.results-detail {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  display: none;
+}
+
+.results-detail h4 {
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  margin: 3px 0;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.result-item.correct {
+  background: rgba(17, 153, 142, 0.2);
+  color: #11998e;
+}
+
+.result-item.incorrect {
+  background: rgba(235, 51, 73, 0.2);
+  color: #eb3349;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+/* ============================================
+   Responsive Styles
+   ============================================ */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .task-text {
+    font-size: 1rem;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}

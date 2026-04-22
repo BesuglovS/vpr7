@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Системы счисления - Практика</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-1.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+    <script src="../js/vpr7-exam-utils.js"></script>
+    <script src="js/vpr8-1-generator.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>🔢 Системы счисления</h1>
+
+      <div class="instructions">
+        Переведите число в указанную систему счисления. Основание системы писать
+        не нужно.
+      </div>
+
+      <div class="task-card">
+        <div class="task-text" id="taskText">
+          Переведите десятичное число
+          <span class="highlight" id="numberValue">78</span> в
+          <span class="highlight" id="targetSystem">восьмеричную</span> систему
+          счисления.
+        </div>
+
+        <div class="answer-area">
+          <label for="answerInput">Ваш ответ:</label>
+          <input
+            type="text"
+            id="answerInput"
+            placeholder="Введите ответ здесь"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-check" id="checkBtn">✓ Проверить</button>
+        <button class="btn btn-clear" id="clearBtn">✕ Очистить</button>
+        <button class="btn btn-hint" id="hintBtn">💡 Подсказка</button>
+        <a href="vpr8-1-t.html" class="btn btn-theory">📚 Теория</a>
+        <button class="btn btn-reset" id="newTaskBtn">🔄 Новое задание</button>
+      </div>
+    </div>
+
+    <script>
+      // Инициализация при загрузке страницы
+      document.addEventListener("DOMContentLoaded", function () {
+        initTask1();
+      });
+    </script>
+  </body>
+</html>
