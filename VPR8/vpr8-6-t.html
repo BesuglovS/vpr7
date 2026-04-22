@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Логические выражения - Теория</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-theory.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>📚 Логические выражения</h1>
+
+      <div class="theory-content">
+        <div class="theory-section">
+          <h2>🔹 Что такое логическое выражение?</h2>
+          <p>
+            <strong>Логическое выражение</strong> — это выражение, составленное
+            из логических переменных и логических операций, которое принимает
+            одно из двух значений: <strong>1 (истина)</strong> или
+            <strong>0 (ложь)</strong>.
+          </p>
+
+          <div class="important">
+            <h3>Логические переменные:</h3>
+            <p>
+              Переменные обозначаются заглавными латинскими буквами:
+              <strong>A, B, C, ...</strong>
+            </p>
+            <p>Каждая переменная может принимать только два значения:</p>
+            <ul>
+              <li><strong>1</strong> — истина (True)</li>
+              <li><strong>0</strong> — ложь (False)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Правила записи логических выражений</h2>
+          <p>В логических выражениях используются три основные операции:</p>
+
+          <div class="example">
+            <table class="conversion-table">
+              <thead>
+                <tr>
+                  <th>Операция</th>
+                  <th>Название</th>
+                  <th>Символ</th>
+                  <th>Пример</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>НЕ</strong></td>
+                  <td>Отрицание</td>
+                  <td>¬</td>
+                  <td>¬A</td>
+                </tr>
+                <tr>
+                  <td><strong>И</strong></td>
+                  <td>Конъюнкция</td>
+                  <td>∧ или /\</td>
+                  <td>A ∧ B</td>
+                </tr>
+                <tr>
+                  <td><strong>ИЛИ</strong></td>
+                  <td>Дизъюнкция</td>
+                  <td>∨ или \/</td>
+                  <td>A ∨ B</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="important">
+            <h3>Приоритет операций (от высшего к низшему):</h3>
+            <div class="step-list">
+              <ol>
+                <li><strong>Скобки</strong> — выполняются первыми</li>
+                <li><strong>НЕ (¬)</strong> — отрицание</li>
+                <li><strong>И (∧)</strong> — конъюнкция</li>
+                <li><strong>ИЛИ (∨)</strong> — дизъюнкция</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Таблицы истинности операций</h2>
+
+          <h3>❌ Отрицание (НЕ, ¬)</h3>
+          <p>
+            Операция <strong>НЕ A</strong> меняет значение на противоположное.
+          </p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>¬A</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>✖️ Конъюнкция (И, ∧)</h3>
+          <p>
+            Операция <strong>A И B</strong> истинна только тогда, когда
+            <strong>оба</strong> операнда истинны.
+          </p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A ∧ B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>➕ Дизъюнкция (ИЛИ, ∨)</h3>
+          <p>
+            Операция <strong>A ИЛИ B</strong> ложна только тогда, когда
+            <strong>оба</strong> операнда ложны.
+          </p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A ∨ B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Построение таблицы истинности</h2>
+          <p>
+            <strong>Таблица истинности</strong> — это таблица, в которой для
+            всех возможных наборов значений переменных вычислено значение
+            логического выражения.
+          </p>
+
+          <div class="important">
+            <h3>Алгоритм построения таблицы истинности:</h3>
+            <div class="step-list">
+              <ol>
+                <li>
+                  Определить количество переменных (n). Количество строк в
+                  таблице (без заголовка) = 2<sup>n</sup>
+                </li>
+                <li>
+                  Записать столбцы для каждой переменной и заполнить их всеми
+                  возможными комбинациями 0 и 1
+                </li>
+                <li>
+                  Добавить столбцы для промежуточных операций в порядке
+                  приоритета (сначала НЕ, потом И, потом ИЛИ)
+                </li>
+                <li>
+                  Вычислить значения в каждом столбце, используя таблицы
+                  истинности операций
+                </li>
+                <li>Последний столбец — результат всего выражения</li>
+              </ol>
+            </div>
+          </div>
+
+          <h3>📝 Пример: выражение A ∨ ¬B</h3>
+          <p>
+            Переменные: A и B → 2<sup>2</sup> = 4 строки.<br />
+            Операции в порядке приоритета: сначала <strong>¬B</strong>, затем
+            <strong>A ∨ ¬B</strong>.
+          </p>
+
+          <div class="example">
+            <table class="conversion-table">
+              <thead>
+                <tr>
+                  <th>A</th>
+                  <th>B</th>
+                  <th>¬B</th>
+                  <th>A ∨ ¬B</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="step-list">
+            <h3>Разбор примера:</h3>
+            <ol>
+              <li>
+                Столбец <strong>¬B</strong>: меняем значение B на
+                противоположное (0→1, 1→0)
+              </li>
+              <li>
+                Столбец <strong>A ∨ ¬B</strong>: применяем ИЛИ к значениям A и
+                ¬B. Результат 0 только когда оба равны 0 (строка 2: A=0, ¬B=0)
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Ещё один пример: A ∧ ¬B ∨ C</h2>
+          <p>
+            Три переменные → 2<sup>3</sup> = 8 строк.<br />
+            Порядок операций: сначала <strong>¬B</strong>, затем
+            <strong>A ∧ ¬B</strong>, затем <strong>(A ∧ ¬B) ∨ C</strong>.
+          </p>
+
+          <div class="example">
+            <table class="conversion-table">
+              <thead>
+                <tr>
+                  <th>A</th>
+                  <th>B</th>
+                  <th>C</th>
+                  <th>¬B</th>
+                  <th>A ∧ ¬B</th>
+                  <th>A ∧ ¬B ∨ C</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <a href="vpr8-6.html" class="btn btn-next">▶ Перейти к практике</a>
+      </div>
+    </div>
+  </body>
+</html>
