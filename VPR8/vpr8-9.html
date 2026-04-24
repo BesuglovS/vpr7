@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Анализ алгоритмов — Практика</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-9.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+    <script src="../js/vpr7-exam-utils.js"></script>
+    <script src="js/vpr8-9-generator.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>💻 Анализ алгоритмов</h1>
+
+      <div class="instructions">
+        Дана программа на языке Pascal или Python с условным оператором.
+        Выберите все пары чисел, для которых программа напечатает "NO", и
+        запишите номера пар в порядке возрастания.
+      </div>
+
+      <div class="task-card">
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="answer-section">
+          <label class="answer-label" for="answerInput"
+            >Введите номера пар (в порядке возрастания):</label
+          >
+          <input
+            type="text"
+            class="answer-input"
+            id="answerInput"
+            placeholder="Например: 14"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="hint-box" id="hintBox"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-check" id="checkBtn">✓ Проверить</button>
+        <button class="btn btn-clear" id="clearBtn">✕ Очистить</button>
+        <button class="btn btn-hint" id="hintBtn">💡 Подсказка</button>
+        <a href="vpr8-9-t.html" class="btn btn-theory">📚 Теория</a>
+        <button class="btn btn-reset" id="newTaskBtn">🔄 Новое задание</button>
+      </div>
+    </div>
+
+    <script>
+      // Page statistics
+      let pageStats = { correct: 0, total: 0 };
+      let answered = false;
+      let selectedPairs = new Set();
+
+      // Load stats
+      function loadStats() {
+        const saved = localStorage.getItem("vpr8-9-stats");
+        if (saved) {
+          try {
+            pageStats = JSON.parse(saved);
+          } catch (e) {
+            pageStats = { correct: 0, total: 0 };
+          }
+        }
+      }
+
+      function saveStats() {
+        localStorage.setItem("vpr8-9-stats", JSON.stringify(pageStats));
+      }
+
+      // Generate and display a new task
+      function newTask() {
+        answered = false;
+        selectedPairs.clear();
+        const task = VPR8_Task9.generateTask();
+
+        // Reset UI
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").className = "answer-input";
+
+        // Update task text
+        document.getElementById("taskText").innerHTML =
+          VPR8_Task9.buildTaskHtml(task);
+
+        // Add click handlers to pair items
+        document.querySelectorAll(".pair-item").forEach((item) => {
+          item.addEventListener("click", () => togglePair(item));
+        });
+      }
+
+      // Toggle pair selection
+      function togglePair(item) {
+        if (answered) return;
+
+        const idx = item.dataset.index;
+        if (selectedPairs.has(idx)) {
+          selectedPairs.delete(idx);
+          item.classList.remove("selected");
+        } else {
+          selectedPairs.add(idx);
+          item.classList.add("selected");
+        }
+
+        // Update input field with sorted selection
+        const sorted = Array.from(selectedPairs)
+          .map(Number)
+          .sort((a, b) => a - b);
+        document.getElementById("answerInput").value = sorted
+          .map((i) => i + 1)
+          .join("");
+      }
+
+      // Check answer
+      function checkAnswer() {
+        if (answered) return;
+
+        const userAnswer = document.getElementById("answerInput").value.trim();
+        if (!userAnswer) {
+          alert("Введите ответ!");
+          return;
+        }
+
+        const result = VPR8_Task9.checkTaskAnswer(userAnswer);
+        const feedback = document.getElementById("feedback");
+
+        pageStats.total++;
+        answered = true;
+
+        if (result.correct) {
+          pageStats.correct++;
+          document.getElementById("answerInput").className =
+            "answer-input correct";
+          feedback.className = "feedback correct";
+        } else {
+          document.getElementById("answerInput").className =
+            "answer-input incorrect";
+          feedback.className = "feedback incorrect";
+        }
+
+        feedback.innerHTML = result.message;
+        feedback.style.display = "block";
+
+        // Highlight pair items
+        const task = VPR8_Task9.getCurrentTask();
+        document.querySelectorAll(".pair-item").forEach((item) => {
+          const idx = Number(item.dataset.index);
+          const isNo = !task.pairs[idx].yes;
+          item.style.cursor = "default";
+          if (isNo) {
+            item.classList.add("correct");
+          }
+        });
+
+        saveStats();
+
+        // Send exam result
+        VPR7_ExamUtils.sendExamResult(result.correct);
+      }
+
+      // Show hint
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        hintBox.innerHTML = VPR8_Task9.buildHint();
+        hintBox.style.display = "block";
+      }
+
+      // Clear answer
+      function clearAnswer() {
+        if (answered) return;
+        selectedPairs.clear();
+        document.getElementById("answerInput").value = "";
+        document.querySelectorAll(".pair-item").forEach((item) => {
+          item.classList.remove("selected");
+        });
+      }
+
+      // Switch code tab (Pascal / Python)
+      function switchCodeTab(btn, lang) {
+        document.querySelectorAll(".tab-btn").forEach((b) => {
+          b.classList.remove("active");
+        });
+        btn.classList.add("active");
+        document.querySelectorAll(".tab-content").forEach((c) => {
+          c.classList.remove("active");
+          c.style.display = "none";
+        });
+        const activeTab = document.getElementById("tab-" + lang);
+        if (activeTab) {
+          activeTab.classList.add("active");
+          activeTab.style.display = "block";
+        }
+      }
+
+      // Init
+      document.addEventListener("DOMContentLoaded", function () {
+        loadStats();
+        newTask();
+
+        document
+          .getElementById("checkBtn")
+          .addEventListener("click", checkAnswer);
+        document
+          .getElementById("clearBtn")
+          .addEventListener("click", clearAnswer);
+        document.getElementById("hintBtn").addEventListener("click", showHint);
+        document
+          .getElementById("newTaskBtn")
+          .addEventListener("click", newTask);
+
+        // Enter key support
+        document
+          .getElementById("answerInput")
+          .addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              checkAnswer();
+            }
+          });
+
+        // Exam mode
+        VPR7_ExamUtils.setupExamMessageListener((correct) => {
+          VPR7_ExamUtils.showCompletedMessage(correct, ".container", [
+            ".task-card",
+            ".buttons",
+          ]);
+        });
+        VPR7_ExamUtils.hideExamNavigation();
+        window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+        window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Анализ алгоритмов — Теория</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-theory.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>📚 Анализ алгоритмов на языке программирования</h1>
+
+      <div class="theory-content">
+        <div class="theory-section">
+          <h2>🔹 Что нужно делать в задании?</h2>
+          <p>
+            В задании №9 ВПР по информатике для 8 класса вам даётся программа на
+            языке Pascal с <strong>условным оператором if</strong>. В условии
+            используются <strong>два сравнения</strong> для переменных
+            <code>s</code> и <code>t</code>, соединённые логическими операциями
+            <code>and</code>, <code>or</code>, <code>not</code> и скобками.
+          </p>
+          <p>
+            Ваша задача — определить, для каких из 5 заданных пар чисел
+            программа выведет <strong>"NO"</strong>.
+          </p>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Структура программы</h2>
+          <p>Программа всегда имеет такую структуру:</p>
+          <p><strong>Pascal:</strong></p>
+          <div class="example">
+            <p>
+              var s, t: integer;<br />
+              begin<br />
+              &nbsp;&nbsp;readln(s);<br />
+              &nbsp;&nbsp;readln(t);<br />
+              &nbsp;&nbsp;if <em>(условие)</em><br />
+              &nbsp;&nbsp;then<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;writeln("YES")<br />
+              &nbsp;&nbsp;else<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;writeln("NO")<br />
+              end.
+            </p>
+          </div>
+          <p><strong>Python:</strong></p>
+          <div class="example">
+            <p>
+              s = int(input())<br />
+              t = int(input())<br />
+              if <em>(условие)</em>:<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;print("YES")<br />
+              else:<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;print("NO")
+            </p>
+          </div>
+          <p>
+            Если <strong>условие истинно</strong> — программа печатает
+            <strong>"YES"</strong>.<br />
+            Если <strong>условие ложно</strong> — программа печатает
+            <strong>"NO"</strong>.
+          </p>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Операторы сравнения</h2>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>Оператор</th>
+                <th>Название</th>
+                <th>Пример</th>
+                <th>Значение</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code><</code></td>
+                <td>Меньше</td>
+                <td><code>5 < 10</code></td>
+                <td>истина</td>
+              </tr>
+              <tr>
+                <td><code>></code></td>
+                <td>Больше</td>
+                <td><code>5 > 10</code></td>
+                <td>ложь</td>
+              </tr>
+              <tr>
+                <td><code><=</code></td>
+                <td>Меньше или равно</td>
+                <td><code>10 <= 10</code></td>
+                <td>истина</td>
+              </tr>
+              <tr>
+                <td><code>>=</code></td>
+                <td>Больше или равно</td>
+                <td><code>5 >= 10</code></td>
+                <td>ложь</td>
+              </tr>
+              <tr>
+                <td><code>=</code></td>
+                <td>Равно</td>
+                <td><code>5 = 5</code></td>
+                <td>истина</td>
+              </tr>
+              <tr>
+                <td><code><></code></td>
+                <td>Не равно</td>
+                <td><code>5 <> 10</code></td>
+                <td>истина</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Логические операции</h2>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>Операция</th>
+                <th>Название</th>
+                <th>Результат истинен, когда...</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>A and B</code></td>
+                <td>И (конъюнкция)</td>
+                <td>оба операнда истинны</td>
+              </tr>
+              <tr>
+                <td><code>A or B</code></td>
+                <td>ИЛИ (дизъюнкция)</td>
+                <td>хотя бы один операнд истинен</td>
+              </tr>
+              <tr>
+                <td><code>not A</code></td>
+                <td>НЕ (отрицание)</td>
+                <td>операнд ложен</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="important">
+            <h3>⚠️ Важно про приоритет операций!</h3>
+            <ol>
+              <li>
+                Сначала выполняется <code>not</code> (отрицание) — самый высокий
+                приоритет
+              </li>
+              <li>Затем выполняется <code>and</code> (конъюнкция)</li>
+              <li>
+                Потом выполняется <code>or</code> (дизъюнкция) — самый низкий
+                приоритет
+              </li>
+              <li>
+                <strong>Скобки</strong> меняют порядок вычислений — выражение в
+                скобках вычисляется первым
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Таблицы истинности</h2>
+
+          <h3>Операция AND (И)</h3>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A and B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>истина</td>
+                <td>истина</td>
+                <td><strong>истина</strong></td>
+              </tr>
+              <tr>
+                <td>истина</td>
+                <td>ложь</td>
+                <td>ложь</td>
+              </tr>
+              <tr>
+                <td>ложь</td>
+                <td>истина</td>
+                <td>ложь</td>
+              </tr>
+              <tr>
+                <td>ложь</td>
+                <td>ложь</td>
+                <td>ложь</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Операция OR (ИЛИ)</h3>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A or B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>истина</td>
+                <td>истина</td>
+                <td><strong>истина</strong></td>
+              </tr>
+              <tr>
+                <td>истина</td>
+                <td>ложь</td>
+                <td><strong>истина</strong></td>
+              </tr>
+              <tr>
+                <td>ложь</td>
+                <td>истина</td>
+                <td><strong>истина</strong></td>
+              </tr>
+              <tr>
+                <td>ложь</td>
+                <td>ложь</td>
+                <td>ложь</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Операция NOT (НЕ)</h3>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>not A</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>истина</td>
+                <td>ложь</td>
+              </tr>
+              <tr>
+                <td>ложь</td>
+                <td><strong>истина</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Метод таблицы истинности</h2>
+          <p>
+            Для систематического решения задачи удобно составить
+            <strong>таблицу истинности</strong>, в которой для каждой пары чисел
+            записываются значения двух сравнений, а затем результат логического
+            выражения.
+          </p>
+
+          <div class="important">
+            <h3>📋 Как составлять таблицу:</h3>
+            <ol>
+              <li>
+                Выделите в условии <strong>два простых сравнения</strong> и
+                обозначьте их буквами A и B
+              </li>
+              <li>
+                Для каждой из 5 пар вычислите истинность A и B (1 — истина, 0 —
+                ложь)
+              </li>
+              <li>
+                Вычислите результат всего логического выражения с учётом
+                операций and, or, not
+              </li>
+              <li>
+                Отметьте пары, для которых результат = 0 (ложь) — это и есть
+                ответ "NO"
+              </li>
+            </ol>
+          </div>
+
+          <div class="example">
+            <p><strong>Пример таблицы:</strong></p>
+            <p>Условие: <code>(s < 10) or (t > 10)</code></p>
+            <table class="conversion-table">
+              <thead>
+                <tr>
+                  <th>№</th>
+                  <th>Пара (s, t)</th>
+                  <th>A =<br />(s < 10)</th>
+                  <th>B =<br />(t > 10)</th>
+                  <th>A or B</th>
+                  <th>Вывод</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>(15, 9)</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td><strong>0</strong></td>
+                  <td><span style="color: #eb3349">NO ✓</span></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>(5, 11)</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>YES</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>(18, 15)</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>YES</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>(10, 9)</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td><strong>0</strong></td>
+                  <td><span style="color: #eb3349">NO ✓</span></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>(–4, 5)</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>YES</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>
+              <strong>Ответ:</strong> пары с результатом 0 → номера
+              <strong>1 и 4</strong> → ответ <strong>14</strong>
+            </p>
+          </div>
+
+          <div class="example">
+            <p><strong>Пример с операцией not:</strong></p>
+            <p>Условие: <code>not ((s > 0) and (t < 5))</code></p>
+            <table class="conversion-table">
+              <thead>
+                <tr>
+                  <th>№</th>
+                  <th>Пара (s, t)</th>
+                  <th>A =<br />(s > 0)</th>
+                  <th>B =<br />(t < 5)</th>
+                  <th>A and B</th>
+                  <th>not(A and B)</th>
+                  <th>Вывод</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>(–2, 3)</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>YES</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>(10, 2)</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td><span style="color: #eb3349">NO ✓</span></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>(5, 8)</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>YES</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>(1, 1)</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td><span style="color: #eb3349">NO ✓</span></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>(0, 4)</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>YES</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>
+              <strong>Ответ:</strong> пары с результатом 0 → номера
+              <strong>2 и 4</strong> → ответ <strong>24</strong>
+            </p>
+          </div>
+
+          <div class="important">
+            <h3>💡 Преимущества табличного метода:</h3>
+            <ul>
+              <li><strong>Наглядность</strong> — все вычисления видны сразу</li>
+              <li>
+                <strong>Меньше ошибок</strong> — сложно пропустить пару или
+                перепутать знак операции
+              </li>
+              <li>
+                <strong>Удобно проверять</strong> — легко найти ошибку, если
+                ответ не сходится
+              </li>
+              <li>Рекомендуется использовать на черновике при сдаче ВПР</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Полезные советы</h2>
+          <ul>
+            <li>
+              <strong>Проверяйте каждую пару отдельно</strong> — не пытайтесь
+              запомнить всё сразу
+            </li>
+            <li>
+              Для операции <code>and</code>: если хотя бы одна часть ложна,
+              результат — ложь ("NO")
+            </li>
+            <li>
+              Для операции <code>or</code>: если хотя бы одна часть истинна,
+              результат — истина ("YES")
+            </li>
+            <li>
+              <strong>Скобки</strong> меняют порядок вычислений — всегда
+              вычисляйте выражение в скобках первым
+            </li>
+            <li>
+              <code>not</code> инвертирует результат: истина становится ложью, и
+              наоборот
+            </li>
+            <li>
+              Не забудьте: ответ — это номера пар, для которых результат
+              <strong>"NO"</strong>, в порядке возрастания
+            </li>
+            <li>
+              Если ответов несколько, просто пишите цифры подряд, например:
+              <code>14</code> или <code>235</code>
+            </li>
+          </ul>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Частые ошибки</h2>
+          <div class="important">
+            <h3>⚠️ Избегайте этих ошибок:</h3>
+            <ul>
+              <li>
+                <strong>Путают "YES" и "NO"</strong> — иногда ответом
+                оказываются пары с "YES", а не с "NO". Внимательно читайте
+                условие!
+              </li>
+              <li>
+                <strong>Забывают про not</strong> — отрицание инвертирует
+                результат, не пропускайте его
+              </li>
+              <li>
+                <strong>Неправильно считают скобки</strong> — выражение в
+                скобках всегда вычисляется первым
+              </li>
+              <li>
+                <strong>Путают <= и <</strong> — "меньше или равно" включает
+                равенство
+              </li>
+              <li>
+                <strong>Неправильно записывают ответ</strong> — цифры должны
+                идти в порядке возрастания, без пробелов и запятых
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <a href="vpr8-9.html" class="btn btn-next">▶ Перейти к практике</a>
+      </div>
+    </div>
+  </body>
+</html>

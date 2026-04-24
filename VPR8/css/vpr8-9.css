@@ -1,0 +1,286 @@
+/**
+ * VPR 8 Class - Task 9 Styles
+ * Стили для задания 9: Анализ алгоритмов на языке программирования
+ */
+
+@import url("vpr8-common.css");
+
+/* Code tabs */
+.code-tabs {
+  margin: 15px 0;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 0;
+}
+
+.tab-btn {
+  padding: 8px 20px;
+  border: none;
+  background: #e9ecef;
+  color: #555;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  background: #dee2e6;
+}
+
+.tab-btn.active {
+  background: #1e1e2e;
+  color: #cdd6f4;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Code block display */
+.code-block {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: 0 10px 10px 10px;
+  padding: 20px 25px;
+  margin: 0 0 15px;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 1rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Pairs list */
+.pairs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+  max-width: 400px;
+}
+
+.pair-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 18px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 2px solid #e9ecef;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.pair-item:hover {
+  border-color: #667eea;
+  background: #f0f2ff;
+}
+
+.pair-item.selected {
+  border-color: #667eea;
+  background: #e8ebff;
+}
+
+.pair-item.correct {
+  border-color: #11998e;
+  background: #d4edda;
+}
+
+.pair-item.incorrect {
+  border-color: #eb3349;
+  background: #f8d7da;
+}
+
+.pair-num {
+  font-weight: bold;
+  color: #667eea;
+  font-size: 1.1rem;
+  min-width: 30px;
+}
+
+.pair-values {
+  font-family: "Courier New", monospace;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Checkbox for pair selection */
+.pair-check {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #667eea;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  transition: all 0.2s;
+}
+
+.pair-item.selected .pair-check {
+  background: #667eea;
+}
+
+.pair-check::after {
+  content: "✓";
+  color: white;
+  font-size: 14px;
+  display: none;
+}
+
+.pair-item.selected .pair-check::after {
+  display: block;
+}
+
+/* Answer note */
+.answer-note {
+  color: #666;
+  font-style: italic;
+  margin: 15px 0;
+}
+
+/* Answer input */
+.answer-section {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.answer-label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.answer-input {
+  width: 200px;
+  padding: 12px 15px;
+  font-size: 1.2rem;
+  text-align: center;
+  border: 2px solid #dee2e6;
+  border-radius: 10px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  font-family: "Courier New", monospace;
+}
+
+.answer-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.answer-input.correct {
+  border-color: #11998e;
+  background: #d4edda;
+}
+
+.answer-input.incorrect {
+  border-color: #eb3349;
+  background: #f8d7da;
+}
+
+/* Hint table */
+.hint-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+
+.hint-table th,
+.hint-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border: 1px solid #e9ecef;
+}
+
+.hint-table th {
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.hint-table tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.yes-result {
+  color: #11998e;
+  font-weight: bold;
+}
+
+.no-result {
+  color: #eb3349;
+  font-weight: bold;
+}
+
+/* Solution path in hint */
+.solution-path {
+  margin-top: 10px;
+  line-height: 1.8;
+}
+
+.solution-path code {
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+}
+
+/* Task text styling */
+.task-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+.task-text strong {
+  color: #2c3e50;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .code-block {
+    padding: 15px 18px;
+    font-size: 0.9rem;
+  }
+
+  .pairs-list {
+    max-width: 100%;
+  }
+
+  .pair-item {
+    padding: 10px 14px;
+  }
+
+  .pair-values {
+    font-size: 1rem;
+  }
+
+  .answer-input {
+    width: 160px;
+    font-size: 1.1rem;
+  }
+
+  .hint-table th,
+  .hint-table td {
+    padding: 8px 6px;
+    font-size: 0.8rem;
+  }
+}
