@@ -64,7 +64,8 @@ h1 {
   margin-bottom: 12px;
 }
 
-.theory-section ul {
+.theory-section ul,
+.theory-section ol {
   margin-left: 25px;
   color: #555;
   line-height: 1.8;

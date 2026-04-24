@@ -1,0 +1,179 @@
+/**
+ * VPR 8 Class - Task 7 Styles
+ * Стили для задания 7: Алгоритм для исполнителя
+ */
+
+@import url("vpr8-common.css");
+
+/* Command list display */
+.commands-list {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 15px 0;
+  border-left: 4px solid #667eea;
+}
+
+.commands-list h3 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.command-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 1rem;
+  color: #444;
+}
+
+.command-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+/* Task info box */
+.task-info {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  text-align: center;
+  padding: 12px 24px;
+  background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  min-width: 120px;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.info-value {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+/* Answer input */
+.answer-area {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.answer-area label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+#answerInput {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px 20px;
+  font-size: 1.3rem;
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  font-family: "Courier New", monospace;
+  letter-spacing: 4px;
+  transition: border-color 0.3s;
+}
+
+#answerInput:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+#answerInput:disabled {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+#answerInput.shake {
+  animation: shake 0.5s;
+}
+
+/* Simulation trace */
+.simulation-trace {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-top: 15px;
+  font-family: "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  display: none;
+}
+
+.simulation-trace.visible {
+  display: block;
+}
+
+.trace-step {
+  padding: 2px 0;
+  color: #444;
+}
+
+.trace-step.error {
+  color: #eb3349;
+  font-weight: bold;
+}
+
+.trace-step.success {
+  color: #11998e;
+  font-weight: bold;
+}
+
+/* Hint box enhancement */
+.hint-box .solution-path {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #dee2e6;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .task-info {
+    gap: 15px;
+  }
+
+  .info-item {
+    min-width: 100px;
+    padding: 10px 16px;
+  }
+
+  .info-value {
+    font-size: 1.3rem;
+  }
+
+  #answerInput {
+    font-size: 1.1rem;
+    padding: 12px 15px;
+    letter-spacing: 2px;
+  }
+
+  .commands-list {
+    padding: 12px 15px;
+  }
+}

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Исполнитель Чертёжник — Практика</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-8.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+    <script src="../js/vpr7-exam-utils.js"></script>
+    <script src="js/vpr8-8-generator.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>📐 Исполнитель Чертёжник</h1>
+
+      <div class="instructions">
+        Исполнитель Чертёжник перемещается на координатной плоскости, оставляя
+        след в виде линии. Определите, на какую одну команду «Сместиться на (a,
+        b)» можно заменить данный алгоритм, чтобы Чертёжник оказался в той же
+        точке.
+      </div>
+
+      <div class="task-card">
+        <div class="algorithm-box" id="algorithmBox">Загрузка задания...</div>
+
+        <div class="coord-info">
+          <div class="coord-item">
+            <div class="coord-label">Начальная точка</div>
+            <div class="coord-value">(0, 0)</div>
+          </div>
+        </div>
+
+        <div class="answer-options">
+          <label class="answer-options-label">Выберите правильный ответ:</label>
+          <div class="options-grid" id="optionsGrid"></div>
+        </div>
+
+        <div class="calc-trace" id="calcTrace"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-hint" id="hintBtn">💡 Подсказка</button>
+        <a href="vpr8-8-t.html" class="btn btn-theory">📚 Теория</a>
+        <button class="btn btn-reset" id="newTaskBtn">🔄 Новое задание</button>
+      </div>
+    </div>
+
+    <script>
+      // Page statistics
+      let pageStats = { correct: 0, total: 0 };
+      let answered = false;
+      let selectedOption = -1;
+
+      // Load stats
+      function loadStats() {
+        const saved = localStorage.getItem("vpr8-8-stats");
+        if (saved) {
+          try {
+            pageStats = JSON.parse(saved);
+          } catch (e) {
+            pageStats = { correct: 0, total: 0 };
+          }
+        }
+      }
+
+      function saveStats() {
+        localStorage.setItem("vpr8-8-stats", JSON.stringify(pageStats));
+      }
+
+      // Generate and display a new task
+      function newTask() {
+        answered = false;
+        selectedOption = -1;
+        const task = VPR8_Task8.generateTask();
+
+        // Reset UI
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("calcTrace").className = "calc-trace";
+        document.getElementById("calcTrace").innerHTML = "";
+
+        // Update algorithm display
+        document.getElementById("algorithmBox").innerHTML =
+          VPR8_Task8.buildAlgorithmHtml(task.blocks);
+
+        // Build answer options
+        const grid = document.getElementById("optionsGrid");
+        grid.innerHTML = "";
+        task.options.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.textContent = `${idx + 1}) Сместиться на ${VPR8_Task8.formatShift(opt.dx, opt.dy)}`;
+          btn.dataset.index = idx;
+          btn.addEventListener("click", () => selectOption(idx));
+          grid.appendChild(btn);
+        });
+      }
+
+      // Select an option
+      function selectOption(index) {
+        if (answered) return;
+
+        selectedOption = index;
+
+        // Update visual selection
+        const buttons = document.querySelectorAll(".option-btn");
+        buttons.forEach((btn, idx) => {
+          btn.classList.toggle("selected", idx === index);
+        });
+
+        // Check answer immediately
+        checkAnswer();
+      }
+
+      // Check answer
+      function checkAnswer() {
+        if (answered || selectedOption < 0) return;
+
+        const result = VPR8_Task8.checkTaskAnswer(selectedOption);
+        const feedback = document.getElementById("feedback");
+        const traceBox = document.getElementById("calcTrace");
+
+        pageStats.total++;
+        answered = true;
+
+        if (result.correct) {
+          pageStats.correct++;
+          feedback.className = "feedback correct";
+        } else {
+          feedback.className = "feedback incorrect";
+        }
+
+        feedback.innerHTML = result.message;
+        feedback.style.display = "block";
+
+        // Show calculation trace
+        traceBox.innerHTML = VPR8_Task8.buildTraceHtml();
+        traceBox.className = "calc-trace visible";
+
+        // Highlight buttons
+        const buttons = document.querySelectorAll(".option-btn");
+        const task = VPR8_Task8.getCurrentTask();
+        buttons.forEach((btn, idx) => {
+          btn.disabled = true;
+          if (idx === task.answerIndex) {
+            btn.classList.add("correct");
+          } else if (idx === selectedOption && !result.correct) {
+            btn.classList.add("incorrect");
+          }
+        });
+
+        saveStats();
+
+        // Send exam result
+        VPR7_ExamUtils.sendExamResult(result.correct);
+      }
+
+      // Show hint
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        hintBox.innerHTML = VPR8_Task8.buildHint();
+        hintBox.style.display = "block";
+      }
+
+      // Init
+      document.addEventListener("DOMContentLoaded", function () {
+        loadStats();
+        newTask();
+
+        document.getElementById("hintBtn").addEventListener("click", showHint);
+        document
+          .getElementById("newTaskBtn")
+          .addEventListener("click", newTask);
+
+        // Exam mode
+        VPR7_ExamUtils.setupExamMessageListener((correct) => {
+          VPR7_ExamUtils.showCompletedMessage(correct, ".container", [
+            ".task-card",
+            ".buttons",
+          ]);
+        });
+        VPR7_ExamUtils.hideExamNavigation();
+        window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+        window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
+      });
+    </script>
+  </body>
+</html>

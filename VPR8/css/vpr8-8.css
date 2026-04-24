@@ -1,0 +1,202 @@
+/**
+ * VPR 8 Class - Task 8 Styles
+ * Стили для задания 8: Исполнитель Чертёжник
+ */
+
+@import url("vpr8-common.css");
+
+/* Algorithm display */
+.algorithm-box {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px 25px;
+  margin: 15px 0;
+  border-left: 4px solid #667eea;
+  font-family: "Courier New", monospace;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.algorithm-box .loop-header {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.algorithm-box .loop-end {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.algorithm-box .command {
+  padding-left: 20px;
+  color: #333;
+}
+
+.algorithm-box .final-command {
+  color: #11998e;
+  font-weight: 600;
+}
+
+/* Coordinate display */
+.coord-info {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.coord-item {
+  text-align: center;
+  padding: 12px 24px;
+  background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  min-width: 140px;
+}
+
+.coord-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.coord-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #667eea;
+  font-family: "Courier New", monospace;
+}
+
+/* Answer options */
+.answer-options {
+  margin-top: 25px;
+}
+
+.answer-options-label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.option-btn {
+  padding: 14px 18px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  font-size: 1rem;
+  font-family: "Courier New", monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: #667eea;
+  background: #f0f2ff;
+  transform: translateY(-2px);
+}
+
+.option-btn.selected {
+  border-color: #667eea;
+  background: #e8ebff;
+}
+
+.option-btn.correct {
+  border-color: #11998e;
+  background: #d4edda;
+  color: #155724;
+}
+
+.option-btn.incorrect {
+  border-color: #eb3349;
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+/* Visualization area */
+.visualization {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#canvasArea {
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  max-width: 100%;
+}
+
+/* Calculation trace */
+.calc-trace {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-top: 15px;
+  font-family: "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  display: none;
+  text-align: left;
+}
+
+.calc-trace.visible {
+  display: block;
+}
+
+.trace-line {
+  padding: 2px 0;
+  color: #444;
+}
+
+.trace-line.loop {
+  color: #667eea;
+}
+
+.trace-line.final {
+  color: #11998e;
+  font-weight: bold;
+}
+
+.trace-line.step {
+  padding-left: 15px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .coord-info {
+    gap: 15px;
+  }
+
+  .coord-item {
+    min-width: 120px;
+    padding: 10px 16px;
+  }
+
+  .coord-value {
+    font-size: 1.2rem;
+  }
+
+  .algorithm-box {
+    padding: 15px 18px;
+    font-size: 0.95rem;
+  }
+}

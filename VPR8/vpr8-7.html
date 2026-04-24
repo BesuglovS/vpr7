@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Алгоритм для исполнителя — Практика</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-7.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+    <script src="../js/vpr7-exam-utils.js"></script>
+    <script src="js/vpr8-7-generator.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>🤖 Алгоритм для исполнителя</h1>
+
+      <div class="instructions">
+        Составьте алгоритм получения из начального числа конечного, используя
+        заданные команды. В ответе запишите только номера команд в
+        соответствующей последовательности (без пробелов и запятых).
+      </div>
+
+      <div class="task-card">
+        <div class="task-text" id="taskText">Загрузка задания...</div>
+
+        <div class="commands-list" id="commandsList">
+          <h3>📋 Доступные команды:</h3>
+          <div id="commandsContainer"></div>
+        </div>
+
+        <div class="task-info">
+          <div class="info-item">
+            <div class="info-label">Начальное число</div>
+            <div class="info-value" id="startValue">—</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Конечное число</div>
+            <div class="info-value" id="targetValue">—</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Макс. команд</div>
+            <div class="info-value" id="maxStepsValue">—</div>
+          </div>
+        </div>
+
+        <div class="answer-area">
+          <label for="answerInput">Ваш ответ (номера команд подряд):</label>
+          <input
+            type="text"
+            id="answerInput"
+            placeholder="Например: 1221"
+            autocomplete="off"
+            inputmode="numeric"
+          />
+        </div>
+
+        <div class="simulation-trace" id="simulationTrace"></div>
+
+        <div class="feedback" id="feedback"></div>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-check" id="checkBtn">✓ Проверить</button>
+        <button class="btn btn-clear" id="clearBtn">✕ Очистить</button>
+        <button class="btn btn-hint" id="hintBtn">💡 Подсказка</button>
+        <a href="vpr8-7-t.html" class="btn btn-theory">📚 Теория</a>
+        <button class="btn btn-reset" id="newTaskBtn">🔄 Новое задание</button>
+      </div>
+    </div>
+
+    <script>
+      // Page statistics (renamed to avoid conflict with generator's stats)
+      let pageStats = { correct: 0, total: 0 };
+      let answered = false;
+
+      // Load stats
+      function loadStats() {
+        const saved = localStorage.getItem("vpr8-7-stats");
+        if (saved) {
+          try {
+            pageStats = JSON.parse(saved);
+          } catch (e) {
+            pageStats = { correct: 0, total: 0 };
+          }
+        }
+      }
+
+      function saveStats() {
+        localStorage.setItem("vpr8-7-stats", JSON.stringify(pageStats));
+      }
+
+      // Generate and display a new task
+      function newTask() {
+        answered = false;
+        const task = VPR8_Task7.generateTask();
+
+        // Reset UI
+        document.getElementById("feedback").className = "feedback";
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("simulationTrace").className =
+          "simulation-trace";
+        document.getElementById("simulationTrace").innerHTML = "";
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").disabled = false;
+        document.getElementById("checkBtn").disabled = false;
+        document.getElementById("answerInput").focus();
+
+        // Update task text
+        const commandsText = task.commands
+          .map((c) => `${c.num}. ${c.text}`)
+          .join("<br>");
+        document.getElementById("taskText").innerHTML =
+          `У исполнителя <strong>${task.commands.length} команды</strong>, которым присвоены номера:<br>${commandsText}`;
+
+        // Update commands display
+        const container = document.getElementById("commandsContainer");
+        container.innerHTML = "";
+        task.commands.forEach((cmd) => {
+          const div = document.createElement("div");
+          div.className = "command-item";
+          div.innerHTML = `<span class="command-number">${cmd.num}</span> <span>${cmd.text}</span>`;
+          container.appendChild(div);
+        });
+
+        // Update info
+        document.getElementById("startValue").textContent = task.start;
+        document.getElementById("targetValue").textContent = task.target;
+        document.getElementById("maxStepsValue").textContent = task.maxSteps;
+      }
+
+      // Check answer
+      function checkAnswer() {
+        if (answered) return;
+
+        const userAnswer = document.getElementById("answerInput").value;
+        const result = VPR8_Task7.checkTaskAnswer(userAnswer);
+        const feedback = document.getElementById("feedback");
+        const traceBox = document.getElementById("simulationTrace");
+
+        pageStats.total++;
+        answered = true;
+
+        if (result.correct) {
+          pageStats.correct++;
+          feedback.className = "feedback correct";
+        } else {
+          feedback.className = "feedback incorrect";
+          document.getElementById("answerInput").classList.add("shake");
+          setTimeout(() => {
+            document.getElementById("answerInput").classList.remove("shake");
+          }, 500);
+        }
+
+        feedback.innerHTML = result.message;
+        feedback.style.display = "block";
+
+        // Show simulation trace
+        if (result.trace) {
+          traceBox.innerHTML = VPR8_Task7.buildTraceHtml(
+            result.trace,
+            result.correct,
+          );
+          traceBox.className = "simulation-trace visible";
+        }
+
+        saveStats();
+
+        // Block further checking
+        document.getElementById("checkBtn").disabled = true;
+        document.getElementById("answerInput").disabled = true;
+
+        // Send exam result
+        VPR7_ExamUtils.sendExamResult(result.correct);
+      }
+
+      // Show hint
+      function showHint() {
+        const hintBox = document.getElementById("hintBox");
+        hintBox.innerHTML = VPR8_Task7.buildHint();
+        hintBox.style.display = "block";
+      }
+
+      // Clear answer
+      function clearAnswer() {
+        document.getElementById("answerInput").value = "";
+        document.getElementById("answerInput").focus();
+        document.getElementById("feedback").style.display = "none";
+        document.getElementById("hintBox").style.display = "none";
+        document.getElementById("simulationTrace").className =
+          "simulation-trace";
+        document.getElementById("simulationTrace").innerHTML = "";
+        if (!answered) {
+          document.getElementById("answerInput").disabled = false;
+          document.getElementById("checkBtn").disabled = false;
+        }
+      }
+
+      // Init
+      document.addEventListener("DOMContentLoaded", function () {
+        loadStats();
+        newTask();
+
+        document
+          .getElementById("checkBtn")
+          .addEventListener("click", checkAnswer);
+        document
+          .getElementById("clearBtn")
+          .addEventListener("click", clearAnswer);
+        document.getElementById("hintBtn").addEventListener("click", showHint);
+        document
+          .getElementById("newTaskBtn")
+          .addEventListener("click", newTask);
+        document
+          .getElementById("answerInput")
+          .addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+              checkAnswer();
+            }
+          });
+
+        // Exam mode
+        VPR7_ExamUtils.setupExamMessageListener((correct) => {
+          VPR7_ExamUtils.showCompletedMessage(correct, ".container", [
+            ".task-card",
+            ".buttons",
+          ]);
+        });
+        VPR7_ExamUtils.hideExamNavigation();
+        window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+        window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
+      });
+    </script>
+  </body>
+</html>
