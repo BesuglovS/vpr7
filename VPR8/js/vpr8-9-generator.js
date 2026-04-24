@@ -222,19 +222,24 @@ function generateTask9() {
       continue;
     }
 
-    // Determine correct "NO" answer indices (1-based)
+    // Determine correct "NO" and "YES" answer indices (1-based)
     const noIndices = [];
+    const yesIndices = [];
     pairs.forEach((p, idx) => {
       if (!p.yes) noIndices.push(idx + 1);
+      else yesIndices.push(idx + 1);
     });
 
-    // Need at least one NO
-    if (noIndices.length === 0) {
+    // Need at least one of each
+    if (noIndices.length === 0 || yesIndices.length === 0) {
       attempts++;
       continue;
     }
 
-    const answerStr = noIndices.join("");
+    // Randomly choose question type: "NO" or "YES"
+    const questionType = Math.random() < 0.5 ? "NO" : "YES";
+    const answerStr =
+      questionType === "NO" ? noIndices.join("") : yesIndices.join("");
 
     task = {
       programTextPascal: buildPascalProgramText(cond.conditionStr),
@@ -242,6 +247,8 @@ function generateTask9() {
       conditionStr: cond.conditionStr,
       pairs: pairs,
       noIndices: noIndices,
+      yesIndices: yesIndices,
+      questionType: questionType,
       answerStr: answerStr,
       evalFn: cond.evalFn,
     };
@@ -265,6 +272,8 @@ function generateTask9() {
       conditionStr: fallbackCond,
       pairs: fallbackPairs,
       noIndices: [1, 4],
+      yesIndices: [2, 3, 5],
+      questionType: "NO",
       answerStr: "14",
       evalFn: (s, t) => s < 10 || t > 10,
     };
@@ -278,6 +287,7 @@ function generateTask9() {
 // Build task HTML text with Pascal and Python tabs
 // ============================================================
 function buildTaskHtml(task) {
+  const target = task.questionType;
   let html = `<p>Ниже приведена программа на двух языках программирования. Выберите любой удобный вариант:</p>`;
   html += `<div class="code-tabs">`;
   html += `<div class="tab-buttons">`;
@@ -288,7 +298,7 @@ function buildTaskHtml(task) {
   html += `<div class="tab-content" id="tab-python" style="display:none"><pre class="code-block">${task.programTextPython}</pre></div>`;
   html += `</div>`;
   html += `<p>Было проведено 5 запусков программы, при которых в качестве значений переменных <strong>s</strong> и <strong>t</strong> вводились следующие пары чисел (<strong>s</strong>, <strong>t</strong>).</p>`;
-  html += `<p>Выберите <strong>ВСЕ</strong> пары чисел, для которых программа напечатает <strong>"NO"</strong>, и запишите в поле ответа цифры, под которыми они указаны.</p>`;
+  html += `<p>Выберите <strong>ВСЕ</strong> пары чисел, для которых программа напечатает <strong>"${target}"</strong>, и запишите в поле ответа цифры, под которыми они указаны.</p>`;
   html += `<div class="pairs-list">`;
   task.pairs.forEach((p, idx) => {
     html += `<div class="pair-item" data-index="${idx}">
@@ -327,7 +337,7 @@ function buildHint9() {
   });
 
   html += `</table>`;
-  html += `<p><strong>Правильный ответ: ${task.answerStr}</strong> (пары, для которых результат "NO")</p>`;
+  html += `<p><strong>Правильный ответ: ${task.answerStr}</strong> (пары, для которых результат "${task.questionType}")</p>`;
   html += `</div>`;
   return html;
 }
