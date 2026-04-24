@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Таблицы истинности — Теория</title>
+    <link rel="stylesheet" href="css/vpr8-common.css" />
+    <link rel="stylesheet" href="css/vpr8-theory.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <script src="../metrika.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <a href="vpr8.html" class="back-link">← Назад</a>
+      <h1>📚 Таблицы истинности логических выражений</h1>
+
+      <div class="theory-content">
+        <div class="theory-section">
+          <h2>🔹 Что нужно делать в задании?</h2>
+          <p>
+            В задании №10 ВПР по информатике для 8 класса вам даётся
+            <strong>логическое выражение</strong> с
+            <strong>3 переменными</strong> (A, B, C) и
+            <strong>5 логическими операциями</strong> трёх видов: НЕ (¬), И (∧),
+            ИЛИ (∨). В выражении могут использоваться скобки.
+          </p>
+          <p>
+            Ваша задача — заполнить <strong>таблицу истинности</strong> —
+            вычислить и записать значение выражения для всех 8 возможных
+            комбинаций значений переменных (от 000 до 111).
+          </p>
+          <div class="example">
+            <p><strong>Пример выражения:</strong></p>
+            <p
+              style="
+                font-size: 1.2rem;
+                font-family: &quot;Courier New&quot;, monospace;
+              "
+            >
+              ¬ (A ∨ C) ∨ B ∧ ¬ C
+            </p>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Что такое таблица истинности?</h2>
+          <p>
+            <strong>Таблица истинности</strong> — это таблица, которая
+            показывает значение логического выражения для всех возможных
+            комбинаций значений входящих в него переменных.
+          </p>
+          <p>Для 3 переменных (A, B, C) существует 2³ = 8 комбинаций:</p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>A</th>
+                <th>B</th>
+                <th>C</th>
+                <th>Выражение</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>?</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>?</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>?</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+                <td>?</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>?</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+                <td>?</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>?</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>?</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            Комбинации обычно перечисляют в порядке возрастания двоичных чисел
+            (000, 001, 010, ..., 111).
+          </p>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Базовые логические операции</h2>
+
+          <h3>НЕ (¬) — отрицание (инверсия)</h3>
+          <p>Операция НЕ изменяет значение на противоположное: 0 → 1, 1 → 0.</p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>¬ A</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td><strong>1</strong></td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td><strong>0</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>И (∧) — конъюнкция (логическое умножение)</h3>
+          <p>Результат И равен 1 только тогда, когда оба операнда равны 1.</p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A ∧ B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td><strong>1</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>ИЛИ (∨) — дизъюнкция (логическое сложение)</h3>
+          <p>Результат ИЛИ равен 1, если хотя бы один из операндов равен 1.</p>
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A ∨ B</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>1</td>
+                <td><strong>1</strong></td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>0</td>
+                <td><strong>1</strong></td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>1</td>
+                <td><strong>1</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Приоритет логических операций</h2>
+          <div class="important">
+            <p>
+              При вычислении значения выражения важно соблюдать
+              <strong>порядок выполнения операций</strong>:
+            </p>
+            <ol>
+              <li>
+                Сначала вычисляется <strong>НЕ (¬)</strong> — самый высокий
+                приоритет
+              </li>
+              <li>Затем выполняется <strong>И (∧)</strong> — конъюнкция</li>
+              <li>
+                Потом выполняется <strong>ИЛИ (∨)</strong> — дизъюнкция, самый
+                низкий приоритет
+              </li>
+              <li>
+                <strong>Скобки ( )</strong> меняют порядок — выражение в скобках
+                вычисляется первым
+              </li>
+            </ol>
+          </div>
+
+          <div class="example">
+            <p><strong>Пример 1:</strong> ¬A ∨ B</p>
+            <p>Порядок: сначала ¬A, затем ∨ с B.</p>
+            <p>При A=1, B=0: ¬1 = 0, затем 0 ∨ 0 = <strong>0</strong></p>
+          </div>
+
+          <div class="example">
+            <p><strong>Пример 2:</strong> ¬(A ∨ B)</p>
+            <p>Порядок: сначала вычисляем скобки (A ∨ B), затем ¬.</p>
+            <p>При A=1, B=0: 1 ∨ 0 = 1, затем ¬1 = <strong>0</strong></p>
+          </div>
+
+          <div class="important">
+            <h3>⚠️ Важно!</h3>
+            <p>
+              ¬A ∨ B и ¬(A ∨ B) — это <strong>разные выражения</strong>! В
+              первом случае отрицание применяется только к A, а во втором — ко
+              всему выражению A ∨ B. Внимательно смотрите на наличие скобок.
+            </p>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Пошаговый метод заполнения таблицы</h2>
+          <p>Чтобы заполнить таблицу истинности, следуйте этим шагам:</p>
+
+          <div class="important">
+            <h3>📋 Алгоритм:</h3>
+            <ol>
+              <li>
+                <strong>Определите порядок вычислений</strong> — расставьте
+                последовательность операций с учётом приоритета и скобок
+              </li>
+              <li>
+                <strong>Для каждой строки</strong> (от 000 до 111) подставьте
+                значения переменных
+              </li>
+              <li>
+                <strong>Вычисляйте по шагам</strong> — сначала операции НЕ,
+                затем в скобках, затем И, затем ИЛИ
+              </li>
+              <li><strong>Запишите результат</strong> в последний столбец</li>
+            </ol>
+          </div>
+
+          <div class="example">
+            <p><strong>Пример с пошаговым решением:</strong></p>
+            <p>Выражение: ¬(A ∨ C) ∨ B ∧ ¬C</p>
+
+            <p style="margin-top: 10px"><strong>Порядок вычислений:</strong></p>
+            <ol>
+              <li>¬C — отрицание C (высший приоритет)</li>
+              <li>A ∨ C — дизъюнкция в скобках</li>
+              <li>¬(A ∨ C) — отрицание результата скобок</li>
+              <li>B ∧ ¬C — конъюнкция B и результата 1-го шага</li>
+              <li>(¬(A ∨ C)) ∨ (B ∧ ¬C) — итоговая дизъюнкция</li>
+            </ol>
+
+            <table class="conversion-table" style="margin-top: 10px">
+              <thead>
+                <tr>
+                  <th>№</th>
+                  <th>A</th>
+                  <th>B</th>
+                  <th>C</th>
+                  <th>¬C</th>
+                  <th>A∨C</th>
+                  <th>¬(A∨C)</th>
+                  <th>B∧¬C</th>
+                  <th>¬(A∨C) ∨ B∧¬C</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td><strong>1</strong></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td><strong>0</strong></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td><strong>1</strong></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td><strong>0</strong></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td><strong>0</strong></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td><strong>0</strong></td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td><strong>1</strong></td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>1</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td><strong>0</strong></td>
+                </tr>
+              </tbody>
+            </table>
+            <p><strong>Ответ:</strong> 1 0 1 0 0 0 1 0</p>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Полезные советы</h2>
+          <ul>
+            <li>
+              <strong>Проверяйте количество операций:</strong> в выражении
+              должно быть ровно 5 операций (НЕ, И, ИЛИ). Это хороший способ
+              проверить, что вы не пропустили ни одной.
+            </li>
+            <li>
+              <strong>Используйте промежуточные столбцы</strong> — записывайте
+              результаты частей выражения отдельно, чтобы не запутаться
+            </li>
+            <li>
+              <strong>Помните о приоритете:</strong> НЕ → И → ИЛИ. Скобки
+              отменяют этот порядок.
+            </li>
+            <li>
+              <strong>Проверяйте крайние строки:</strong> первая строка (000) и
+              последняя (111) часто помогают обнаружить ошибки
+            </li>
+            <li>
+              <strong>Для НЕ:</strong> если над выражением стоит ¬, сначала
+              вычисляем выражение, затем инвертируем результат
+            </li>
+            <li>
+              <strong>Для И:</strong> результат 1 только когда все операнды
+              равны 1. В остальных случаях — 0.
+            </li>
+            <li>
+              <strong>Для ИЛИ:</strong> результат 0 только когда все операнды
+              равны 0. В остальных случаях — 1.
+            </li>
+          </ul>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Частые ошибки</h2>
+          <div class="important">
+            <h3>⚠️ Избегайте этих ошибок:</h3>
+            <ul>
+              <li>
+                <strong>Путают ¬(A ∨ B) и ¬A ∨ B</strong> — это разные
+                выражения. ¬(A ∨ B) сначала вычисляет A ∨ B, затем отрицает
+                результат. ¬A ∨ B сначала отрицает A, затем выполняет ∨.
+              </li>
+              <li>
+                <strong>Неправильный порядок операций</strong> — всегда помните
+                приоритет: НЕ → И → ИЛИ
+              </li>
+              <li>
+                <strong>Путают И и ИЛИ</strong> — для И нужны обе 1, для ИЛИ
+                достаточно одной 1
+              </li>
+              <li>
+                <strong>Пропускают строки</strong> — для 3 переменных должно
+                быть ровно 8 строк. Проверяйте количество.
+              </li>
+              <li>
+                <strong>Неправильная последовательность строк</strong> — строки
+                должны идти от 000 до 111 (по возрастанию двоичных чисел)
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <a href="vpr8-10.html" class="btn btn-next">▶ Перейти к практике</a>
+      </div>
+    </div>
+  </body>
+</html>
