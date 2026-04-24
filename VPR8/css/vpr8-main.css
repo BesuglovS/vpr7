@@ -82,6 +82,21 @@ h1 {
   overflow: hidden;
 }
 
+/* Disabled cards (not ready yet) */
+.task-card.disabled {
+  opacity: 0.55;
+  filter: grayscale(0.7);
+  cursor: not-allowed;
+  pointer-events: none;
+  user-select: none;
+  padding: 30px;
+}
+
+.task-card.disabled:hover {
+  transform: none;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
 a.task-card {
   padding: 30px;
 }
