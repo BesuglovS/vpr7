@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ВПР по информатике - Главная</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="manifest" href="manifest.json" />
+    <meta
+      name="description"
+      content="Интерактивные задания для подготовки к ВПР по информатике для 7 и 8 классов."
+    />
+    <meta property="og:title" content="ВПР по информатике" />
+    <meta
+      property="og:description"
+      content="Интерактивные задания для подготовки к ВПР по информатике для 7 и 8 классов"
+    />
+    <!-- Yandex.Metrika counter -->
+    <script src="metrika.js"></script>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
+    <!-- /Yandex.Metrika counter -->
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f0c29 0%,
+          #302b63 50%,
+          #24243e 100%
+        );
+        color: #e0e0e0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        max-width: 800px;
+        width: 100%;
+        padding: 40px 20px;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        color: #9e9e9e;
+        margin-bottom: 50px;
+        line-height: 1.5;
+      }
+
+      .classes-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 40px;
+      }
+
+      .class-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 40px 20px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .class-card:hover {
+        transform: translateY(-6px);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .class-icon {
+        font-size: 3.5rem;
+        margin-bottom: 16px;
+      }
+
+      .class-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 8px;
+      }
+
+      .class-desc {
+        font-size: 0.95rem;
+        color: #b0b0b0;
+        line-height: 1.5;
+      }
+
+      .badge {
+        display: inline-block;
+        background: rgba(102, 126, 234, 0.2);
+        color: #667eea;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 4px 14px;
+        border-radius: 20px;
+        margin-top: 12px;
+      }
+
+      .badge-green {
+        background: rgba(56, 239, 125, 0.15);
+        color: #38ef7d;
+      }
+
+      .footer {
+        margin-top: 20px;
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      .footer a {
+        color: #667eea;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        .classes-grid {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a
+        href="http://oge.nayanovaacademy.ru/oge.html"
+        class="back-link"
+        style="
+          display: inline-block;
+          color: #667eea;
+          text-decoration: none;
+          font-size: 0.95rem;
+          font-weight: 500;
+          margin-bottom: 30px;
+          padding: 8px 16px;
+          border: 1px solid rgba(102, 126, 234, 0.3);
+          border-radius: 10px;
+          transition: all 0.2s ease;
+        "
+        onmouseover="
+          this.style.borderColor = 'rgba(102,126,234,0.6)';
+          this.style.background = 'rgba(102,126,234,0.1)';
+        "
+        onmouseout="
+          this.style.borderColor = 'rgba(102,126,234,0.3)';
+          this.style.background = 'transparent';
+        "
+        >→ К ОГЭ</a
+      >
+
+      <h1>🎓 ВПР - Информатика</h1>
+      <p class="subtitle">
+        Интерактивные задания для подготовки к проверочной работе
+      </p>
+
+      <div class="classes-grid">
+        <a href="vpr7/vpr7.html" class="class-card">
+          <div class="class-icon">📘</div>
+          <div class="class-title">7 класс</div>
+          <div class="class-desc">
+            12 типов заданий: устройства компьютера, файлы, URL, логика,
+            кодирование, объём информации, RGB, форматирование текста
+          </div>
+          <span class="badge">12 заданий</span>
+        </a>
+
+        <a href="vpr8/vpr8.html" class="class-card">
+          <div class="class-icon">📗</div>
+          <div class="class-title">8 класс</div>
+          <div class="class-desc">
+            Системы счисления, логические высказывания, алгоритмы для
+            исполнителей, таблицы истинности, анализ программ
+          </div>
+          <span class="badge badge-green">10 заданий</span>
+        </a>
+      </div>
+
+      <div class="footer">
+        <p>Copyright &copy; 2026 Безуглов Сергей</p>
+        <p style="margin-top: 4px">
+          <a
+            href="https://github.com/BesuglovS/vpr7"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Определение объёма текстовой информации</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="stylesheet" href="css/vpr7-8.css" />
+    <title>Вычисление объёма информации</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="stylesheet" href="css/vpr7-7.css" />
     <!-- Yandex.Metrika counter -->
-    <script src="metrika.js"></script>
+    <script src="../metrika.js"></script>
     <script src="js/vpr7-exam-utils.js"></script>
     <noscript
       ><div>
@@ -19,24 +19,24 @@
         /></div
     ></noscript>
     <!-- /Yandex.Metrika counter -->
+    <script src="js/vpr7-7-generator.js"></script>
   </head>
   <body>
-    <script src="js/vpr7-8-generator.js"></script>
     <div class="container">
       <a href="vpr7.html" class="back-link">← На главную</a>
-      <h1>📝 Определение объёма текстовой информации</h1>
+      <h1>💾 Вычисление объёма информации</h1>
 
       <div class="instructions">
-        Решите задачу на определение информационного объёма сообщения при
-        кодировании символов. Введите числовой ответ в байтах.
+        Решите задачу на вычисление объёма информации. Введите числовой ответ в
+        указанных единицах.
       </div>
 
       <div class="task-card">
-        <div class="task-type" id="taskType">Задача на кодирование</div>
+        <div class="task-type" id="taskType">Тип задачи</div>
         <div class="task-text" id="taskText">Загрузка задания...</div>
 
         <div class="answer-section">
-          <label class="answer-label">Введите ответ:</label>
+          <label class="answer-label" id="answerLabel">Введите ответ:</label>
           <div class="answer-input-group">
             <input
               type="number"
@@ -46,25 +46,34 @@
               step="any"
               autocomplete="off"
             />
-            <span class="answer-unit">байт</span>
+            <span
+              class="answer-unit"
+              id="answerUnit"
+              style="
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #1e3c72;
+                min-width: 40px;
+              "
+            ></span>
           </div>
         </div>
 
         <div class="hint-box" id="hintBox">
           <h4>💡 Подсказка — ход решения:</h4>
           <div id="hintSteps"></div>
-          <div class="formula-box">
-            <h5>Формулы для решения:</h5>
-            <div class="formula-item">
-              N = 2<sup>i</sup> — мощность алфавита
-            </div>
-            <div class="formula-item">
-              i = log₂(N) — информационный вес символа
-            </div>
-            <div class="formula-item">
-              I = K × i — информационный объём сообщения
-            </div>
-            <div class="formula-item">1 байт = 8 бит</div>
+          <div class="conversion-table">
+            <h5>Таблица перевода единиц:</h5>
+            <table>
+              <tr>
+                <td>1 КБ = 1024 байт</td>
+                <td>1 МБ = 1024 КБ</td>
+              </tr>
+              <tr>
+                <td>1 ГБ = 1024 МБ</td>
+                <td>1 ТБ = 1024 ГБ</td>
+              </tr>
+            </table>
           </div>
         </div>
 
@@ -82,7 +91,7 @@
           <button class="btn btn-hint" onclick="showHint()">
             💡 Подсказка
           </button>
-          <a href="vpr7-8-t.html" class="btn btn-theory">📚 Теория</a>
+          <a href="vpr7-7-t.html" class="btn btn-theory">📚 Теория</a>
           <button class="btn btn-reset" onclick="resetGame()">
             🔄 Новое задание
           </button>
@@ -107,7 +116,27 @@
       let stats = { correct: 0, total: 0 };
       let examTaskCompleted = false; // Флаг, что задание уже выполнено в режиме экзамена
 
-      // Генерация задачи через модуль
+      // Загрузка статистики из localStorage
+      function loadStats() {
+        const saved = localStorage.getItem("vpr7-7-stats");
+        if (saved) {
+          try {
+            stats = JSON.parse(saved);
+          } catch (e) {
+            stats = { correct: 0, total: 0 };
+          }
+        }
+      }
+
+      // Сохранение статистики в localStorage
+      function saveStats() {
+        localStorage.setItem("vpr7-7-stats", JSON.stringify(stats));
+      }
+
+      // Ссылка на модуль генератора
+      const Gen = window.VPR7_Task7_Generator;
+
+      // Генерация задания
       function generateTask() {
         answered = false;
         document.getElementById("feedback").className = "feedback";
@@ -116,11 +145,16 @@
         document.getElementById("answerInput").value = "";
         document.getElementById("answerInput").className = "answer-input";
 
-        // Используем генератор из внешнего модуля
-        currentTask = VPR7_Task8_Generator.generateTask();
+        currentTask = Gen.generateTask();
 
         document.getElementById("taskType").textContent = currentTask.type;
         document.getElementById("taskText").innerHTML = currentTask.text;
+
+        // Показываем единицу измерения ответа
+        document.getElementById("answerUnit").textContent =
+          currentTask.answerUnit;
+        document.getElementById("answerLabel").textContent =
+          "Введите ответ (" + currentTask.answerUnit + "):";
       }
 
       // Показать подсказку
@@ -147,11 +181,6 @@
 
         const userAnswer = parseFloat(rawValue.replace(",", "."));
 
-        if (isNaN(userAnswer)) {
-          alert("Введите числовой ответ!");
-          return;
-        }
-
         answered = true;
         stats.total++;
 
@@ -159,8 +188,17 @@
         const feedback = document.getElementById("feedback");
         const feedbackText = document.getElementById("feedbackText");
 
-        // Сравниваем ответ
-        const isCorrect = Math.abs(userAnswer - currentTask.answer) < 0.01;
+        // Проверяем ответ (единица уже задана в условии)
+        const correctAnswer = currentTask.answer;
+        const correctUnit = currentTask.answerUnit;
+
+        // Сравниваем только числовое значение
+        const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.001;
+
+        // Получаем название единицы для отображения
+        const unitName = Gen.units[correctUnit]
+          ? Gen.units[correctUnit].name
+          : correctUnit;
 
         if (isCorrect) {
           stats.correct++;
@@ -170,11 +208,12 @@
         } else {
           input.className = "answer-input incorrect";
           feedback.className = "feedback incorrect";
-          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${currentTask.answer} байт</strong>`;
+          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${correctAnswer} ${unitName}</strong>`;
         }
 
         feedback.style.display = "block";
         updateStats();
+        saveStats();
 
         // Отправляем результат в родительское окно (режим экзамена)
         VPR7_ExamUtils.sendExamResult(isCorrect);
@@ -221,6 +260,8 @@
         });
 
       // Запуск
+      loadStats();
+      updateStats();
       generateTask();
       VPR7_ExamUtils.hideExamNavigation();
 

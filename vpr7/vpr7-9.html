@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Вычисление объёма информации</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="stylesheet" href="css/vpr7-7.css" />
+    <title>Передача информации</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="stylesheet" href="css/vpr7-9.css" />
     <!-- Yandex.Metrika counter -->
-    <script src="metrika.js"></script>
+    <script src="../metrika.js"></script>
     <script src="js/vpr7-exam-utils.js"></script>
     <noscript
       ><div>
@@ -19,16 +19,16 @@
         /></div
     ></noscript>
     <!-- /Yandex.Metrika counter -->
-    <script src="js/vpr7-7-generator.js"></script>
   </head>
   <body>
+    <script src="js/vpr7-9-generator.js"></script>
     <div class="container">
       <a href="vpr7.html" class="back-link">← На главную</a>
-      <h1>💾 Вычисление объёма информации</h1>
+      <h1>📡 Передача информации</h1>
 
       <div class="instructions">
-        Решите задачу на вычисление объёма информации. Введите числовой ответ в
-        указанных единицах.
+        Решите задачу на передачу информации. Из трёх величин (скорость, время,
+        объём) известны две. Найдите третью.
       </div>
 
       <div class="task-card">
@@ -46,32 +46,33 @@
               step="any"
               autocomplete="off"
             />
-            <span
-              class="answer-unit"
-              id="answerUnit"
-              style="
-                font-size: 1.2rem;
-                font-weight: bold;
-                color: #1e3c72;
-                min-width: 40px;
-              "
-            ></span>
+            <span class="answer-unit" id="answerUnit"></span>
           </div>
         </div>
 
         <div class="hint-box" id="hintBox">
           <h4>💡 Подсказка — ход решения:</h4>
           <div id="hintSteps"></div>
+          <div class="formula-box">
+            <h5>Формулы для решения:</h5>
+            <div class="formula-item">I = v × t — объём информации</div>
+            <div class="formula-item">v = I / t — скорость передачи</div>
+            <div class="formula-item">t = I / v — время передачи</div>
+          </div>
           <div class="conversion-table">
-            <h5>Таблица перевода единиц:</h5>
+            <h5>Перевод единиц:</h5>
             <table>
               <tr>
-                <td>1 КБ = 1024 байт</td>
-                <td>1 МБ = 1024 КБ</td>
+                <td>1 байт = 8 бит</td>
+                <td>1 Кбит = 1024 бит</td>
               </tr>
               <tr>
-                <td>1 ГБ = 1024 МБ</td>
-                <td>1 ТБ = 1024 ГБ</td>
+                <td>1 КБ = 1024 байт</td>
+                <td>1 Мбит = 1024 Кбит</td>
+              </tr>
+              <tr>
+                <td>1 МБ = 1024 КБ</td>
+                <td>1 Гбит = 1024 Мбит</td>
               </tr>
             </table>
           </div>
@@ -91,7 +92,7 @@
           <button class="btn btn-hint" onclick="showHint()">
             💡 Подсказка
           </button>
-          <a href="vpr7-7-t.html" class="btn btn-theory">📚 Теория</a>
+          <a href="vpr7-9-t.html" class="btn btn-theory">📚 Теория</a>
           <button class="btn btn-reset" onclick="resetGame()">
             🔄 Новое задание
           </button>
@@ -116,26 +117,6 @@
       let stats = { correct: 0, total: 0 };
       let examTaskCompleted = false; // Флаг, что задание уже выполнено в режиме экзамена
 
-      // Загрузка статистики из localStorage
-      function loadStats() {
-        const saved = localStorage.getItem("vpr7-7-stats");
-        if (saved) {
-          try {
-            stats = JSON.parse(saved);
-          } catch (e) {
-            stats = { correct: 0, total: 0 };
-          }
-        }
-      }
-
-      // Сохранение статистики в localStorage
-      function saveStats() {
-        localStorage.setItem("vpr7-7-stats", JSON.stringify(stats));
-      }
-
-      // Ссылка на модуль генератора
-      const Gen = window.VPR7_Task7_Generator;
-
       // Генерация задания
       function generateTask() {
         answered = false;
@@ -145,16 +126,20 @@
         document.getElementById("answerInput").value = "";
         document.getElementById("answerInput").className = "answer-input";
 
-        currentTask = Gen.generateTask();
+        // Используем генератор из внешнего модуля
+        currentTask = VPR7_Task9_Generator.generateTask();
 
         document.getElementById("taskType").textContent = currentTask.type;
         document.getElementById("taskText").innerHTML = currentTask.text;
 
-        // Показываем единицу измерения ответа
-        document.getElementById("answerUnit").textContent =
-          currentTask.answerUnit;
+        // Определяем единицу измерения ответа
+        const unitName = VPR7_Task9_Generator.getUnitName(
+          currentTask.answerUnit,
+        );
+
+        document.getElementById("answerUnit").textContent = unitName;
         document.getElementById("answerLabel").textContent =
-          "Введите ответ (" + currentTask.answerUnit + "):";
+          "Введите ответ (" + unitName + "):";
       }
 
       // Показать подсказку
@@ -170,16 +155,14 @@
       function checkAnswer() {
         if (answered) return;
 
-        const rawValue = document.getElementById("answerInput").value.trim();
+        const userAnswer = parseFloat(
+          document.getElementById("answerInput").value.replace(",", "."),
+        );
 
-        // Проверка на корректность ввода: только цифры, одна запятая или точка
-        const validNumberRegex = /^[0-9]+([.,][0-9]+)?$/;
-        if (!validNumberRegex.test(rawValue)) {
-          alert("Введите корректное число!\nПример: 75 или 12,5");
+        if (isNaN(userAnswer)) {
+          alert("Введите числовой ответ!");
           return;
         }
-
-        const userAnswer = parseFloat(rawValue.replace(",", "."));
 
         answered = true;
         stats.total++;
@@ -188,17 +171,19 @@
         const feedback = document.getElementById("feedback");
         const feedbackText = document.getElementById("feedbackText");
 
-        // Проверяем ответ (единица уже задана в условии)
-        const correctAnswer = currentTask.answer;
-        const correctUnit = currentTask.answerUnit;
+        // Сравниваем ответ
+        const isCorrect = Math.abs(userAnswer - currentTask.answer) < 0.01;
 
-        // Сравниваем только числовое значение
-        const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.001;
-
-        // Получаем название единицы для отображения
-        const unitName = Gen.units[correctUnit]
-          ? Gen.units[correctUnit].name
-          : correctUnit;
+        // Получаем название единицы
+        let unitName = currentTask.answerUnit;
+        const { speedUnits, volumeUnits, timeUnits } = VPR7_Task9_Generator;
+        if (speedUnits[unitName]) {
+          unitName = speedUnits[unitName].name;
+        } else if (volumeUnits[unitName]) {
+          unitName = volumeUnits[unitName].name;
+        } else if (timeUnits[unitName]) {
+          unitName = timeUnits[unitName].name;
+        }
 
         if (isCorrect) {
           stats.correct++;
@@ -208,12 +193,11 @@
         } else {
           input.className = "answer-input incorrect";
           feedback.className = "feedback incorrect";
-          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${correctAnswer} ${unitName}</strong>`;
+          feedbackText.innerHTML = `❌ Неправильно.<br>Правильный ответ: <strong>${currentTask.answer} ${unitName}</strong>`;
         }
 
         feedback.style.display = "block";
         updateStats();
-        saveStats();
 
         // Отправляем результат в родительское окно (режим экзамена)
         VPR7_ExamUtils.sendExamResult(isCorrect);
@@ -243,8 +227,8 @@
       VPR7_ExamUtils.setupExamMessageListener((correct) => {
         examTaskCompleted = true;
         VPR7_ExamUtils.showCompletedMessage(correct, ".container", [
-          ".game-area",
-          ".score-board",
+          ".task-card",
+          ".stats",
           ".buttons",
         ]);
       });
@@ -260,8 +244,6 @@
         });
 
       // Запуск
-      loadStats();
-      updateStats();
       generateTask();
       VPR7_ExamUtils.hideExamNavigation();
 
