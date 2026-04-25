@@ -176,12 +176,29 @@ function generateNewTask() {
   // Случайно выбираем режим задания: ищем единственное ЛОЖНОЕ или единственное ИСТИННОЕ имя
   let mode = Math.random() < 0.5 ? "false" : "true";
 
-  // Проверяем, хватает ли имён для выбранного режима. Если нет — переключаем режим.
+  // Проверяем, хватает ли имён для выбранного режима.
+  // Если режим не подходит — пробуем другой. Если и другой не подходит — генерируем заново.
   if (mode === "false" && (falseNames.length < 1 || trueNames.length < 3)) {
-    mode = "true";
-  }
-  if (mode === "true" && (trueNames.length < 1 || falseNames.length < 3)) {
-    mode = "false";
+    // Режим "false" не работает — пробуем "true"
+    if (trueNames.length >= 1 && falseNames.length >= 3) {
+      mode = "true";
+    } else {
+      // Оба режима не работают для этого выражения — генерируем новое задание
+      generateNewTask();
+      return;
+    }
+  } else if (
+    mode === "true" &&
+    (trueNames.length < 1 || falseNames.length < 3)
+  ) {
+    // Режим "true" не работает — пробуем "false"
+    if (falseNames.length >= 1 && trueNames.length >= 3) {
+      mode = "false";
+    } else {
+      // Оба режима не работают для этого выражения — генерируем новое задание
+      generateNewTask();
+      return;
+    }
   }
 
   currentMode = mode;
