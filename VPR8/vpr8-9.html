@@ -11,10 +11,24 @@
     <script src="../js/vpr7-exam-utils.js"></script>
     <script src="js/vpr8-9-generator.js"></script>
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body>
@@ -22,7 +36,7 @@
       <a href="vpr8.html" class="back-link">← Назад</a>
       <h1>💻 Анализ алгоритмов</h1>
 
-      <div class="instructions">
+      <div class="instructions" id="instructions">
         Дана программа на языке Pascal или Python с условным оператором.
         Выберите все пары чисел, для которых программа напечатает "NO", и
         запишите номера пар в порядке возрастания.
@@ -91,6 +105,13 @@
         document.getElementById("hintBox").style.display = "none";
         document.getElementById("answerInput").value = "";
         document.getElementById("answerInput").className = "answer-input";
+
+        // Update instructions text based on question type
+        const target = task.questionType;
+        document.getElementById("instructions").innerHTML =
+          `Дана программа на языке Pascal или Python с условным оператором. ` +
+          `Выберите все пары чисел, для которых программа напечатает "<strong>${target}</strong>", и ` +
+          `запишите номера пар в порядке возрастания.`;
 
         // Update task text
         document.getElementById("taskText").innerHTML =
