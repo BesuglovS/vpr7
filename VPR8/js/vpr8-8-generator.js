@@ -104,20 +104,25 @@ function generateAlgorithm() {
 
 // ============================================================
 // Generate 4 answer options, one correct
+// taskType: "equivalent" — replace algorithm with one command
+//           "return"     — command to return to start
 // ============================================================
-function generateOptions(totalDx, totalDy) {
+function generateOptions(totalDx, totalDy, taskType) {
+  const correctDx = taskType === "return" ? -totalDx : totalDx;
+  const correctDy = taskType === "return" ? -totalDy : totalDy;
+
   const options = [];
-  options.push({ dx: totalDx, dy: totalDy, correct: true });
+  options.push({ dx: correctDx, dy: correctDy, correct: true });
 
   // Generate 3 wrong options by perturbing the correct answer
   const used = new Set();
-  used.add(`${totalDx},${totalDy}`);
+  used.add(`${correctDx},${correctDy}`);
 
   while (options.length < 4) {
     // Strategy: change sign, swap, or add/subtract small values
     const strategy = Math.floor(Math.random() * 4);
-    let wrongDx = totalDx;
-    let wrongDy = totalDy;
+    let wrongDx = correctDx;
+    let wrongDy = correctDy;
 
     switch (strategy) {
       case 0:
@@ -127,8 +132,8 @@ function generateOptions(totalDx, totalDy) {
         break;
       case 1:
         // Swap coordinates
-        wrongDx = totalDy;
-        wrongDy = totalDx;
+        wrongDx = correctDy;
+        wrongDy = correctDx;
         break;
       case 2:
         // Add/subtract from one coordinate
@@ -191,8 +196,9 @@ function buildAlgorithmHtml(blocks) {
 
 // ============================================================
 // Build calculation trace
+// taskType: "equivalent" or "return"
 // ============================================================
-function buildTrace(blocks) {
+function buildTrace(blocks, taskType) {
   const trace = [];
   let totalDx = 0;
   let totalDy = 0;
@@ -229,6 +235,11 @@ function buildTrace(blocks) {
   }
 
   trace.push(`Итого: ${formatShift(totalDx, totalDy)}`);
+
+  if (taskType === "return") {
+    trace.push(`Чтобы вернуться: ${formatShift(-totalDx, -totalDy)}`);
+  }
+
   return { trace, totalDx, totalDy };
 }
 
@@ -247,7 +258,14 @@ function generateTask8() {
     (Math.abs(algo.totalDx) > 20 || Math.abs(algo.totalDy) > 20)
   );
 
-  const { options, answerIndex } = generateOptions(algo.totalDx, algo.totalDy);
+  // Randomly choose task type: "equivalent" or "return"
+  const taskType = Math.random() < 0.5 ? "equivalent" : "return";
+
+  const { options, answerIndex } = generateOptions(
+    algo.totalDx,
+    algo.totalDy,
+    taskType,
+  );
 
   const task = {
     blocks: algo.blocks,
@@ -255,6 +273,7 @@ function generateTask8() {
     totalDy: algo.totalDy,
     options: options,
     answerIndex: answerIndex,
+    taskType: taskType,
   };
 
   currentTask8 = task;
@@ -269,12 +288,14 @@ function checkTask8Answer(selectedIndex) {
 
   const isCorrect = selectedIndex === currentTask8.answerIndex;
   const correctOption = currentTask8.options[currentTask8.answerIndex];
+  const type = currentTask8.taskType;
 
   if (isCorrect) {
-    return {
-      correct: true,
-      message: "✅ Правильно! Эта команда эквивалентна всему алгоритму.",
-    };
+    const msg =
+      type === "return"
+        ? "✅ Правильно! Эта команда вернёт Чертёжника в начало координат."
+        : "✅ Правильно! Эта команда эквивалентна всему алгоритму.";
+    return { correct: true, message: msg };
   } else {
     return {
       correct: false,
@@ -288,7 +309,7 @@ function checkTask8Answer(selectedIndex) {
 // ============================================================
 function buildHint8() {
   if (!currentTask8) return "";
-  const { trace } = buildTrace(currentTask8.blocks);
+  const { trace } = buildTrace(currentTask8.blocks, currentTask8.taskType);
   let html = `<strong>💡 Подсказка — пошаговое вычисление:</strong><br>`;
   html += `<div class="solution-path">`;
   for (const line of trace) {
@@ -303,11 +324,12 @@ function buildHint8() {
 // ============================================================
 function buildTraceHtml8() {
   if (!currentTask8) return "";
-  const { trace } = buildTrace(currentTask8.blocks);
+  const { trace } = buildTrace(currentTask8.blocks, currentTask8.taskType);
   let html = "";
   for (const line of trace) {
     let cls = "trace-line";
-    if (line.startsWith("Итого")) cls += " final";
+    if (line.startsWith("Итого") || line.startsWith("Чтобы вернуться"))
+      cls += " final";
     else if (line.startsWith("Цикл") || line.startsWith("Внутри"))
       cls += " loop";
     else cls += " step";

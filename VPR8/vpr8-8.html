@@ -11,10 +11,24 @@
     <script src="../js/vpr7-exam-utils.js"></script>
     <script src="js/vpr8-8-generator.js"></script>
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body>
@@ -22,17 +36,15 @@
       <a href="vpr8.html" class="back-link">← Назад</a>
       <h1>📐 Исполнитель Чертёжник</h1>
 
-      <div class="instructions">
+      <div class="instructions" id="taskInstructions">
         Исполнитель Чертёжник перемещается на координатной плоскости, оставляя
-        след в виде линии. Определите, на какую одну команду «Сместиться на (a,
-        b)» можно заменить данный алгоритм, чтобы Чертёжник оказался в той же
-        точке.
+        след в виде линии. Загрузка задания...
       </div>
 
       <div class="task-card">
         <div class="algorithm-box" id="algorithmBox">Загрузка задания...</div>
 
-        <div class="coord-info">
+        <div class="coord-info" id="coordInfo">
           <div class="coord-item">
             <div class="coord-label">Начальная точка</div>
             <div class="coord-value">(0, 0)</div>
@@ -40,7 +52,9 @@
         </div>
 
         <div class="answer-options">
-          <label class="answer-options-label">Выберите правильный ответ:</label>
+          <label class="answer-options-label" id="optionsLabel"
+            >Выберите правильный ответ:</label
+          >
           <div class="options-grid" id="optionsGrid"></div>
         </div>
 
@@ -91,8 +105,32 @@
         document.getElementById("calcTrace").className = "calc-trace";
         document.getElementById("calcTrace").innerHTML = "";
 
+        // Update instructions and coordinate info based on task type
+        const instructionsEl = document.getElementById("taskInstructions");
+        const coordInfoEl = document.getElementById("coordInfo");
+        const optionsLabelEl = document.getElementById("optionsLabel");
+
+        if (task.taskType === "return") {
+          instructionsEl.textContent =
+            "Исполнитель Чертёжник перемещается на координатной плоскости, оставляя след в виде линии. Определите, какую одну команду «Сместиться на (a, b)» надо выполнить, чтобы Чертёжник вернулся в исходную точку (0, 0).";
+          optionsLabelEl.textContent = "Выберите команду для возврата:";
+        } else {
+          instructionsEl.textContent =
+            "Исполнитель Чертёжник перемещается на координатной плоскости, оставляя след в виде линии. Определите, на какую одну команду «Сместиться на (a, b)» можно заменить данный алгоритм, чтобы Чертёжник оказался в той же точке.";
+          optionsLabelEl.textContent = "Выберите правильный ответ:";
+        }
+        coordInfoEl.innerHTML = "";
+
+        // Add task type badge
+        const badgeClass = task.taskType === "return" ? "return" : "equivalent";
+        const badgeText =
+          task.taskType === "return"
+            ? "🔄 Возврат в начало"
+            : "🔄 Эквивалентная команда";
+
         // Update algorithm display
         document.getElementById("algorithmBox").innerHTML =
+          `<div class="task-type-badge ${badgeClass}">${badgeText}</div>` +
           VPR8_Task8.buildAlgorithmHtml(task.blocks);
 
         // Build answer options

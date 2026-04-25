@@ -141,6 +141,27 @@
   max-width: 100%;
 }
 
+/* Task type badge */
+.task-type-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.task-type-badge.equivalent {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.task-type-badge.return {
+  background: #fff3e0;
+  color: #e65100;
+}
+
 /* Calculation trace */
 .calc-trace {
   background: #f8f9fa;
