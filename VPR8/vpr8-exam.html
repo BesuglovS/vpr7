@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ВПР 8 класс - Полный вариант</title>
+    <link rel="stylesheet" href="css/vpr8-exam.css" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="manifest" href="../manifest.json" />
+    <!-- Yandex.Metrika counter -->
+    <script src="../metrika.js"></script>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
+    <!-- /Yandex.Metrika counter -->
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-content">
+        <a href="vpr8.html" class="back-link">← На главную</a>
+
+        <div class="progress-section">
+          <div class="task-counter">
+            Задание <span id="currentTaskNum">1</span> из <span>10</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 10%"></div>
+          </div>
+        </div>
+
+        <div class="score-display">
+          <div class="score-item">
+            <div class="score-value" id="correctScore">0</div>
+            <div class="score-label">Правильно</div>
+          </div>
+          <div class="score-item">
+            <div class="score-value" id="totalAttempted">0</div>
+            <div class="score-label">Попыток</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="task-indicators" id="taskIndicators"></div>
+
+    <main class="main-content">
+      <div class="task-frame-container" id="taskContainer">
+        <iframe class="task-frame" id="taskFrame" src=""></iframe>
+      </div>
+
+      <div class="results-screen" id="resultsScreen">
+        <div class="results-card">
+          <h1 class="results-title">🎓 Результаты ВПР</h1>
+          <div class="results-score" id="finalScore">0/10</div>
+          <p class="results-message" id="resultsMessage">Отличная работа!</p>
+
+          <div class="results-details">
+            <div class="result-detail-item">
+              <div class="result-detail-value" id="detailCorrect">0</div>
+              <div class="result-detail-label">Правильных ответов</div>
+            </div>
+            <div class="result-detail-item">
+              <div class="result-detail-value" id="detailIncorrect">0</div>
+              <div class="result-detail-label">Неправильных ответов</div>
+            </div>
+            <div class="result-detail-item">
+              <div class="result-detail-value" id="detailPercent">0%</div>
+              <div class="result-detail-label">Процент выполнения</div>
+            </div>
+          </div>
+
+          <div class="results-breakdown">
+            <h3>📋 Детализация по заданиям</h3>
+            <div class="breakdown-list" id="breakdownList"></div>
+          </div>
+
+          <div class="results-buttons">
+            <button class="results-btn btn-restart" onclick="restartExam()">
+              🔄 Пройти заново
+            </button>
+            <a href="vpr8.html" class="results-btn btn-home">🏠 На главную</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <nav class="navigation" id="navigation">
+      <button class="nav-btn btn-next" id="btnNext" onclick="nextTask()">
+        Далее →
+      </button>
+      <button class="nav-btn btn-finish" id="btnFinish" onclick="finishExam()">
+        ✓ Завершить
+      </button>
+    </nav>
+
+    <script>
+      // Задания
+      const tasks = [
+        { file: "vpr8-1.html", title: "Системы счисления" },
+        { file: "vpr8-2.html", title: "Сравнение чисел" },
+        { file: "vpr8-3.html", title: "Сложение в системах счисления" },
+        { file: "vpr8-4.html", title: "Вычитание в системах счисления" },
+        { file: "vpr8-5.html", title: "Логические высказывания" },
+        { file: "vpr8-6.html", title: "Логические выражения" },
+        { file: "vpr8-7.html", title: "Алгоритм для исполнителя" },
+        { file: "vpr8-8.html", title: "Исполнитель Чертёжник" },
+        { file: "vpr8-9.html", title: "Анализ алгоритмов" },
+        { file: "vpr8-10.html", title: "Таблицы истинности" },
+      ];
+
+      // Состояние экзамена
+      let currentTaskIndex = 0;
+      let results = {}; // { taskIndex: { completed: boolean, correct: boolean } }
+      let correctCount = 0;
+      let attemptedCount = 0;
+
+      // Инициализация
+      function init() {
+        // Загружаем сохранённые результаты
+        loadResults();
+        renderTaskIndicators();
+        loadTask(currentTaskIndex);
+        updateUI();
+      }
+
+      // Загрузка результатов из localStorage
+      function loadResults() {
+        const saved = localStorage.getItem("vpr8-exam-results");
+        if (saved) {
+          const data = JSON.parse(saved);
+          results = data.results || {};
+          correctCount = data.correctCount || 0;
+          attemptedCount = data.attemptedCount || 0;
+        }
+      }
+
+      // Сохранение результатов в localStorage
+      function saveResults() {
+        localStorage.setItem(
+          "vpr8-exam-results",
+          JSON.stringify({
+            results,
+            correctCount,
+            attemptedCount,
+          }),
+        );
+      }
+
+      // Отрисовка индикаторов заданий
+      function renderTaskIndicators() {
+        const container = document.getElementById("taskIndicators");
+        container.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+          const indicator = document.createElement("div");
+          indicator.className = "task-indicator";
+          indicator.textContent = index + 1;
+
+          if (index === currentTaskIndex) {
+            indicator.classList.add("current");
+          }
+
+          // Устанавливаем статус - только один класс
+          if (results[index]) {
+            if (results[index].correct) {
+              indicator.classList.add("completed");
+            } else {
+              indicator.classList.add("completed-wrong");
+            }
+          } else {
+            indicator.classList.add("pending");
+          }
+
+          container.appendChild(indicator);
+        });
+      }
+
+      // Загрузка задания
+      function loadTask(index) {
+        const frame = document.getElementById("taskFrame");
+        frame.style.height = "600px";
+        frame.src = tasks[index].file + "?examMode=1";
+        currentTaskIndex = index;
+        updateUI();
+        renderTaskIndicators();
+      }
+
+      // Отправка статуса задания в iframe
+      function sendTaskStatusToIframe() {
+        const frame = document.getElementById("taskFrame");
+        const isCompleted = results[currentTaskIndex] ? true : false;
+        frame.contentWindow.postMessage(
+          {
+            type: "vpr7-task-status",
+            completed: isCompleted,
+            correct: isCompleted ? results[currentTaskIndex].correct : false,
+          },
+          "*",
+        );
+      }
+
+      // Автоматическое изменение высоты iframe
+      function resizeIframe() {
+        const frame = document.getElementById("taskFrame");
+        // Ставим минимальную высоту, чтобы избежать мерцания
+        frame.style.height = "600px";
+      }
+
+      // Слушатель загрузки iframe
+      document.getElementById("taskFrame").onload = function () {
+        resizeIframe();
+        sendTaskStatusToIframe();
+      };
+
+      // Обновление UI
+      function updateUI() {
+        // Счётчик заданий
+        document.getElementById("currentTaskNum").textContent =
+          currentTaskIndex + 1;
+
+        // Прогресс-бар
+        const progress = ((currentTaskIndex + 1) / tasks.length) * 100;
+        document.getElementById("progressBar").style.width = progress + "%";
+
+        // Счётчики
+        document.getElementById("correctScore").textContent = correctCount;
+        document.getElementById("totalAttempted").textContent = attemptedCount;
+
+        // Показываем/скрываем кнопки
+        if (currentTaskIndex === tasks.length - 1) {
+          document.getElementById("btnNext").style.display = "none";
+          document.getElementById("btnFinish").style.display = "flex";
+        } else {
+          document.getElementById("btnNext").style.display = "flex";
+          document.getElementById("btnFinish").style.display = "none";
+        }
+      }
+
+      // Навигация
+      function nextTask() {
+        if (currentTaskIndex < tasks.length - 1) {
+          loadTask(currentTaskIndex + 1);
+        }
+      }
+
+      // Завершение экзамена
+      function finishExam() {
+        showResults();
+      }
+
+      // Показ результатов
+      function showResults() {
+        document.getElementById("taskContainer").style.display = "none";
+        document.getElementById("navigation").style.display = "none";
+        document.getElementById("resultsScreen").style.display = "flex";
+        document.querySelector(".task-indicators").style.display = "none";
+
+        // Подсчёт результатов
+        let correct = 0;
+        let incorrect = 0;
+        let skipped = 0;
+
+        tasks.forEach((task, index) => {
+          if (results[index]) {
+            if (results[index].correct) {
+              correct++;
+            } else {
+              incorrect++;
+            }
+          } else {
+            skipped++;
+          }
+        });
+
+        const total = tasks.length;
+        const percent = Math.round((correct / total) * 100);
+
+        // Отображение оценки
+        const scoreEl = document.getElementById("finalScore");
+        scoreEl.textContent = `${correct}/${total}`;
+
+        // Определение класса для оценки
+        scoreEl.className = "results-score";
+        if (percent >= 90) {
+          scoreEl.classList.add("excellent");
+        } else if (percent >= 70) {
+          scoreEl.classList.add("good");
+        } else if (percent >= 50) {
+          scoreEl.classList.add("satisfactory");
+        } else {
+          scoreEl.classList.add("needs-work");
+        }
+
+        // Сообщение
+        const messageEl = document.getElementById("resultsMessage");
+        if (percent >= 90) {
+          messageEl.textContent = "Превосходно! Вы отлично подготовлены к ВПР!";
+        } else if (percent >= 70) {
+          messageEl.textContent =
+            "Хороший результат! Продолжайте тренироваться!";
+        } else if (percent >= 50) {
+          messageEl.textContent = "Неплохо, но есть над чем поработать.";
+        } else {
+          messageEl.textContent =
+            "Рекомендуем ещё раз изучить теорию и потренироваться.";
+        }
+
+        // Детали
+        document.getElementById("detailCorrect").textContent = correct;
+        document.getElementById("detailIncorrect").textContent = incorrect;
+        document.getElementById("detailPercent").textContent = percent + "%";
+
+        // Детализация по заданиям
+        const breakdownList = document.getElementById("breakdownList");
+        breakdownList.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+          const item = document.createElement("div");
+          let statusClass, statusIcon;
+
+          if (results[index]) {
+            if (results[index].correct) {
+              statusClass = "correct";
+              statusIcon = "✓";
+            } else {
+              statusClass = "incorrect";
+              statusIcon = "✗";
+            }
+          } else {
+            statusClass = "skipped";
+            statusIcon = "—";
+          }
+
+          item.className = `breakdown-item ${statusClass}`;
+          item.innerHTML = `
+            <div class="breakdown-number">${index + 1}</div>
+            <div style="flex: 1;">${task.title}</div>
+            <div class="breakdown-status">${statusIcon}</div>
+          `;
+
+          breakdownList.appendChild(item);
+        });
+
+        // Очистка localStorage
+        localStorage.removeItem("vpr8-exam-results");
+      }
+
+      // Перезапуск экзамена
+      function restartExam() {
+        results = {};
+        correctCount = 0;
+        attemptedCount = 0;
+        currentTaskIndex = 0;
+        localStorage.removeItem("vpr8-exam-results");
+
+        document.getElementById("taskContainer").style.display = "block";
+        document.getElementById("navigation").style.display = "flex";
+        document.getElementById("resultsScreen").style.display = "none";
+        document.querySelector(".task-indicators").style.display = "flex";
+
+        loadTask(0);
+        renderTaskIndicators();
+        updateUI();
+      }
+
+      // Приём сообщений от iframe
+      window.addEventListener("message", function (event) {
+        // Обработка высоты контента
+        if (event.data && event.data.type === "vpr7-content-height") {
+          const frame = document.getElementById("taskFrame");
+          const height = event.data.height;
+
+          if (height && height > 400 && height < 3000) {
+            // Устанавливаем точную высоту БЕЗ лишних отступов
+            const newHeight = Math.ceil(height);
+            const currentHeight = parseInt(frame.style.height) || 0;
+
+            // Обновляем только если разница больше 10 пикселей и высота не превышает 3000px
+            if (Math.abs(newHeight - currentHeight) > 10) {
+              frame.style.height = newHeight + "px";
+            }
+          }
+        }
+
+        // Проверяем тип сообщения
+        if (event.data && event.data.type === "vpr7-task-result") {
+          const taskIndex = currentTaskIndex;
+          const isCorrect = event.data.correct;
+
+          // Записываем результат только если это первая попытка
+          if (!results[taskIndex]) {
+            results[taskIndex] = {
+              completed: true,
+              correct: isCorrect,
+            };
+
+            attemptedCount++;
+            if (isCorrect) {
+              correctCount++;
+            }
+
+            saveResults();
+            renderTaskIndicators();
+            updateUI();
+
+            // Автоматический переход к следующему заданию или показ результатов
+            setTimeout(function () {
+              if (currentTaskIndex === tasks.length - 1) {
+                // Это было последнее задание - показываем результаты
+                finishExam();
+              } else {
+                // Переходим к следующему заданию
+                nextTask();
+              }
+            }, 1500); // Задержка 1.5 секунды, чтобы пользователь увидел результат
+          }
+        }
+      });
+
+      // Запуск
+      init();
+    </script>
+  </body>
+</html>

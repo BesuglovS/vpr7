@@ -14,14 +14,18 @@ function initTask3() {
   document.getElementById("checkBtn").addEventListener("click", checkAnswer);
   document.getElementById("clearBtn").addEventListener("click", clearAnswer);
   document.getElementById("hintBtn").addEventListener("click", showHint);
-  document.getElementById("newTaskBtn").addEventListener("click", generateNewTask);
+  document
+    .getElementById("newTaskBtn")
+    .addEventListener("click", generateNewTask);
 
   // Обработчик Enter в поле ввода
-  document.getElementById("answerInput").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
-      checkAnswer();
-    }
-  });
+  document
+    .getElementById("answerInput")
+    .addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        checkAnswer();
+      }
+    });
 }
 
 function generateNewTask() {
@@ -50,10 +54,10 @@ function generateNewTask() {
   currentAnswer = result.toString(base).toUpperCase();
 
   // Названия систем счисления
-  const systemNames = { 
-    2: "двоичной", 
-    8: "восьмеричной", 
-    16: "шестнадцатеричной" 
+  const systemNames = {
+    2: "двоичной",
+    8: "восьмеричной",
+    16: "шестнадцатеричной",
   };
 
   // Подстрочные индексы для отображения основания
@@ -70,7 +74,10 @@ function generateNewTask() {
 }
 
 function checkAnswer() {
-  const userAnswer = document.getElementById("answerInput").value.trim().toUpperCase();
+  const userAnswer = document
+    .getElementById("answerInput")
+    .value.trim()
+    .toUpperCase();
   const feedback = document.getElementById("feedback");
 
   if (!userAnswer) {
@@ -94,7 +101,10 @@ function checkAnswer() {
   }
 
   feedback.style.display = "block";
-  updateStats();
+
+  // Отправляем результат в родительское окно (режим экзамена)
+  VPR7_ExamUtils.sendExamResult(userAnswer === currentAnswer);
+
   document.getElementById("checkBtn").disabled = true;
 }
 

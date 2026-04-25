@@ -44,7 +44,7 @@ function generateNewTask() {
     { from: 10, to: 16, fromName: "десятичное", toName: "шестнадцатеричную" },
     { from: 2, to: 10, fromName: "двоичное", toName: "десятичную" },
     { from: 8, to: 10, fromName: "восьмеричное", toName: "десятичную" },
-    { from: 16, to: 10, fromName: "шестнадцатеричное", toName: "деся
+    { from: 16, to: 10, fromName: "шестнадцатеричное", toName: "десятичную" },
     { from: 8, to: 2, fromName: "восьмеричное", toName: "двоичную" },
     { from: 2, to: 16, fromName: "двоичное", toName: "шестнадцатеричную" },
     { from: 16, to: 2, fromName: "шестнадцатеричное", toName: "двоичную" },
@@ -106,8 +106,8 @@ function checkAnswer() {
 
   feedback.style.display = "block";
 
-  // Обновляем статистику
-  updateStats();
+  // Отправляем результат в родительское окно (режим экзамена)
+  VPR7_ExamUtils.sendExamResult(userAnswer === currentAnswer);
 
   // Блокируем проверку
   document.getElementById("checkBtn").disabled = true;

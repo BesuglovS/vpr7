@@ -24,14 +24,36 @@ function sendExamResult(correct) {
  */
 function sendContentHeight() {
   if (window.parent !== window) {
-    const height = document.documentElement.scrollHeight;
-    window.parent.postMessage(
-      {
-        type: "vpr7-content-height",
-        height: height,
-      },
-      "*",
-    );
+    requestAnimationFrame(() => {
+      const container = document.querySelector(".container");
+      let height;
+      if (container) {
+        // Измеряем высоту контейнера + padding body (20px top + 20px bottom)
+        height = container.scrollHeight + 40;
+      } else {
+        const doc = document.documentElement;
+        const body = document.body;
+        const originalHtmlHeight = doc.style.height;
+        const originalBodyHeight = body.style.height;
+        doc.style.height = "";
+        body.style.height = "";
+        height = Math.max(
+          body.scrollHeight,
+          doc.scrollHeight,
+          body.offsetHeight,
+          doc.offsetHeight,
+        );
+        doc.style.height = originalHtmlHeight;
+        body.style.height = originalBodyHeight;
+      }
+      window.parent.postMessage(
+        {
+          type: "vpr7-content-height",
+          height: height,
+        },
+        "*",
+      );
+    });
   }
 }
 

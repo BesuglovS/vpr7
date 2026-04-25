@@ -8,12 +8,27 @@
     <link rel="stylesheet" href="css/vpr8-10.css" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <script src="../metrika.js"></script>
+    <script src="../vpr7/js/vpr7-exam-utils.js"></script>
     <script src="js/vpr8-10-generator.js"></script>
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body>
@@ -55,6 +70,17 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         initTask10();
+
+        // Exam mode
+        VPR7_ExamUtils.setupExamMessageListener((correct) => {
+          VPR7_ExamUtils.showCompletedMessage(correct, ".container", [
+            ".task-card",
+            ".buttons",
+          ]);
+        });
+        VPR7_ExamUtils.hideExamNavigation();
+        window.addEventListener("load", VPR7_ExamUtils.sendContentHeight);
+        window.addEventListener("resize", VPR7_ExamUtils.sendContentHeight);
       });
     </script>
   </body>

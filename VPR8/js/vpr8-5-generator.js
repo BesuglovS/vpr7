@@ -238,7 +238,8 @@ function checkAnswer() {
     return;
   }
 
-  if (parseInt(answer) === currentAnswer) {
+  const isCorrect = parseInt(answer) === currentAnswer;
+  if (isCorrect) {
     const conditionWord = currentMode === "false" ? "ложно" : "истинно";
     showFeedback(
       `✅ Правильно! Выражение ${conditionWord} только для имени ${currentCorrectName}.`,
@@ -250,6 +251,9 @@ function checkAnswer() {
       "error",
     );
   }
+
+  // Отправляем результат в родительское окно (режим экзамена)
+  VPR7_ExamUtils.sendExamResult(isCorrect);
 }
 
 function clearAnswer() {

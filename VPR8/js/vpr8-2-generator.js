@@ -42,16 +42,18 @@ function generateNewTask() {
   });
   document.getElementById("checkBtn").disabled = false;
 
-  // Генерируем случайные границы в разных системах счисления
-  const systems = [2, 8, 16];
+  // Генерируем границы в десятичной системе.
+  // minValue от 40 до 140, maxValue от minValue+20 до 230.
+  // Это гарантирует, что все числа 0..255 помещаются в 8 бит,
+  // и есть запас для генерации неправильных ответов за пределами диапазона.
+  const minValue = Math.floor(Math.random() * 100) + 40;
+  const maxValue =
+    minValue + Math.floor(Math.random() * (230 - minValue - 20)) + 20;
 
   // Выбираем случайные системы для границ
+  const systems = [2, 8, 16];
   const leftSystem = systems[Math.floor(Math.random() * systems.length)];
   const rightSystem = systems[Math.floor(Math.random() * systems.length)];
-
-  // Генерируем нижнюю и верхнюю границы в десятичной
-  const minValue = Math.floor(Math.random() * 150) + 100;
-  const maxValue = minValue + Math.floor(Math.random() * 120) + 30;
 
   // Преобразуем границы в выбранные системы
   const leftBoundary = minValue.toString(leftSystem).toUpperCase();
@@ -60,32 +62,37 @@ function generateNewTask() {
   // Получаем названия систем
   const systemNames = { 2: "₂", 8: "₈", 10: "₁₀", 16: "₁₆" };
 
-  // Генерируем 4 варианта ответа в двоичной системе
-  const options = [];
-
-  // Правильный ответ - случайное число между границами
+  // Правильный ответ — строго внутри диапазона (minValue < a < maxValue)
   const correctValue =
-    minValue + Math.floor(Math.random() * (maxValue - minValue - 2)) + 1;
-  const correctBinary = correctValue.toString(2);
+    minValue + Math.floor(Math.random() * (maxValue - minValue - 1)) + 1;
 
-  // 3 неправильных ответа
-  const wrongValues = [];
+  // Генерируем ровно 3 неправильных ответа, которые точно НЕ попадают в диапазон
+  const wrongValues = new Set();
 
-  // Ниже границы
-  wrongValues.push(minValue - Math.floor(Math.random() * 50) - 1);
-  // Выше границы
-  wrongValues.push(maxValue + Math.floor(Math.random() * 50) + 1);
-  // Случайное рядом
-  const nearValue =
-    correctValue +
-    (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 5) + 2);
-  wrongValues.push(nearValue);
+  // Один ответ ниже minValue (в диапазоне 0..minValue-1)
+  wrongValues.add(Math.floor(Math.random() * minValue));
+
+  // Один ответ выше maxValue (в диапазоне maxValue+1..255)
+  wrongValues.add(maxValue + Math.floor(Math.random() * (255 - maxValue)) + 1);
+
+  // Третий неправильный ответ — тоже строго вне диапазона
+  while (wrongValues.size < 3) {
+    if (Math.random() > 0.5) {
+      const val = Math.floor(Math.random() * minValue);
+      wrongValues.add(val);
+    } else {
+      const val = maxValue + Math.floor(Math.random() * (255 - maxValue)) + 1;
+      wrongValues.add(val);
+    }
+  }
+
+  const wrongValuesArray = Array.from(wrongValues);
 
   // Собираем все варианты
-  options.push({ value: correctBinary, correct: true });
-  wrongValues.forEach((v) => {
-    options.push({ value: v.toString(2), correct: false });
-  });
+  const options = [
+    { value: correctValue, correct: true },
+    ...wrongValuesArray.map((v) => ({ value: v, correct: false })),
+  ];
 
   // Перемешиваем варианты
   options.sort(() => Math.random() - 0.5);
@@ -99,10 +106,11 @@ function generateNewTask() {
     <span class="highlight">${leftBoundary}</span>${systemNames[leftSystem]} <strong><</strong> <em>а</em> <strong><</strong> <span class="highlight">${rightBoundary}</span>${systemNames[rightSystem]}?
   `;
 
-  // Обновляем варианты ответа
+  // Обновляем варианты ответа — все числа с одинаковой длиной (8 бит)
   const optionBtns = document.querySelectorAll(".option-btn");
   options.forEach((opt, i) => {
-    optionBtns[i].textContent = `${i + 1}) ${opt.value}`;
+    const binary = opt.value.toString(2).padStart(8, "0");
+    optionBtns[i].textContent = `${i + 1}) ${binary}`;
     optionBtns[i].dataset.value = i + 1;
     optionBtns[i].dataset.correct = opt.correct;
   });
@@ -136,8 +144,8 @@ function checkAnswer() {
 
   feedback.style.display = "block";
 
-  // Обновляем статистику
-  updateStats();
+  // Отправляем результат в родительское окно (режим экзамена)
+  VPR7_ExamUtils.sendExamResult(userAnswer === currentAnswer);
 
   // Блокируем проверку
   document.getElementById("checkBtn").disabled = true;
