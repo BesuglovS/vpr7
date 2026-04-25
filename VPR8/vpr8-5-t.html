@@ -9,10 +9,24 @@
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <script src="../metrika.js"></script>
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- Yandex.Metrika counter -->
-    <noscript><div><img src="https://mc.yandex.ru/watch/107146125" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/107146125"
+          style="position: absolute; left: -9999px"
+          alt=""
+        /></div
+    ></noscript>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body>
@@ -165,6 +179,7 @@
 
         <div class="theory-section">
           <h2>🔹 Алгоритм решения типовых задач</h2>
+
           <div class="step-list">
             <h3>Задача: Найти, для кого ЛОЖНО высказывание:</h3>
             <p>
@@ -180,11 +195,165 @@
                 Ищем имя, у которого первая буква гласная, а последняя согласная
               </li>
             </ol>
+            <div class="example">
+              <p><strong>Ответ:</strong> Олег</p>
+              <p>Первая буква 'О' — гласная, последняя буква 'г' — согласная</p>
+            </div>
           </div>
 
+          <div class="step-list">
+            <h3>Задача: Найти, для кого ИСТИННО высказывание:</h3>
+            <p>
+              <strong
+                >(Первая буква гласная) И НЕ (Последняя буква гласная)</strong
+              >
+            </p>
+            <ol>
+              <li>Помним: выражение истинно только когда обе части истинны</li>
+              <li>Часть 1 истинна → Первая буква гласная</li>
+              <li>Часть 2 истинна → Последняя буква НЕ гласная</li>
+              <li>
+                Ищем имя, у которого первая буква гласная, а последняя согласная
+              </li>
+            </ol>
+            <div class="example">
+              <p><strong>Ответ:</strong> Алексей</p>
+              <p>Первая буква 'А' — гласная, последняя буква 'й' — согласная</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="theory-section">
+          <h2>🔹 Метод таблицы истинности</h2>
+          <p>
+            Для надёжного решения можно построить таблицу истинности: в строках
+            — имена из вариантов ответа, в столбцах — промежуточные вычисления.
+          </p>
+
+          <div class="step-list">
+            <h3>
+              Пример: Найти имя, для которого ЛОЖНО высказывание<br />
+              <span class="highlight"
+                >НЕ (Первая буква гласная) ИЛИ (Последняя буква гласная)</span
+              >
+            </h3>
+            <ol>
+              <li>
+                Запишем базовые выражения: A = «первая буква гласная», B =
+                «последняя буква гласная»
+              </li>
+              <li>Следуем приоритету операций: сначала отрицание, потом ИЛИ</li>
+              <li>Заполним таблицу для каждого имени</li>
+            </ol>
+          </div>
+
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>Имя</th>
+                <th>A<br />Первая гласная</th>
+                <th>B<br />Последняя гласная</th>
+                <th>НЕ A</th>
+                <th>НЕ A ИЛИ B<br />(итог)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Анна</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Максим</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Татьяна</td>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+              <tr style="background: #fff3cd; font-weight: bold">
+                <td>Олег</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+
           <div class="example">
-            <p><strong>Ответ к примеру из задания:</strong> Олег</p>
-            <p>Первая буква 'О' — гласная, последняя буква 'г' — согласная</p>
+            <p>
+              <strong>Вывод:</strong> в последнем столбце только у имени
+              <strong>Олег</strong> стоит 0 — значит, высказывание ложно только
+              для него.
+            </p>
+          </div>
+
+          <div class="step-list">
+            <h3>
+              Пример: Найти имя, для которого ИСТИННО высказывание<br />
+              <span class="highlight"
+                >(Первая буква гласная) И НЕ (Последняя буква гласная)</span
+              >
+            </h3>
+          </div>
+
+          <table class="conversion-table">
+            <thead>
+              <tr>
+                <th>Имя</th>
+                <th>A<br />Первая гласная</th>
+                <th>B<br />Последняя гласная</th>
+                <th>НЕ B</th>
+                <th>A И НЕ B<br />(итог)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Анна</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Максим</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>Татьяна</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr style="background: #fff3cd; font-weight: bold">
+                <td>Олег</td>
+                <td>1</td>
+                <td>0</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="example">
+            <p>
+              <strong>Вывод:</strong> в последнем столбце только у имени
+              <strong>Олег</strong> стоит 1 — значит, высказывание истинно
+              только для него.
+            </p>
           </div>
         </div>
       </div>

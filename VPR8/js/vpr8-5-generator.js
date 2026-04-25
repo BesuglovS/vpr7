@@ -1,5 +1,6 @@
 let currentAnswer = 4;
 let currentCorrectName = "";
+let currentMode = "false"; // "false" — ищем единственное ЛОЖНОЕ, "true" — ищем единственное ИСТИННОЕ
 
 function initTask5() {
   generateNewTask();
@@ -62,7 +63,9 @@ function generateNewTask() {
         const lastV = vowels.includes(name[name.length - 1].toUpperCase());
         return !firstV || lastV;
       },
-      hint: "Выражение A ИЛИ B ложно только когда и A и B ложны одновременно. Отрицание НЕ (A) ложно когда A истинно.",
+      hintFalse:
+        "Выражение A ИЛИ B ложно только когда и A и B ложны одновременно. Отрицание НЕ (A) ложно когда A истинно.",
+      hintTrue: "Выражение A ИЛИ B истинно когда хотя бы одна часть истинна.",
     },
     {
       text: "(Первая буква гласная) И НЕ (Последняя буква гласная)",
@@ -71,7 +74,10 @@ function generateNewTask() {
         const lastV = vowels.includes(name[name.length - 1].toUpperCase());
         return firstV && !lastV;
       },
-      hint: "Выражение A И B ложно когда хотя бы одно из них ложно. Отрицание НЕ (B) истинно когда B ложно.",
+      hintFalse:
+        "Выражение A И B ложно когда хотя бы одно из них ложно. Отрицание НЕ (B) истинно когда B ложно.",
+      hintTrue:
+        "Выражение A И B истинно только когда оба выражения истинны одновременно.",
     },
     {
       text: "(Первая буква согласная) ИЛИ (Последняя буква согласная)",
@@ -80,7 +86,9 @@ function generateNewTask() {
         const lastV = vowels.includes(name[name.length - 1].toUpperCase());
         return !firstV || !lastV;
       },
-      hint: "Выражение A ИЛИ B ложно только когда и A и B ложны одновременно.",
+      hintFalse:
+        "Выражение A ИЛИ B ложно только когда и A и B ложны одновременно.",
+      hintTrue: "Выражение A ИЛИ B истинно когда хотя бы одна часть истинна.",
     },
     {
       text: "(Вторая буква гласная) И (Третья буква согласная)",
@@ -89,7 +97,10 @@ function generateNewTask() {
         const thirdV = vowels.includes(name[2].toUpperCase());
         return secondV && !thirdV;
       },
-      hint: "Выражение A И B ложно когда хотя бы одно из них ложно. Обратите внимание что нумерация букв начинается с 1.",
+      hintFalse:
+        "Выражение A И B ложно когда хотя бы одно из них ложно. Обратите внимание что нумерация букв начинается с 1.",
+      hintTrue:
+        "Выражение A И B истинно только когда оба выражения истинны одновременно.",
     },
     {
       text: "НЕ ((Первая буква гласная) И (Вторая буква гласная))",
@@ -98,7 +109,10 @@ function generateNewTask() {
         const secondV = vowels.includes(name[1].toUpperCase());
         return !(firstV && secondV);
       },
-      hint: "По закону Де Моргана: НЕ (A И B) = НЕ A ИЛИ НЕ B. Выражение ложно только когда и A и B истинны.",
+      hintFalse:
+        "По закону Де Моргана: НЕ (A И B) = НЕ A ИЛИ НЕ B. Выражение ложно только когда и A и B истинны.",
+      hintTrue:
+        "По закону Де Моргана: НЕ (A И B) = НЕ A ИЛИ НЕ B. Выражение истинно когда хотя бы одна часть ложна.",
     },
     {
       text: "(Третья буква гласная) ИЛИ (Предпоследняя буква гласная)",
@@ -107,7 +121,9 @@ function generateNewTask() {
         const prelastV = vowels.includes(name[name.length - 2].toUpperCase());
         return thirdV || prelastV;
       },
-      hint: "Выражение A ИЛИ B ложно только когда и A и B ложны одновременно.",
+      hintFalse:
+        "Выражение A ИЛИ B ложно только когда и A и B ложны одновременно.",
+      hintTrue: "Выражение A ИЛИ B истинно когда хотя бы одна часть истинна.",
     },
     {
       text: "(Вторая буква согласная) И НЕ (Третья буква согласная)",
@@ -116,7 +132,10 @@ function generateNewTask() {
         const thirdV = vowels.includes(name[2].toUpperCase());
         return !secondV && thirdV;
       },
-      hint: "Выражение A И B ложно когда хотя бы одно из них ложно. Отрицание НЕ (B) истинно когда B ложно.",
+      hintFalse:
+        "Выражение A И B ложно когда хотя бы одно из них ложно. Отрицание НЕ (B) истинно когда B ложно.",
+      hintTrue:
+        "Выражение A И B истинно только когда оба выражения истинны одновременно.",
     },
     {
       text: "(Первая буква гласная) И (Третья буква гласная)",
@@ -125,7 +144,9 @@ function generateNewTask() {
         const thirdV = vowels.includes(name[2].toUpperCase());
         return firstV && thirdV;
       },
-      hint: "Выражение A И B истинно только когда оба выражения истинны одновременно.",
+      hintFalse: "Выражение A И B ложно когда хотя бы одно из них ложно.",
+      hintTrue:
+        "Выражение A И B истинно только когда оба выражения истинны одновременно.",
     },
     {
       text: "НЕ (Вторая буква гласная) И НЕ (Предпоследняя буква гласная)",
@@ -134,18 +155,15 @@ function generateNewTask() {
         const prelastV = vowels.includes(name[name.length - 2].toUpperCase());
         return !secondV && !prelastV;
       },
-      hint: "Выражение A И B ложно когда хотя бы одно из них ложно.",
+      hintFalse: "Выражение A И B ложно когда хотя бы одно из них ложно.",
+      hintTrue:
+        "Выражение A И B истинно только когда оба выражения истинны одновременно.",
     },
   ];
 
   // Выбираем случайное логическое выражение
   const selectedLogic =
     logicExpressions[Math.floor(Math.random() * logicExpressions.length)];
-
-  // Обновляем подсказку под текущее выражение
-  document.getElementById("hintBtn").onclick = function () {
-    showHintBox(`💡 Подсказка: ${selectedLogic.hint}`);
-  };
 
   // Разделяем имена на те для которых выражение ЛОЖНО и ИСТИННО
   const falseNames = allNames.filter(
@@ -155,28 +173,53 @@ function generateNewTask() {
     selectedLogic.check(name, vowels),
   );
 
-  // Берем РОВНО 1 имя для которого выражение ЛОЖНО и 3 для которых ИСТИННО
-  const selectedFalse =
-    falseNames[Math.floor(Math.random() * falseNames.length)];
+  // Случайно выбираем режим задания: ищем единственное ЛОЖНОЕ или единственное ИСТИННОЕ имя
+  let mode = Math.random() < 0.5 ? "false" : "true";
 
-  // Перемешиваем истинные имена и берем 3 штуки
-  const shuffledTrue = [...trueNames]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3);
+  // Проверяем, хватает ли имён для выбранного режима. Если нет — переключаем режим.
+  if (mode === "false" && (falseNames.length < 1 || trueNames.length < 3)) {
+    mode = "true";
+  }
+  if (mode === "true" && (trueNames.length < 1 || falseNames.length < 3)) {
+    mode = "false";
+  }
 
-  // Собираем все 4 имени и перемешиваем их
-  const names = [...shuffledTrue, selectedFalse].sort(
-    () => Math.random() - 0.5,
-  );
+  currentMode = mode;
 
-  // Находим индекс правильного ответа (нумерация с 1)
-  currentAnswer = names.indexOf(selectedFalse) + 1;
+  // Обновляем подсказку под текущее выражение и режим
+  document.getElementById("hintBtn").onclick = function () {
+    const hintText =
+      mode === "false" ? selectedLogic.hintFalse : selectedLogic.hintTrue;
+    showHintBox(`💡 Подсказка: ${hintText}`);
+  };
+
+  let selectedTarget;
+  let shuffledOthers;
+  let names;
+
+  if (mode === "false") {
+    // Берём РОВНО 1 имя, для которого выражение ЛОЖНО, и 3 для которых ИСТИННО
+    selectedTarget = falseNames[Math.floor(Math.random() * falseNames.length)];
+    shuffledOthers = [...trueNames].sort(() => Math.random() - 0.5).slice(0, 3);
+    names = [...shuffledOthers, selectedTarget].sort(() => Math.random() - 0.5);
+    currentAnswer = names.indexOf(selectedTarget) + 1;
+  } else {
+    // Берём РОВНО 1 имя, для которого выражение ИСТИННО, и 3 для которых ЛОЖНО
+    selectedTarget = trueNames[Math.floor(Math.random() * trueNames.length)];
+    shuffledOthers = [...falseNames]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    names = [...shuffledOthers, selectedTarget].sort(() => Math.random() - 0.5);
+    currentAnswer = names.indexOf(selectedTarget) + 1;
+  }
 
   // Сохраняем правильное имя для вывода в ответе
   currentCorrectName = names[currentAnswer - 1];
 
+  const conditionWord = mode === "false" ? "ЛОЖНО" : "ИСТИННО";
+
   document.getElementById("taskText").innerHTML = `
-        В поле ответа запишите <strong>номер</strong> имени, для которого ЛОЖНО высказывание:<br />
+        В поле ответа запишите <strong>номер</strong> имени, для которого ${conditionWord} высказывание:<br />
         <span class="highlight logic-expression">${selectedLogic.text}</span>
         <ol class="task-options">
             <li>${names[0]}</li>
@@ -196,8 +239,9 @@ function checkAnswer() {
   }
 
   if (parseInt(answer) === currentAnswer) {
+    const conditionWord = currentMode === "false" ? "ложно" : "истинно";
     showFeedback(
-      `✅ Правильно! Выражение ложно только для имени ${currentCorrectName}.`,
+      `✅ Правильно! Выражение ${conditionWord} только для имени ${currentCorrectName}.`,
       "success",
     );
   } else {
