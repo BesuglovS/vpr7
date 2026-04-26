@@ -126,9 +126,16 @@ function generateTask2() {
 // ============================================
 // Task 3: Addition in Number Systems
 // ============================================
-function generateTask3() {
+function generateTask3(usedBases) {
   const bases = [2, 8, 16];
-  const base = randomChoice8(bases);
+  let availableBases = bases;
+  if (usedBases && usedBases.length > 0) {
+    const filtered = bases.filter((b) => !usedBases.includes(b));
+    if (filtered.length > 0) {
+      availableBases = filtered;
+    }
+  }
+  const base = randomChoice8(availableBases);
   const num1 = randomInt8(100, 899);
   const num2 = randomInt8(100, 899);
   const num1Str = num1.toString(base).toUpperCase();
@@ -137,15 +144,22 @@ function generateTask3() {
 
   const taskText = `Выполните сложение: <b>${num1Str}</b>${SUB8[base]} + <b>${num2Str}</b>${SUB8[base]}.<br>Ответ запишите в <b>${BASE_NAMES8[base]}</b> системе счисления. Основание системы писать не нужно.`;
 
-  return { text: taskText, answer: result, type: "число" };
+  return { text: taskText, answer: result, type: "число", base: base };
 }
 
 // ============================================
 // Task 4: Subtraction in Number Systems
 // ============================================
-function generateTask4() {
+function generateTask4(usedBases) {
   const bases = [2, 8, 16];
-  const base = randomChoice8(bases);
+  let availableBases = bases;
+  if (usedBases && usedBases.length > 0) {
+    const filtered = bases.filter((b) => !usedBases.includes(b));
+    if (filtered.length > 0) {
+      availableBases = filtered;
+    }
+  }
+  const base = randomChoice8(availableBases);
   const num1 = randomInt8(200, 999);
   const num2 = randomInt8(10, num1 - 50);
   const num1Str = num1.toString(base).toUpperCase();
@@ -154,7 +168,7 @@ function generateTask4() {
 
   const taskText = `Выполните вычитание: <b>${num1Str}</b>${SUB8[base]} \u2013 <b>${num2Str}</b>${SUB8[base]}.<br>Ответ запишите в <b>${BASE_NAMES8[base]}</b> системе счисления. Основание системы писать не нужно.`;
 
-  return { text: taskText, answer: result, type: "число" };
+  return { text: taskText, answer: result, type: "число", base: base };
 }
 
 // ============================================

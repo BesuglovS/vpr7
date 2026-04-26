@@ -850,11 +850,26 @@
           };
 
           let taskNumber = 1;
+          // Track used bases for tasks 3 and 4 (addition/subtraction in number systems)
+          let usedBasesForNumSys = [];
           for (let taskType = 1; taskType <= 10; taskType++) {
             const count = taskCounts[taskType] || 0;
             for (let i = 0; i < count; i++) {
               try {
-                const task = taskTypes[taskType].generator();
+                let task;
+                if (taskType === 3) {
+                  task = generateTask3(usedBasesForNumSys);
+                  if (task.base !== undefined) {
+                    usedBasesForNumSys.push(task.base);
+                  }
+                } else if (taskType === 4) {
+                  task = generateTask4(usedBasesForNumSys);
+                  if (task.base !== undefined) {
+                    usedBasesForNumSys.push(task.base);
+                  }
+                } else {
+                  task = taskTypes[taskType].generator();
+                }
                 variant.tasks.push({
                   number: taskNumber++,
                   type: taskType,
