@@ -1285,10 +1285,14 @@ function generateTask10() {
 
   taskText += `<table border="1" cellpadding="4" style="border-collapse: collapse; margin: 10px 0; font-size: 11pt;">`;
 
-  // Header row
+  // Header row - variable columns keep their headers, operation columns are blank
   taskText += `<tr>`;
   expr.cols.forEach((col) => {
-    taskText += `<td style="font-weight: bold; padding: 5px 10px; text-align: center;">${col.header}</td>`;
+    if (col.type === "op") {
+      taskText += `<td style="font-weight: bold; padding: 5px 50px; text-align: center;">&nbsp;</td>`;
+    } else {
+      taskText += `<td style="font-weight: bold; padding: 5px 10px; text-align: center;">${col.header}</td>`;
+    }
   });
   taskText += `</tr>`;
 
