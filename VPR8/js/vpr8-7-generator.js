@@ -250,6 +250,7 @@ function generateTask() {
   }
   if (!task) {
     // Fallback guaranteed task
+    // 3 -> 20: 3+1=4, 4+1=5, 5*2=10, 10*2=20  => answer "1122"
     const c1 = {
       num: 1,
       id: "add",
@@ -273,8 +274,8 @@ function generateTask() {
       target: 20,
       commands: [c1, c2],
       maxSteps: 4,
-      answer: "2121",
-      pathSteps: [1, 0, 1, 0],
+      answer: "1122",
+      pathSteps: [0, 0, 1, 1],
     };
   }
   currentTask = task;
