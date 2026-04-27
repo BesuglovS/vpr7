@@ -27,13 +27,40 @@ function shuffleArray8(arr) {
 // Task 1: Number Systems (Системы счисления)
 // ============================================
 function generateTask1() {
-  const bases = [2, 3, 4, 5, 6, 7, 8, 9];
-  const base = randomChoice8(bases);
+  // 12 типов преобразований между системами счисления 2, 8, 10, 16
+  const conversionTypes = [
+    { from: 10, to: 2, fromName: "десятичной", toName: "двоичную" },
+    { from: 10, to: 8, fromName: "десятичной", toName: "восьмеричную" },
+    { from: 10, to: 16, fromName: "десятичной", toName: "шестнадцатеричную" },
+    { from: 2, to: 10, fromName: "двоичной", toName: "десятичную" },
+    { from: 8, to: 10, fromName: "восьмеричной", toName: "десятичную" },
+    { from: 16, to: 10, fromName: "шестнадцатеричной", toName: "десятичную" },
+    { from: 2, to: 8, fromName: "двоичной", toName: "восьмеричную" },
+    { from: 2, to: 16, fromName: "двоичной", toName: "шестнадцатеричную" },
+    { from: 8, to: 2, fromName: "восьмеричной", toName: "двоичную" },
+    { from: 8, to: 16, fromName: "восьмеричной", toName: "шестнадцатеричную" },
+    { from: 16, to: 2, fromName: "шестнадцатеричной", toName: "двоичную" },
+    { from: 16, to: 8, fromName: "шестнадцатеричной", toName: "восьмеричную" },
+  ];
+
+  const type = randomChoice8(conversionTypes);
   const decimal = randomInt8(20, 200);
-  const result = decimal.toString(base).toUpperCase();
+
+  const sourceNumber = decimal.toString(type.from).toUpperCase();
+  const answer = decimal.toString(type.to).toUpperCase();
+
+  let text;
+  if (type.from === 10) {
+    text = `Переведите число <b>${sourceNumber}</b> из десятичной системы счисления в <b>${type.toName}</b> систему счисления.<br>В ответе запишите полученное число.`;
+  } else if (type.to === 10) {
+    text = `Переведите число <b>${sourceNumber}_${type.from}</b> из ${type.fromName} системы счисления в десятичную.<br>В ответе запишите полученное число.`;
+  } else {
+    text = `Переведите число <b>${sourceNumber}_${type.from}</b> из ${type.fromName} системы счисления в <b>${type.toName}</b> систему счисления.<br>В ответе запишите полученное число.`;
+  }
+
   return {
-    text: `Переведите число <b>${decimal}</b> из десятичной системы счисления в систему с основанием <b>${base}</b>.<br>В ответе запишите полученное число.`,
-    answer: result,
+    text: text,
+    answer: answer,
     type: "строка",
   };
 }
