@@ -900,18 +900,38 @@ function generateTask9() {
   const printNo = Math.random() < 0.5;
   const printResult = printNo ? "NO" : "YES";
 
-  // Generate 5 pairs
-  const pairs = [];
-  const correctIndices = [];
-  for (let i = 0; i < 5; i++) {
-    const s = randomInt8(-20, 20);
-    const t = randomInt8(-20, 20);
-    const eval1 = comp1.eval(s, t1);
-    const eval2 = comp2.eval(t, t2);
-    const conditionResult = template.eval(eval1, eval2);
-    const printsResult = conditionResult ? "NO" : "YES";
-    if (printsResult === printResult) correctIndices.push(i + 1);
-    pairs.push({ s, t, printsResult });
+  // Generate 5 pairs, ensuring 1-4 correct answers (not 0 and not 5)
+  let pairs = [];
+  let correctIndices = [];
+  let valid = false;
+  for (let attempt = 0; attempt < 100 && !valid; attempt++) {
+    pairs = [];
+    correctIndices = [];
+    for (let i = 0; i < 5; i++) {
+      const s = randomInt8(-20, 20);
+      const t = randomInt8(-20, 20);
+      const eval1 = comp1.eval(s, t1);
+      const eval2 = comp2.eval(t, t2);
+      const conditionResult = template.eval(eval1, eval2);
+      const printsResult = conditionResult ? "NO" : "YES";
+      if (printsResult === printResult) correctIndices.push(i + 1);
+      pairs.push({ s, t, printsResult });
+    }
+    if (correctIndices.length > 0 && correctIndices.length < 5) {
+      valid = true;
+    }
+  }
+  // Fallback if still not valid after max attempts - force a pair to be wrong
+  if (!valid && correctIndices.length === 0) {
+    // All 5 print the opposite of printResult - flip the last pair
+    const lastIdx = 4;
+    pairs[lastIdx].printsResult = printResult;
+    correctIndices.push(lastIdx + 1);
+  } else if (!valid && correctIndices.length === 5) {
+    // All 5 print printResult - flip the last pair
+    const lastIdx = 4;
+    pairs[lastIdx].printsResult = printResult === "NO" ? "YES" : "NO";
+    correctIndices.pop();
   }
 
   // Format pairs as (s,t)
@@ -929,6 +949,7 @@ function generateTask9() {
 
   // Build Python program text
   const pyCondition = conditionStr
+    .replace(/<>/g, "!=")
     .replace(/ and /g, " and ")
     .replace(/ or /g, " or ")
     .replace(/not /g, "not ");
