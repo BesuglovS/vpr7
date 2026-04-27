@@ -261,49 +261,63 @@ function generateTask5() {
     },
   ];
 
-  const selectedRule = randomChoice8(rules);
-  const wantTrue = Math.random() < 0.5;
-  const conditionWord = wantTrue ? "ИСТИННО" : "ЛОЖНО";
-
-  // Pick 4 names where exactly one satisfies the condition
-  const selectedNames = [];
+  let selectedRule;
+  let wantTrue;
   let correctName = null;
-  let attempts = 0;
+  let wrongNames = [];
 
-  while (attempts < 200) {
-    const testName = randomChoice8(names);
-    if (selectedNames.includes(testName)) continue;
-    const result = checkName(testName, selectedRule);
-    if (wantTrue ? result : !result) {
-      if (!correctName) {
-        correctName = testName;
-        selectedNames.push(testName);
+  // Keep trying different rule/truth combinations until we find one
+  // where exactly 1 name matches and at least 3 names don't match (or vice versa)
+  let attempts = 0;
+  while (attempts < 100) {
+    selectedRule = randomChoice8(rules);
+    wantTrue = Math.random() < 0.5;
+
+    // Precompute which names match the condition
+    const matchingNames = [];
+    const nonMatchingNames = [];
+    for (const name of names) {
+      const result = checkName(name, selectedRule);
+      if (wantTrue ? result : !result) {
+        matchingNames.push(name);
+      } else {
+        nonMatchingNames.push(name);
       }
     }
-    if (selectedNames.length === 4) break;
-    if (!selectedNames.includes(testName) && selectedNames.length < 4) {
-      // Fill remaining with wrong answers
-      const wrongResult = wantTrue ? !result : result;
-      if (wrongResult) {
-        selectedNames.push(testName);
-      }
+
+    // We need at least 1 matching name (correct answer)
+    // and at least 3 non-matching names (wrong answers)
+    if (matchingNames.length >= 1 && nonMatchingNames.length >= 3) {
+      // Pick exactly 1 correct name from matches
+      correctName = randomChoice8(matchingNames);
+      // Pick exactly 3 wrong names from non-matches
+      const shuffledWrong = shuffleArray8(nonMatchingNames);
+      wrongNames = shuffledWrong.slice(0, 3);
+      break;
     }
+
     attempts++;
   }
 
-  // Ensure we have at least some names
-  while (selectedNames.length < 4) {
-    const n = randomChoice8(names);
-    if (!selectedNames.includes(n)) selectedNames.push(n);
+  // Fallback: if all attempts failed (extremely unlikely), force a safe combination
+  if (!correctName) {
+    selectedRule = rules[2]; // NOT_FIRST_VOWEL
+    wantTrue = false;
+    const matchingNames = names.filter((n) => !isVowel(n[0]));
+    const nonMatchingNames = names.filter((n) => isVowel(n[0]));
+    correctName = randomChoice8(nonMatchingNames);
+    wrongNames = shuffleArray8(matchingNames).slice(0, 3);
   }
 
-  // Shuffle and find correct index
-  const shuffledNames = shuffleArray8([...selectedNames]);
-  const correctIndex = shuffledNames.indexOf(correctName) + 1;
+  const conditionWord = wantTrue ? "ИСТИННО" : "ЛОЖНО";
+
+  // Combine and shuffle
+  const allNames = shuffleArray8([correctName, ...wrongNames]);
+  const correctIndex = allNames.indexOf(correctName) + 1;
 
   let taskText = `В поле ответа запишите <b>номер</b> имени, для которого <b>${conditionWord}</b> высказывание:<br>`;
   taskText += `<b>${selectedRule.text}</b><br><br>`;
-  shuffledNames.forEach((n, i) => {
+  allNames.forEach((n, i) => {
     taskText += `${i + 1}) ${n}<br>`;
   });
 
