@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ВПР 7 класс - Полный вариант</title>
-    <link rel="stylesheet" href="../css/vpr7-exam.css" />
+    <link rel="stylesheet" href="css/vpr7-exam.css" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
     <!-- Yandex.Metrika counter -->
@@ -25,6 +25,15 @@
         <a href="vpr7.html" class="back-link">← На главную</a>
 
         <div class="progress-section">
+          <button class="header-btn btn-finish-small" onclick="finishExam()">
+            ✓ Завершить
+          </button>
+          <button
+            class="header-btn btn-home-small"
+            onclick="window.location.href = 'vpr7.html'"
+          >
+            🏠 Главная
+          </button>
           <div class="task-counter">
             Задание <span id="currentTaskNum">1</span> из <span>12</span>
           </div>
@@ -97,12 +106,6 @@
       <button class="nav-btn btn-prev" id="btnPrev" onclick="prevTask()">
         ← Назад
       </button>
-      <button class="nav-btn btn-next" id="btnNext" onclick="nextTask()">
-        Далее →
-      </button>
-      <button class="nav-btn btn-finish" id="btnFinish" onclick="finishExam()">
-        ✓ Завершить
-      </button>
     </nav>
 
     <script>
@@ -130,8 +133,26 @@
 
       // Инициализация
       function init() {
-        // Загружаем сохранённые результаты
-        loadResults();
+        // Проверяем пришел ли пользователь из главной страницы (новый экзамен)
+        // Если нет сохраненных результатов или пустой результат - сбрасываем всё
+        const saved = localStorage.getItem("vpr7-exam-results");
+
+        // Если нет сохраненных данных или это новый заход - очищаем
+        if (
+          !saved ||
+          document.referrer.includes("vpr7.html") ||
+          !document.referrer
+        ) {
+          localStorage.removeItem("vpr7-exam-results");
+          results = {};
+          correctCount = 0;
+          attemptedCount = 0;
+          currentTaskIndex = 0;
+        } else {
+          // Загружаем сохранённые результаты только если они есть и это продолжение
+          loadResults();
+        }
+
         renderTaskIndicators();
         loadTask(currentTaskIndex);
         updateUI();
@@ -244,12 +265,13 @@
         document.getElementById("btnPrev").disabled = currentTaskIndex === 0;
 
         // Показываем/скрываем кнопки
+        // Кнопка завершения экзамена доступна всегда
+        document.getElementById("btnFinish").style.display = "flex";
+
         if (currentTaskIndex === tasks.length - 1) {
           document.getElementById("btnNext").style.display = "none";
-          document.getElementById("btnFinish").style.display = "flex";
         } else {
           document.getElementById("btnNext").style.display = "flex";
-          document.getElementById("btnFinish").style.display = "none";
         }
       }
 
