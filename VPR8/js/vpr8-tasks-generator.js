@@ -66,33 +66,82 @@ function generateTask1() {
 }
 
 // ============================================
-// Task 2: Number Comparison (Сравнение чисел)
+// Task 2: Number in Range (Число в диапазоне)
 // ============================================
 function generateTask2() {
-  const bases = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16];
-  const base1 = randomChoice8(bases);
-  let base2 = randomChoice8(bases);
-  while (base2 === base1) {
-    base2 = randomChoice8(bases);
+  // Unicode subscript digits for base notation
+  const subscripts = { 2: "₂", 8: "₈", 16: "₁₆" };
+
+  // 1. Generate range boundaries (0..255 so binary fits 8 bits)
+  const minValue = randomInt8(40, 140);
+  const maxValueLimit = Math.min(
+    230,
+    minValue + Math.floor(Math.random() * 100) + 20,
+  );
+  const maxValue = randomInt8(
+    minValue + 20,
+    Math.max(minValue + 21, maxValueLimit),
+  );
+
+  // 2. Pick random bases for left and right boundary
+  const systems = [2, 8, 16];
+  const leftSystem = randomChoice8(systems);
+  const rightSystem = randomChoice8(systems);
+
+  // 3. Convert boundaries
+  const leftBoundary = minValue.toString(leftSystem).toUpperCase();
+  const rightBoundary = maxValue.toString(rightSystem).toUpperCase();
+
+  // 4. Correct answer — strictly inside (minValue < a < maxValue)
+  const correctValue = randomInt8(minValue + 1, maxValue - 1);
+
+  // 5. Generate 3 wrong answers (all strictly outside the range)
+  const wrongValues = new Set();
+
+  // One value below minValue
+  wrongValues.add(randomInt8(1, Math.max(1, minValue - 1)));
+
+  // One value above maxValue
+  wrongValues.add(randomInt8(maxValue + 1, Math.min(255, maxValue + 50)));
+
+  // Third wrong value — any value outside range
+  while (wrongValues.size < 3) {
+    if (Math.random() < 0.5) {
+      wrongValues.add(randomInt8(1, Math.max(1, minValue - 1)));
+    } else {
+      wrongValues.add(randomInt8(maxValue + 1, Math.min(255, maxValue + 50)));
+    }
   }
 
-  const num1 = randomInt8(20, 200);
-  const num2 = randomInt8(20, 200);
+  const wrongValuesArray = Array.from(wrongValues);
 
-  const str1 = num1.toString(base1).toUpperCase();
-  const str2 = num2.toString(base2).toUpperCase();
+  // 6. Build all options
+  const options = [
+    { value: correctValue, correct: true },
+    ...wrongValuesArray.map((v) => ({ value: v, correct: false })),
+  ];
 
-  const decimal1 = parseInt(str1, base1);
-  const decimal2 = parseInt(str2, base2);
+  // Shuffle
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = randomInt8(0, i);
+    [options[i], options[j]] = [options[j], options[i]];
+  }
 
-  let comparison;
-  if (decimal1 > decimal2) comparison = ">";
-  else if (decimal1 < decimal2) comparison = "<";
-  else comparison = "=";
+  // Find correct answer index (1-based)
+  const correctIndex = options.findIndex((o) => o.correct) + 1;
+
+  // 7. Build task text
+  let taskText = `Какое из чисел, записанных в двоичной системе счисления, удовлетворяет условию<br>`;
+  taskText += `<b>${leftBoundary}</b>${subscripts[leftSystem]} < <i>a</i> < <b>${rightBoundary}</b>${subscripts[rightSystem]}?<br><br>`;
+
+  options.forEach((opt, i) => {
+    const binary = opt.value.toString(2).padStart(8, "0");
+    taskText += `${i + 1}) ${binary}<br>`;
+  });
 
   return {
-    text: `Сравните числа <b>${str1}_${base1}</b> и <b>${str2}_${base2}</b>.<br>В ответе запишите знак сравнения (> , < или =).`,
-    answer: comparison,
+    text: taskText,
+    answer: String(correctIndex),
     type: "строка",
   };
 }
