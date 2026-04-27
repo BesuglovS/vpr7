@@ -116,18 +116,19 @@ function generateCommands(types) {
 // Returns { commands: string, steps: number[] } or null.
 // ============================================================
 function findSolution(start, target, commands, maxSteps) {
-  // BFS: queue of { value, path }
-  const queue = [{ value: start, path: [] }];
+  // BFS: queue of { value, path, mask }
+  // mask is a bitmask tracking which commands have been used (bit 0 = cmd0, bit 1 = cmd1)
+  const queue = [{ value: start, path: [], mask: 0 }];
   const visited = new Set();
-  visited.add(start);
+  visited.add(start + ":0");
 
   while (queue.length > 0) {
-    const { value, path } = queue.shift();
+    const { value, path, mask } = queue.shift();
     if (value === target) {
       // Require that solution uses both commands (when there are 2)
       if (commands.length === 2) {
-        const hasCmd0 = path.includes(0);
-        const hasCmd1 = path.includes(1);
+        const hasCmd0 = (mask & 1) !== 0;
+        const hasCmd1 = (mask & 2) !== 0;
         if (!hasCmd0 || !hasCmd1) {
           // Continue searching for a solution that uses both
           continue;
@@ -142,14 +143,16 @@ function findSolution(start, target, commands, maxSteps) {
 
     for (let i = 0; i < commands.length; i++) {
       const nextVal = commands[i].apply(value);
+      const newMask = mask | (1 << i);
+      const key = nextVal + ":" + newMask;
       if (
         nextVal !== null &&
         nextVal >= 0 &&
         nextVal <= 150 &&
-        !visited.has(nextVal)
+        !visited.has(key)
       ) {
-        visited.add(nextVal);
-        queue.push({ value: nextVal, path: [...path, i] });
+        visited.add(key);
+        queue.push({ value: nextVal, path: [...path, i], mask: newMask });
       }
     }
   }
@@ -166,21 +169,32 @@ function tryGenerateTask() {
   const start = Math.floor(Math.random() * 50) + 2; // 2..51
   const maxSteps = Math.floor(Math.random() * 2) + 4; // 4 or 5
 
-  // Try to find target reachable in exactly maxSteps (or close)
-  // BFS from start to collect reachable values
-  const reachable = new Map(); // value -> shortest path length
-  const queue = [{ value: start, depth: 0, path: [] }];
-  reachable.set(start, 0);
+  // BFS from start to collect reachable values with command usage mask
+  const reachable = new Map(); // key: value:mask -> { depth, path }
+  const queue = [{ value: start, depth: 0, path: [], mask: 0 }];
+  reachable.set(start + ":0", { depth: 0, path: [] });
 
   let bestTarget = null;
   let bestPath = null;
+  let bestHasBoth = false;
 
   while (queue.length > 0) {
-    const { value, depth, path } = queue.shift();
+    const { value, depth, path, mask } = queue.shift();
+    const hasBoth = (mask & 3) === 3; // both commands used when mask has bits 0 and 1 set
 
     if (depth >= 4 && depth <= 5 && value !== start) {
-      // Require shortest path to be exactly 4 or 5 steps
-      if (!bestTarget || depth > bestPath.length) {
+      // Prefer targets reachable with both commands
+      // Among same both-command status, prefer longer path (up to 5)
+      // Among same length, prefer the one using both commands
+      if (!bestTarget) {
+        bestTarget = value;
+        bestPath = path;
+        bestHasBoth = hasBoth;
+      } else if (hasBoth && !bestHasBoth) {
+        bestTarget = value;
+        bestPath = path;
+        bestHasBoth = true;
+      } else if (hasBoth === bestHasBoth && depth > bestPath.length) {
         bestTarget = value;
         bestPath = path;
       }
@@ -190,21 +204,28 @@ function tryGenerateTask() {
 
     for (let i = 0; i < commands.length; i++) {
       const nextVal = commands[i].apply(value);
+      const newMask = mask | (1 << i);
+      const key = nextVal + ":" + newMask;
       if (
         nextVal !== null &&
         nextVal >= 0 &&
         nextVal <= 150 &&
-        !reachable.has(nextVal)
+        !reachable.has(key)
       ) {
-        reachable.set(nextVal, depth + 1);
-        queue.push({ value: nextVal, depth: depth + 1, path: [...path, i] });
+        reachable.set(key, { depth: depth + 1, path: [...path, i] });
+        queue.push({
+          value: nextVal,
+          depth: depth + 1,
+          path: [...path, i],
+          mask: newMask,
+        });
       }
     }
   }
 
   if (!bestTarget || bestPath.length < 4) return null;
 
-  // Ensure solution exists
+  // Ensure solution exists (uses both commands by construction)
   const sol = findSolution(start, bestTarget, commands, maxSteps + 2);
   if (!sol) return null;
 
