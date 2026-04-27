@@ -53,9 +53,9 @@ function generateTask1() {
   if (type.from === 10) {
     text = `Переведите число <b>${sourceNumber}</b> из десятичной системы счисления в <b>${type.toName}</b> систему счисления.<br>В ответе запишите полученное число.`;
   } else if (type.to === 10) {
-    text = `Переведите число <b>${sourceNumber}_${type.from}</b> из ${type.fromName} системы счисления в десятичную.<br>В ответе запишите полученное число.`;
+    text = `Переведите число <b>${sourceNumber}${toSubscript8(type.from)}</b> из ${type.fromName} системы счисления в десятичную.<br>В ответе запишите полученное число.`;
   } else {
-    text = `Переведите число <b>${sourceNumber}_${type.from}</b> из ${type.fromName} системы счисления в <b>${type.toName}</b> систему счисления.<br>В ответе запишите полученное число.`;
+    text = `Переведите число <b>${sourceNumber}${toSubscript8(type.from)}</b> из ${type.fromName} системы счисления в <b>${type.toName}</b> систему счисления.<br>В ответе запишите полученное число.`;
   }
 
   return {
