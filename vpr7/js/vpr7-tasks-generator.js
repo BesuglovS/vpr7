@@ -30,7 +30,8 @@ function shuffleArray(arr) {
 // ============================================
 function generateTask1() {
   if (typeof window.VPR7_Task1_Generator !== "undefined") {
-    // Parse fallback data and generate task
+    // Try to load data from file; if not available, use fallback
+    // For PDF generator we use fallback data directly (synchronous context)
     const data = window.VPR7_Task1_Generator.parseData(
       window.VPR7_Task1_Generator.FALLBACK_DATA,
     );
@@ -67,7 +68,7 @@ function generateTask1() {
 function generateTask1Fallback() {
   const inputDevices = [
     "клавиатура",
-    "мышка",
+    "мышь",
     "сканер",
     "микрофон",
     "веб-камера",
@@ -88,7 +89,11 @@ function generateTask1Fallback() {
     "DVD-диск",
     "карта памяти",
   ];
-  const processingDevices = ["процессор", "видеокарта"];
+  const processingDevices = [
+    "процессор",
+    "видеокарта",
+    "NPU (нейронный процессор)",
+  ];
 
   const selectedInput = shuffleArray(inputDevices).slice(0, 3);
   const selectedOutput = shuffleArray(outputDevices).slice(0, 2);
