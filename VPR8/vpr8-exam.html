@@ -370,6 +370,7 @@
 
       // Приём сообщений от iframe
       window.addEventListener("message", function (event) {
+        if (event.origin !== window.location.origin) return;
         // Обработка высоты контента
         if (event.data && event.data.type === "vpr7-content-height") {
           const frame = document.getElementById("taskFrame");

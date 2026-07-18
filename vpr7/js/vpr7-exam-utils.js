@@ -14,7 +14,7 @@ function sendExamResult(correct) {
         type: "vpr7-task-result",
         correct: correct,
       },
-      "*",
+      window.location.origin,
     );
   }
 }
@@ -51,7 +51,7 @@ function sendContentHeight() {
           type: "vpr7-content-height",
           height: height,
         },
-        "*",
+        window.location.origin,
       );
     });
   }
@@ -153,6 +153,7 @@ function showCompletedMessage(
  */
 function setupExamMessageListener(onComplete) {
   window.addEventListener("message", function (event) {
+    if (event.origin !== window.location.origin) return;
     if (event.data && event.data.type === "vpr7-task-status") {
       if (event.data.completed && onComplete) {
         onComplete(event.data.correct);

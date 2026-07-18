@@ -152,3 +152,7 @@ Copyright (c) 2026 Безуглов Сергей
 
 - GitHub: [@BesuglovS](https://github.com/BesuglovS)
 - Репозиторий: [https://github.com/BesuglovS/vpr7](https://github.com/BesuglovS/vpr7)
+
+---
+
+Подробнее об архитектуре см. в [ARCHITECTURE.md](ARCHITECTURE.md).
