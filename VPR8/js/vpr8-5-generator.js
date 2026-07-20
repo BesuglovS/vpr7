@@ -271,6 +271,7 @@ function checkAnswer() {
 
   // Отправляем результат в родительское окно (режим экзамена)
   VPR7_ExamUtils.sendExamResult(isCorrect);
+  if (window.VPR7_Storage) VPR7_Storage.saveTaskResult('8', 5, isCorrect);
 }
 
 function clearAnswer() {

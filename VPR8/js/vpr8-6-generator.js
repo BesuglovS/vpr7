@@ -306,6 +306,7 @@ function checkAnswer() {
 
   // Отправляем результат в родительское окно (режим экзамена)
   VPR7_ExamUtils.sendExamResult(allCorrect);
+  if (window.VPR7_Storage) VPR7_Storage.saveTaskResult('8', 6, allCorrect);
 }
 
 // ============================================================

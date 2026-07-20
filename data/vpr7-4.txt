@@ -1,0 +1,36 @@
+# Задание 4: Логика
+
+## Категории
+Логические переменные
+Логические операции
+Таблицы истинности
+Логические высказывания
+
+## Элементы
+True
+False
+NOT
+AND
+OR
+XOR
+NOT A
+NOT B
+A AND B
+A OR B
+A XOR B
+NOT (A AND B)
+NOT (A OR B)
+(A AND B) OR (NOT A AND B)
+(A AND B) AND (NOT C)
+A = 5
+B = 10
+A < B
+A > B
+A = B
+A != B
+A == B
+A && B
+!A || B
+!(A && B)
+(A || B) && !A
+(A && B) || !B

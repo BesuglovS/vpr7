@@ -1,0 +1,173 @@
+# Задание 8-9: Анализ алгоритмов (Pascal)
+
+## Задачи
+
+1. Программа на Pascal:
+   ```pascal
+   var a, b: integer;
+   begin
+     readln(a, b);
+     if a > b then
+       writeln('YES')
+     else
+       writeln('NO');
+   end.
+   ```
+   Какие пары чисел выведут "NO"?
+   А) a=5, b=3
+   Б) a=3, b=5
+   В) a=10, b=10
+   Ответ: Б
+
+2. Программа на Pascal:
+   ```pascal
+   var x: integer;
+   begin
+     readln(x);
+     if x > 0 then
+       writeln('POS')
+     else
+       writeln('NEG');
+   end.
+   ```
+   Какие значения x выведут "NEG"?
+   А) x=5
+   Б) x=-3
+   В) x=0
+   Ответ: Б
+
+3. Программа на Pascal:
+   ```pascal
+   var a, b: integer;
+   begin
+     readln(a, b);
+     if a < b then
+       writeln('YES')
+     else
+       writeln('NO');
+   end.
+   ```
+   Какие пары чисел выведут "YES"?
+   А) a=5, b=3
+   Б) a=3, b=5
+   В) a=7, b=7
+   Ответ: Б
+
+4. Программа на Pascal:
+   ```pascal
+   var x: integer;
+   begin
+     readln(x);
+     if x < 0 then
+       writeln('NEG')
+     else
+       writeln('POS');
+   end.
+   ```
+   Какие значения x выведут "POS"?
+   А) x=-5
+   Б) x=3
+   В) x=0
+   Ответ: Б
+
+5. Программа на Pascal:
+   ```pascal
+   var a, b: integer;
+   begin
+     readln(a, b);
+     if a = b then
+       writeln('EQUAL')
+     else
+       writeln('NOT');
+   end.
+   ```
+   Какие пары чисел выведут "EQUAL"?
+   А) a=5, b=3
+   Б) a=3, b=5
+   В) a=7, b=7
+   Ответ: В
+
+6. Программа на Pascal:
+   ```pascal
+   var x: integer;
+   begin
+     readln(x);
+     if x > 10 then
+       writeln('BIG')
+     else
+       writeln('SMALL');
+   end.
+   ```
+   Какие значения x выведут "SMALL"?
+   А) x=15
+   Б) x=5
+   В) x=10
+   Ответ: Б
+
+7. Программа на Pascal:
+   ```pascal
+   var a, b: integer;
+   begin
+     readln(a, b);
+     if a + b > 10 then
+       writeln('BIG')
+     else
+       writeln('SMALL');
+   end.
+   ```
+   Какие пары чисел выведут "SMALL"?
+   А) a=6, b=6
+   Б) a=2, b=2
+   В) a=7, b=5
+   Ответ: Б
+
+8. Программа на Pascal:
+   ```pascal
+   var x: integer;
+   begin
+     readln(x);
+     if x mod 2 = 0 then
+       writeln('EVEN')
+     else
+       writeln('ODD');
+   end.
+   ```
+   Какие значения x выведут "EVEN"?
+   А) x=3
+   Б) x=4
+   В) x=5
+   Ответ: Б
+
+9. Программа на Pascal:
+   ```pascal
+   var a, b: integer;
+   begin
+     readln(a, b);
+     if a - b > 0 then
+       writeln('POS')
+     else
+       writeln('NEG');
+   end.
+   ```
+   Какие пары чисел выведут "POS"?
+   А) a=3, b=5
+   Б) a=5, b=3
+   В) a=7, b=7
+   Ответ: Б
+
+10. Программа на Pascal:
+    ```pascal
+    var x: integer;
+    begin
+      readln(x);
+      if x mod 2 <> 0 then
+        writeln('ODD')
+      else
+        writeln('EVEN');
+    end.
+    ```
+    Какие значения x выведут "ODD"?
+    А) x=2
+    Б) x=3
+    В) x=4
+    Ответ: Б

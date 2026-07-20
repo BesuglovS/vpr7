@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Типы файлов и расширения</title>
+    <meta name="description" content="Распределите расширения файлов по соответствующим категориям. Интерактивное задание ВПР 7 класс." />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="stylesheet" href="css/vpr7-3.css" />
@@ -20,6 +21,7 @@
     ></noscript>
     <!-- /Yandex.Metrika counter -->
     <script src="js/vpr7-3-generator.js"></script>
+    <script src="js/vpr7-storage.js"></script>
   </head>
   <body>
     <div class="container">
@@ -382,6 +384,7 @@
 
         // Отправляем результат в родительское окно (режим экзамена)
         VPR7_ExamUtils.sendExamResult(correctAnswers === totalExtensions);
+        if (window.VPR7_Storage) VPR7_Storage.saveTaskResult('7', 3, isCorrect);
 
         // Показываем подробные результаты
         const resultsDetail = document.getElementById("resultsDetail");

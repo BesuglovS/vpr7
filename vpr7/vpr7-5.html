@@ -4,12 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Логические задачи</title>
+    <meta name="description" content="Решите логическую задачу, сопоставив имена и фамилии на основе условий. Интерактивное задание ВПР 7 класс." />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="stylesheet" href="css/vpr7-5.css" />
     <!-- Yandex.Metrika counter -->
     <script src="../metrika.js"></script>
     <script src="js/vpr7-exam-utils.js"></script>
+    <script src="js/vpr7-storage.js"></script>
     <noscript
       ><div>
         <img
@@ -306,6 +308,7 @@
 
         // Отправляем результат в родительское окно (режим экзамена)
         VPR7_ExamUtils.sendExamResult(correctCount === totalCells);
+        if (window.VPR7_Storage) VPR7_Storage.saveTaskResult('7', 5, isCorrect);
 
         // Показываем ход рассуждений
         if (currentTask.reasoning && currentTask.reasoning.length > 0) {

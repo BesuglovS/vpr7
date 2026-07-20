@@ -146,6 +146,7 @@ function checkAnswer() {
 
   // Отправляем результат в родительское окно (режим экзамена)
   VPR7_ExamUtils.sendExamResult(userAnswer === currentAnswer);
+  if (window.VPR7_Storage) VPR7_Storage.saveTaskResult('8', 2, userAnswer === currentAnswer);
 
   // Блокируем проверку
   document.getElementById("checkBtn").disabled = true;

@@ -1,0 +1,31 @@
+# Задание 2: Файлы и папки
+
+## Категории
+Системные файлы
+Пользовательские файлы
+Логические файлы
+Временные файлы
+Исполняемые файлы
+
+## Элементы
+C:\Windows\System32
+C:\Windows
+C:\Users
+C:\Program Files
+C:\Program Files (x86)
+C:\Windows\Temp
+C:\Users\Name\Desktop
+C:\Users\Name\Documents
+C:\Users\Name\Downloads
+C:\Users\Name\Pictures
+C:\Users\Name\Music
+C:\Users\Name\Videos
+C:\ProgramData
+C:\PerfLog
+C:\Prefetch
+C:\hiberfil.sys
+C:\pagefile.sys
+C:\Windows\WinSxS
+C:\bootmgr
+C:\BCD
+C:\ntldr

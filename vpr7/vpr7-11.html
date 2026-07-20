@@ -4,12 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Цветовая модель RGB</title>
+    <meta name="description" content="Определите цвет по значениям RGB-компонентов. Интерактивный цветовой миксер. Задание ВПР 7 класс." />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="manifest" href="../manifest.json" />
     <link rel="stylesheet" href="css/vpr7-11.css" />
     <!-- Yandex.Metrika counter -->
     <script src="../metrika.js"></script>
     <script src="js/vpr7-exam-utils.js"></script>
+    <script src="js/vpr7-storage.js"></script>
     <noscript
       ><div>
         <img
@@ -378,6 +380,7 @@
 
         // Отправляем результат в родительское окно (режим экзамена)
         VPR7_ExamUtils.sendExamResult(isCorrect);
+        if (window.VPR7_Storage) VPR7_Storage.saveTaskResult('7', 11, isCorrect);
       }
 
       // Обновление статистики
