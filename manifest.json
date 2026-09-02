@@ -2,7 +2,7 @@
   "name": "ВПР 7 класс - Информатика",
   "short_name": "ВПР 7 класс",
   "description": "Интерактивные задания для подготовки к ВПР по информатике для 7 класса",
-  "start_url": "/vpr7.html",
+  "start_url": "/vpr.html",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
