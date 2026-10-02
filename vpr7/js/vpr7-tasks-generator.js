@@ -547,8 +547,10 @@ function generateTask6Fallback() {
 function generateTask7() {
   if (typeof window.VPR7_Task7_Generator !== "undefined") {
     const task = window.VPR7_Task7_Generator.generateTask();
-    // Return only numeric answer for consistency with interactive version
-    return { text: task.text, answer: task.answer };
+    // Добавляем единицу измерения, чтобы ответ был однозначным в таблице
+    const unitName =
+      window.VPR7_Task7_Generator.units[task.answerUnit].name;
+    return { text: task.text, answer: `${task.answer} ${unitName}` };
   }
   return generateTask7Fallback();
 }
@@ -600,7 +602,9 @@ function generateTask8Fallback() {
 function generateTask9() {
   if (typeof window.VPR7_Task9_Generator !== "undefined") {
     const task = window.VPR7_Task9_Generator.generateTask();
-    return { text: task.text, answer: task.answer };
+    // Добавляем единицу измерения (КБ/МБ, бит/с, с/мин — зависит от типа задания)
+    const unitName = window.VPR7_Task9_Generator.getUnitName(task.answerUnit);
+    return { text: task.text, answer: `${task.answer} ${unitName}` };
   }
   return generateTask9Fallback();
 }

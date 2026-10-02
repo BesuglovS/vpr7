@@ -270,7 +270,7 @@
         border: 2px solid #e0e0e0;
       }
 
-      /* Print styles for A4 */
+      /* Print styles: страницы уже разбиты на A4 средствами JS */
       .print-container {
         display: none;
       }
@@ -282,10 +282,10 @@
         }
 
         .container,
-        .card:not(.print-card),
         .buttons,
         .back-link,
-        .preview-tabs {
+        .preview-tabs,
+        .progress-modal {
           display: none !important;
         }
 
@@ -293,16 +293,17 @@
           display: block;
         }
 
-        .print-page {
-          width: 210mm;
-          min-height: 297mm;
-          padding: 20mm;
-          margin: 0 auto;
-          background: white;
+        .print-container .a4-page {
+          width: auto;
+          min-height: 0;
+          height: auto;
+          overflow: visible;
+          margin: 0;
+          box-shadow: none;
           page-break-after: always;
         }
 
-        .print-page:last-child {
+        .print-container .a4-page:last-child {
           page-break-after: auto;
         }
       }
@@ -320,37 +321,10 @@
         line-height: 1.5;
       }
 
-      /* PDF export styles - no shadows, minimal margins */
-      .pdf-page {
-        width: 100%;
-        padding: 5mm;
-        background: white;
-        font-family: "Times New Roman", Times, serif;
-        font-size: 12pt;
-        line-height: 1.5;
-        box-sizing: border-box;
-      }
-
-      .a4-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-        border-bottom: 2px solid #333;
-        padding-bottom: 10px;
-      }
-
-      .a4-header h1 {
-        font-size: 14pt;
-        color: #333;
-        text-shadow: none;
-        margin: 0;
-      }
-
-      .a4-header .variant-info {
-        font-size: 14pt;
-        color: #333;
-        font-weight: bold;
+      /* В предпросмотре страница фиксированной высоты — видны реальные разрывы */
+      .preview-page {
+        height: 297mm;
+        overflow: hidden;
       }
 
       .a4-task {
@@ -388,15 +362,6 @@
         font-style: italic;
         color: #666;
         margin-bottom: 5px;
-      }
-
-      .answers-page .a4-task {
-        margin-bottom: 15px;
-      }
-
-      .answer-key {
-        color: #2e7d32;
-        font-weight: bold;
       }
 
       .loading {
@@ -726,7 +691,11 @@
         </div>
 
         <div class="buttons">
-          <button class="btn btn-generate" onclick="generateVariants()">
+          <button
+            class="btn btn-generate"
+            id="btnGenerate"
+            onclick="generateVariants()"
+          >
             🔄 Сгенерировать
           </button>
           <button
@@ -801,7 +770,7 @@
     <script src="js/vpr7-11-generator.js"></script>
     <script src="js/vpr7-12-generator.js"></script>
     <!-- Main tasks generator (uses individual generators) -->
-    <script src="js/vpr7-tasks-generator.js"></script>
+    <script src="js/vpr7-tasks-generator.js?v=2"></script>
 
     <!-- Libraries for PDF export (loaded after all other scripts) -->
     <script src="../js/jspdf.umd.min.js"></script>
@@ -829,6 +798,121 @@
 
       let generatedVariants = [];
       let currentVariantIndex = 0;
+      let variantPages = []; // HTML страниц заданий (по вариантам)
+      let answersPages = []; // HTML страниц с ответами
+
+      // ---------- Геометрия A4 ----------
+      const PAGE_PADDING_MM = 15;
+      const ANSWERS_TASKS_PER_TABLE = 12;
+      const ANSWERS_TABLE_SPACING_PX = 30;
+
+      function measureMm(mm) {
+        const probe = document.createElement("div");
+        probe.style.cssText =
+          "position:absolute; visibility:hidden; height:" + mm + "mm; width:0;";
+        document.body.appendChild(probe);
+        const height = probe.getBoundingClientRect().height;
+        document.body.removeChild(probe);
+        return height;
+      }
+
+      let cachedContentHeight = null;
+      function getPageContentHeightPx() {
+        if (cachedContentHeight === null) {
+          // Высота области контента (297мм минус поля) с запасом на округления
+          cachedContentHeight = measureMm(297 - 2 * PAGE_PADDING_MM) - 8;
+        }
+        return cachedContentHeight;
+      }
+
+      // Скрытая страница для замера высоты блоков.
+      // Инлайн-стили дублируют .a4-page, чтобы media-запросы не искажали замер.
+      let measurer = null;
+      function getMeasurer() {
+        if (!measurer) {
+          measurer = document.createElement("div");
+          measurer.className = "a4-page";
+          measurer.style.cssText =
+            "position:absolute; left:-9999px; top:0; margin:0; width:210mm; " +
+            "padding:15mm; background:white; box-shadow:none; " +
+            "font-family:'Times New Roman',Times,serif; font-size:12pt; line-height:1.5;";
+          document.body.appendChild(measurer);
+        }
+        measurer.innerHTML = "";
+        return measurer;
+      }
+
+      function measureBlockHeight(html) {
+        const m = getMeasurer();
+        const wrapper = document.createElement("div");
+        wrapper.style.display = "flow-root";
+        wrapper.innerHTML = html;
+        m.appendChild(wrapper);
+        const height = wrapper.getBoundingClientRect().height;
+        m.removeChild(wrapper);
+        return height;
+      }
+
+      // Раскладывает блоки по страницам по их измеренной высоте
+      function paginateBlocks(heights, contentHeight) {
+        const pages = [];
+        let current = [];
+        let used = 0;
+        heights.forEach((height, idx) => {
+          if (current.length > 0 && used + height > contentHeight) {
+            pages.push(current);
+            current = [];
+            used = 0;
+          }
+          current.push(idx);
+          used += height;
+        });
+        if (current.length > 0) pages.push(current);
+        return pages;
+      }
+
+      // ---------- Построение блоков страниц ----------
+      function buildVariantHeaderHtml(variantNumber) {
+        return `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333; flex-wrap: wrap; gap: 10px;">
+                  <div style="font-size: 14pt; font-weight: bold;">ВПР Информатика 7 класс</div>
+                  <div>
+                    <span style="font-weight: bold;">Фамилия, имя: </span>
+                    <span style="display: inline-block; width: 300px; border-bottom: 1px solid #333;">&nbsp;</span>
+                  </div>
+                  <div>
+                    <span style="font-weight: bold;">Класс: </span>
+                    <span style="display: inline-block; width: 60px; border-bottom: 1px solid #333;">&nbsp;</span>
+                  </div>
+                  <div style="font-size: 14pt; font-weight: bold;">Вариант ${variantNumber}</div>
+                </div>
+              `;
+      }
+
+      function buildTaskBlockHtml(task) {
+        return `
+              <div class="a4-task">
+                <div class="a4-task-number">${task.number}.</div>
+                <div class="a4-task-text">${task.text}</div>
+                <div class="a4-answer-label">Ответ:</div>
+                <div class="a4-answer-space"></div>
+              </div>
+            `;
+      }
+
+      // Разбивает вариант на страницы A4 (используется в предпросмотре, печати и PDF)
+      function buildVariantPages(variant) {
+        const blocks = [buildVariantHeaderHtml(variant.number)];
+        variant.tasks.forEach((task) => blocks.push(buildTaskBlockHtml(task)));
+        const heights = blocks.map((html) => measureBlockHeight(html));
+        const pages = paginateBlocks(heights, getPageContentHeightPx());
+        return pages.map(
+          (idxs) =>
+            `<div class="a4-page preview-page">${idxs
+              .map((i) => blocks[i])
+              .join("")}</div>`,
+        );
+      }
 
       // Update total tasks count
       function updateTotalCount() {
@@ -865,81 +949,92 @@
         const loading = document.getElementById("loading");
         const previewContent = document.getElementById("previewContent");
         const previewTabs = document.getElementById("previewTabs");
+        const btnGenerate = document.getElementById("btnGenerate");
+        const btnPdf = document.getElementById("btnPdf");
 
+        btnGenerate.disabled = true;
+        btnPdf.disabled = true;
         loading.classList.add("active");
         previewContent.style.display = "none";
 
-        // Get task counts
-        const taskCounts = {};
-        document.querySelectorAll(".task-count-select").forEach((select) => {
-          const taskNum = select.dataset.task;
-          taskCounts[taskNum] = parseInt(select.value) || 0;
-        });
+        try {
+          // Get task counts
+          const taskCounts = {};
+          document.querySelectorAll(".task-count-select").forEach((select) => {
+            const taskNum = select.dataset.task;
+            taskCounts[taskNum] = parseInt(select.value) || 0;
+          });
 
-        const variantCount =
-          parseInt(document.getElementById("variantCount").value) || 1;
+          const variantCount =
+            parseInt(document.getElementById("variantCount").value) || 1;
 
-        // Generate variants
-        generatedVariants = [];
+          // Generate variants
+          generatedVariants = [];
 
-        // Use setTimeout to allow UI to update
-        await new Promise((resolve) => setTimeout(resolve, 100));
+          // Use setTimeout to allow UI to update
+          await delay(100);
 
-        for (let v = 0; v < variantCount; v++) {
-          const variant = {
-            number: v + 1,
-            tasks: [],
-          };
+          for (let v = 0; v < variantCount; v++) {
+            const variant = {
+              number: v + 1,
+              tasks: [],
+            };
 
-          let taskNumber = 1;
-          for (let taskType = 1; taskType <= 12; taskType++) {
-            const count = taskCounts[taskType] || 0;
-            for (let i = 0; i < count; i++) {
-              try {
-                const task = taskTypes[taskType].generator();
-                variant.tasks.push({
-                  number: taskNumber++,
-                  type: taskType,
-                  typeName: taskTypes[taskType].name,
-                  text: task.text,
-                  answer: task.answer,
-                });
-              } catch (e) {
-                console.error(`Error generating task type ${taskType}:`, e);
+            let taskNumber = 1;
+            for (let taskType = 1; taskType <= 12; taskType++) {
+              const count = taskCounts[taskType] || 0;
+              for (let i = 0; i < count; i++) {
+                try {
+                  const task = taskTypes[taskType].generator();
+                  variant.tasks.push({
+                    number: taskNumber++,
+                    type: taskType,
+                    typeName: taskTypes[taskType].name,
+                    text: task.text,
+                    answer: task.answer,
+                  });
+                } catch (e) {
+                  console.error(`Error generating task type ${taskType}:`, e);
+                }
               }
             }
+
+            generatedVariants.push(variant);
           }
 
-          generatedVariants.push(variant);
+          // Постраничная разметка (используется в предпросмотре, печати и PDF)
+          variantPages = generatedVariants.map((variant) =>
+            buildVariantPages(variant),
+          );
+          answersPages = buildAnswersPages();
+          fillPrintContainer();
+
+          // Update preview tabs
+          previewTabs.innerHTML = "";
+          generatedVariants.forEach((variant, index) => {
+            const tab = document.createElement("button");
+            tab.className = "preview-tab" + (index === 0 ? " active" : "");
+            tab.textContent = `Вариант ${variant.number}`;
+            tab.onclick = () => showVariant(index);
+            previewTabs.appendChild(tab);
+          });
+
+          // Add "Ответы" tab
+          const answersTab = document.createElement("button");
+          answersTab.className = "preview-tab";
+          answersTab.textContent = "📋 Ответы";
+          answersTab.onclick = () => showAnswersTable();
+          previewTabs.appendChild(answersTab);
+
+          // Show first variant
+          currentVariantIndex = 0;
+          renderPreview();
+        } finally {
+          loading.classList.remove("active");
+          previewContent.style.display = "block";
+          btnGenerate.disabled = false;
+          btnPdf.disabled = generatedVariants.length === 0;
         }
-
-        // Update preview tabs
-        previewTabs.innerHTML = "";
-        generatedVariants.forEach((variant, index) => {
-          const tab = document.createElement("button");
-          tab.className = "preview-tab" + (index === 0 ? " active" : "");
-          tab.textContent = `Вариант ${variant.number}`;
-          tab.onclick = () => showVariant(index);
-          previewTabs.appendChild(tab);
-        });
-
-        // Add "Ответы" tab
-        const answersTab = document.createElement("button");
-        answersTab.className = "preview-tab";
-        answersTab.textContent = "📋 Ответы";
-        answersTab.onclick = () => showAnswersTable();
-        previewTabs.appendChild(answersTab);
-
-        // Show first variant
-        currentVariantIndex = 0;
-        renderPreview();
-
-        loading.classList.remove("active");
-        previewContent.style.display = "block";
-
-        // Enable download button
-        document.getElementById("btnPdf").disabled =
-          generatedVariants.length === 0;
       }
 
       // Show specific variant
@@ -961,158 +1056,165 @@
         tabs[tabs.length - 1].classList.add("active");
 
         const previewContent = document.getElementById("previewContent");
-        previewContent.innerHTML = renderAnswersTable(false);
+        previewContent.innerHTML = answersPages.length
+          ? answersPages.join("")
+          : noPreviewHtml("Нет заданий — таблица ответов пуста");
+      }
+
+      function noPreviewHtml(message) {
+        return `
+                <div class="no-preview">
+                  <div class="icon">📋</div>
+                  <p>${message || 'Нажмите "Сгенерировать" для создания вариантов'}</p>
+                </div>
+              `;
       }
 
       // Render preview
       function renderPreview() {
         const previewContent = document.getElementById("previewContent");
-        if (generatedVariants.length === 0) {
-          previewContent.innerHTML = `
-                  <div class="no-preview">
-                    <div class="icon">📋</div>
-                    <p>Нажмите "Сгенерировать" для создания вариантов</p>
-                  </div>
-                `;
+        if (
+          generatedVariants.length === 0 ||
+          !variantPages[currentVariantIndex]
+        ) {
+          previewContent.innerHTML = noPreviewHtml();
           return;
         }
-
-        const variant = generatedVariants[currentVariantIndex];
-        previewContent.innerHTML = renderVariantHTML(variant, false);
+        previewContent.innerHTML = variantPages[currentVariantIndex].join("");
       }
 
-      // Render variant HTML
-      function renderVariantHTML(
-        variant,
-        includeAnswers = false,
-        forPDF = false,
-      ) {
-        const pageClass = forPDF ? "pdf-page" : "a4-page";
+      // ---------- Страницы ответов ----------
+      function buildAnswersTitleHeaderHtml() {
+        return `
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333;">
+                <h1 style="font-size: 14pt; color: #333; margin: 0;">Ответы</h1>
+                <div style="font-size: 12pt; color: #666;">ВПР Информатика 7 класс</div>
+              </div>
+            `;
+      }
 
-        if (includeAnswers) {
-          // Эта функция больше не используется для отдельных ответов
-          // Используется renderAnswersTable для сводной таблицы
-          return "";
-        } else {
-          // Страница с заданиями
-          let html = `
-                <div class="${pageClass}">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333; flex-wrap: wrap; gap: 10px;">
-                    <div style="font-size: 14pt; font-weight: bold;">ВПР Информатика 7 класс</div>
-                    <div>
-                      <span style="font-weight: bold;">Фамилия, имя: </span>
-                      <span style="display: inline-block; width: 300px; border-bottom: 1px solid #333;">&nbsp;</span>
-                    </div>
-                    <div>
-                      <span style="font-weight: bold;">Класс: </span>
-                      <span style="display: inline-block; width: 60px; border-bottom: 1px solid #333;">&nbsp;</span>
-                    </div>
-                    <div style="font-size: 14pt; font-weight: bold;">Вариант ${variant.number}</div>
-                  </div>
-              `;
+      function buildAnswersContinueHeaderHtml() {
+        return `
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333;">
+                <h1 style="font-size: 14pt; color: #333; margin: 0;">Ответы (продолжение)</h1>
+                <div style="font-size: 12pt; color: #666;">ВПР Информатика 7 класс</div>
+              </div>
+            `;
+      }
 
-          variant.tasks.forEach((task) => {
-            html += `
-                  <div class="a4-task">
-                    <div class="a4-task-number">${task.number}.</div>
-                    <div class="a4-task-text">${task.text}</div>
-                    <div class="a4-answer-label">Ответ:</div><div class="a4-answer-space"></div>
-                  </div>
-                `;
-          });
-
-          html += `</div>`;
-          return html;
+      function buildAnswersTableHtml(startTask, endTask) {
+        let headerCells =
+          "<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center;'>Вариант</th>";
+        for (let i = startTask; i <= endTask; i++) {
+          // Тип задания берём из любого варианта, где оно есть
+          const task = generatedVariants
+            .map((v) => v.tasks[i - 1])
+            .find(Boolean);
+          const headerText = task ? `${i} (${task.type})` : `${i}`;
+          headerCells += `<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center; min-width: 40px;'>${headerText}</th>`;
         }
+
+        let bodyRows = "";
+        generatedVariants.forEach((variant) => {
+          let rowCells = `<td style='border: 1px solid #333; padding: 8px; font-weight: bold; text-align: center;'>${variant.number}</td>`;
+          for (let i = startTask; i <= endTask; i++) {
+            const task = variant.tasks[i - 1]; // tasks array is 0-indexed
+            if (task) {
+              // Перенос слов для длинных ответов (например, путей к файлам)
+              rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center; word-wrap: break-word; word-break: break-all; max-width: 80px;'>${task.answer}</td>`;
+            } else {
+              rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center;'>&nbsp;</td>`;
+            }
+          }
+          bodyRows += `<tr>${rowCells}</tr>`;
+        });
+
+        return `<table style="width: 100%; border-collapse: collapse; font-size: 11pt;"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
       }
 
-      // Render answers table for all variants
-      function renderAnswersTable(forPDF = false) {
-        if (generatedVariants.length === 0) return "";
+      // Строит страницы ответов: таблицы переносятся на следующую страницу
+      // построчно (с повтором шапки колонок), а не обрезаются
+      function buildAnswersPages() {
+        if (generatedVariants.length === 0) return [];
 
-        const pageClass = forPDF ? "pdf-page" : "a4-page";
-
-        // Get max number of tasks across all variants
         const maxTasks = Math.max(
           ...generatedVariants.map((v) => v.tasks.length),
         );
+        if (maxTasks === 0) return [];
 
-        // Maximum tasks per table
-        const tasksPerTable = 12;
+        const contentHeight = getPageContentHeightPx();
+        const titleHeaderH = measureBlockHeight(buildAnswersTitleHeaderHtml());
+        const contHeaderH = measureBlockHeight(
+          buildAnswersContinueHeaderHtml(),
+        );
 
-        // Calculate number of tables needed
-        const numTables = Math.ceil(maxTasks / tasksPerTable);
-
-        // Build header for a specific table
-        function buildHeader(startTask, endTask) {
-          let headerCells =
-            "<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center;'>Вариант</th>";
-          for (let i = startTask; i <= endTask; i++) {
-            // Get task type from first variant (all variants have same task types at same positions)
-            const task = generatedVariants[0]?.tasks[i - 1];
-            const taskType = task ? task.type : "";
-            const headerText = taskType ? `${i} (${taskType})` : `${i}`;
-            headerCells += `<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center; min-width: 60px;'>${headerText}</th>`;
-          }
-          return headerCells;
-        }
-
-        // Build rows for a specific table
-        function buildRows(startTask, endTask) {
-          let tableRows = "";
-          generatedVariants.forEach((variant) => {
-            let rowCells = `<td style='border: 1px solid #333; padding: 8px; font-weight: bold; text-align: center;'>${variant.number}</td>`;
-
-            // Add answers for tasks in this range
-            for (let i = startTask; i <= endTask; i++) {
-              const task = variant.tasks[i - 1]; // tasks array is 0-indexed
-              if (task) {
-                // Allow word wrap for long answers (like file paths in task 2)
-                rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center; word-wrap: break-word; word-break: break-all; max-width: 80px;'>${task.answer}</td>`;
-              } else {
-                rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center;'>&nbsp;</td>`;
+        // Разрезаем каждую таблицу (по 12 колонок) на сегменты строк,
+        // помещающиеся на страницу
+        const segments = [];
+        for (let s = 1; s <= maxTasks; s += ANSWERS_TASKS_PER_TABLE) {
+          const e = Math.min(s + ANSWERS_TASKS_PER_TABLE - 1, maxTasks);
+          let cur = s;
+          while (cur <= e) {
+            let fit = null;
+            for (let cand = e; cand >= cur; cand--) {
+              const h = measureBlockHeight(buildAnswersTableHtml(cur, cand));
+              if (h <= contentHeight - titleHeaderH) {
+                fit = cand;
+                break;
               }
             }
-
-            tableRows += `<tr>${rowCells}</tr>`;
-          });
-          return tableRows;
-        }
-
-        // Build all tables
-        let tablesHtml = "";
-        for (let t = 0; t < numTables; t++) {
-          const startTask = t * tasksPerTable + 1;
-          const endTask = Math.min((t + 1) * tasksPerTable, maxTasks);
-
-          // Add spacing between tables
-          if (t > 0) {
-            tablesHtml += `<div style="margin-top: 30px;"></div>`;
+            if (fit === null) {
+              // Даже одна строка не помещается — аварийный сегмент
+              segments.push([cur, cur]);
+              cur += 1;
+            } else {
+              segments.push([cur, fit]);
+              cur = fit + 1;
+            }
           }
-
-          tablesHtml += `
-            <table style="width: 100%; border-collapse: collapse; font-size: 11pt;">
-              <thead>
-                <tr>${buildHeader(startTask, endTask)}</tr>
-              </thead>
-              <tbody>
-                ${buildRows(startTask, endTask)}
-              </tbody>
-            </table>
-          `;
         }
 
-        const html = `
-          <div class="${pageClass}">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333;">
-              <h1 style="font-size: 14pt; color: #333; margin: 0;">Ответы</h1>
-              <div style="font-size: 12pt; color: #666;">ВПР Информатика 7 класс</div>
-            </div>
-            ${tablesHtml}
-          </div>
-        `;
+        // Раскладываем сегменты по страницам
+        const pages = [];
+        let pageSegments = [];
+        let used = 0;
+        let avail = contentHeight - titleHeaderH;
+        segments.forEach(([s, e]) => {
+          const h = measureBlockHeight(buildAnswersTableHtml(s, e));
+          if (
+            pageSegments.length > 0 &&
+            used + ANSWERS_TABLE_SPACING_PX + h > avail
+          ) {
+            pages.push(pageSegments);
+            pageSegments = [];
+            used = 0;
+            avail = contentHeight - contHeaderH;
+          }
+          used += (pageSegments.length > 0 ? ANSWERS_TABLE_SPACING_PX : 0) + h;
+          pageSegments.push([s, e]);
+        });
+        if (pageSegments.length > 0) pages.push(pageSegments);
 
-        return html;
+        return pages.map((segs, pageIdx) => {
+          const header =
+            pageIdx === 0
+              ? buildAnswersTitleHeaderHtml()
+              : buildAnswersContinueHeaderHtml();
+          const tables = segs
+            .map(
+              ([s, e], i) =>
+                (i > 0
+                  ? `<div style="margin-top: ${ANSWERS_TABLE_SPACING_PX}px;"></div>`
+                  : "") + buildAnswersTableHtml(s, e),
+            )
+            .join("");
+          return `<div class="a4-page preview-page">${header}${tables}</div>`;
+        });
+      }
+
+      function fillPrintContainer() {
+        document.getElementById("printContainer").innerHTML =
+          variantPages.flat().join("") + answersPages.join("");
       }
 
       // Progress modal functions
@@ -1134,224 +1236,124 @@
         }
       }
 
+      // ---------- Вспомогательные ----------
+      function nextFrame() {
+        return new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      // Добавляет canvas страницы в PDF; если страница выше A4 —
+      // разрезает её на несколько страниц вместо обрезания
+      function addPageCanvasToPDF(pdf, canvas, pageWidthPt, pageHeightPt) {
+        if (!canvas.width || !canvas.height) return;
+        const imgHeightPt = (canvas.height * pageWidthPt) / canvas.width;
+        if (imgHeightPt <= pageHeightPt + 0.5) {
+          pdf.addImage(
+            canvas.toDataURL("image/png"),
+            "PNG",
+            0,
+            0,
+            pageWidthPt,
+            imgHeightPt,
+          );
+          return;
+        }
+        const sliceHeightPx = Math.floor(
+          (canvas.width * pageHeightPt) / pageWidthPt,
+        );
+        for (let y = 0; y < canvas.height; y += sliceHeightPx) {
+          const h = Math.min(sliceHeightPx, canvas.height - y);
+          const slice = document.createElement("canvas");
+          slice.width = canvas.width;
+          slice.height = h;
+          slice.getContext("2d").drawImage(canvas, 0, -y);
+          if (y > 0) pdf.addPage();
+          pdf.addImage(
+            slice.toDataURL("image/png"),
+            "PNG",
+            0,
+            0,
+            pageWidthPt,
+            (h * pageWidthPt) / canvas.width,
+          );
+        }
+      }
+
       // Download PDF
       async function downloadPDF() {
         if (generatedVariants.length === 0) return;
 
         // Show progress modal
         showProgressModal();
-        // Даем браузеру время отрисовать модальное окно
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await nextFrame();
+        await delay(50);
 
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF("p", "pt", "a4");
-
-        // A4 dimensions in points (1 pt = 1/72 inch)
         const pageWidthPt = 595.28;
         const pageHeightPt = 841.89;
-        const marginPt = 10;
-        const contentWidthPt = pageWidthPt - 2 * marginPt;
 
-        // Pixel dimensions for rendering (at 2x scale for quality)
-        const scale = 2;
-        const contentWidthPx = Math.round(contentWidthPt * scale);
+        const allPages = [];
+        variantPages.forEach((pages, v) => {
+          pages.forEach((html) =>
+            allPages.push({
+              html,
+              label: `Вариант ${generatedVariants[v].number}`,
+            }),
+          );
+        });
+        answersPages.forEach((html) =>
+          allPages.push({ html, label: "Ответы" }),
+        );
 
-        let isFirstPage = true;
-
-        // Calculate total steps for progress
-        const totalVariants = generatedVariants.length;
-        const totalSteps = totalVariants * 2; // tasks + answers for each variant
-        let currentStep = 0;
-
-        // Helper function to render element to canvas
-        async function renderElementToCanvas(element, contentWidthPx) {
-          return await html2canvas(element, {
-            scale: 1,
-            useCORS: true,
-            logging: false,
-            width: contentWidthPx,
-            windowWidth: contentWidthPx,
-          });
-        }
-
-        // Helper function to add canvas to PDF with page breaks
-        function addCanvasToPDF(
-          canvas,
-          pdf,
-          xOffset,
-          yOffset,
-          contentWidthPt,
-          pageHeightPt,
-          marginPt,
-        ) {
-          const imgWidthPt = contentWidthPt;
-          const imgHeightPt = (canvas.height * contentWidthPt) / canvas.width;
-          const availableHeight = pageHeightPt - 2 * marginPt;
-
-          if (imgHeightPt <= availableHeight) {
-            pdf.addImage(
-              canvas.toDataURL("image/png", 1.0),
-              "PNG",
-              xOffset,
-              yOffset,
-              imgWidthPt,
-              imgHeightPt,
-            );
-            return yOffset + imgHeightPt;
-          }
-          return null; // Doesn't fit
-        }
-
-        // Create temporary container for rendering
+        // Скрытый контейнер для рендера страниц
         const container = document.createElement("div");
-        container.style.width = contentWidthPx + "px";
-        container.style.padding = "0";
-        container.style.background = "white";
-        container.style.fontFamily = "'Times New Roman', Times, serif";
-        container.style.fontSize = "14px";
-        container.style.lineHeight = "1.5";
-        container.style.boxSizing = "border-box";
-        container.style.position = "absolute";
-        container.style.left = "-9999px";
-        container.style.top = "0";
+        container.style.cssText =
+          "position:absolute; left:-9999px; top:0; width:210mm;";
         document.body.appendChild(container);
 
-        const xOffset = marginPt;
-        const availableHeight = pageHeightPt - 2 * marginPt;
-        const ptsPerPx = contentWidthPt / contentWidthPx;
-
         try {
-          // Phase 1: Render all variants (tasks only)
-          for (let i = 0; i < generatedVariants.length; i++) {
-            const variant = generatedVariants[i];
+          for (let i = 0; i < allPages.length; i++) {
             updateProgress(
-              (currentStep / totalSteps) * 100,
-              `Вариант ${variant.number}: формирование заданий...`,
+              (i / allPages.length) * 100,
+              `${allPages[i].label} (${i + 1} из ${allPages.length})...`,
             );
-            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await nextFrame();
 
-            // Render header separately
-            const headerHtml = `
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333; flex-wrap: wrap; gap: 10px;">
-                <div style="font-size: 14pt; font-weight: bold;">ВПР Информатика 7 класс</div>
-                <div>
-                  <span style="font-weight: bold;">Фамилия, имя: </span>
-                  <span style="display: inline-block; width: 300px; border-bottom: 1px solid #333;">&nbsp;</span>
-                </div>
-                <div>
-                  <span style="font-weight: bold;">Класс: </span>
-                  <span style="display: inline-block; width: 60px; border-bottom: 1px solid #333;">&nbsp;</span>
-                </div>
-                <div style="font-size: 14pt; font-weight: bold;">Вариант ${variant.number}</div>
-              </div>
-            `;
-            container.innerHTML = headerHtml;
-            await new Promise((resolve) => setTimeout(resolve, 10));
-            let headerCanvas = await renderElementToCanvas(
-              container,
-              contentWidthPx,
-            );
-            const headerHeightPt =
-              (headerCanvas.height * contentWidthPt) / headerCanvas.width;
+            container.innerHTML = allPages[i].html;
+            const pageEl = container.firstElementChild;
+            // Инлайн-стили: идентичность с замером и защита от media-запросов
+            pageEl.style.margin = "0";
+            pageEl.style.width = "210mm";
+            pageEl.style.padding = "15mm";
+            pageEl.style.fontSize = "12pt";
+            pageEl.style.height = "auto";
+            pageEl.style.minHeight = "297mm";
+            pageEl.style.overflow = "visible";
+            pageEl.style.boxShadow = "none";
+            await delay(20);
 
-            let currentY = marginPt;
+            const canvas = await html2canvas(pageEl, {
+              scale: 2,
+              useCORS: true,
+              logging: false,
+              backgroundColor: "#ffffff",
+              windowWidth: 1000,
+              windowHeight: pageEl.scrollHeight + 100,
+            });
 
-            // Add header on new page
-            if (!isFirstPage) {
-              pdf.addPage();
-            }
-            isFirstPage = false;
+            if (i > 0) pdf.addPage();
+            addPageCanvasToPDF(pdf, canvas, pageWidthPt, pageHeightPt);
 
-            pdf.addImage(
-              headerCanvas.toDataURL("image/png", 1.0),
-              "PNG",
-              xOffset,
-              currentY,
-              contentWidthPt,
-              headerHeightPt,
-            );
-            currentY += headerHeightPt + 10; // 10pt gap after header
-
-            // Gap between tasks in points
-            const taskGapPt = 12;
-
-            // Render each task separately
-            for (let t = 0; t < variant.tasks.length; t++) {
-              const task = variant.tasks[t];
-              const taskHtml = `
-                <div class="a4-task" style="padding-left: 25px; position: relative;">
-                  <div class="a4-task-number" style="position: absolute; left: 0; font-weight: bold;">${task.number}.</div>
-                  <div class="a4-task-text" style="margin-bottom: 5px;">${task.text}</div>
-                  <div class="a4-answer-label" style="font-style: italic; color: #666; margin-bottom: 3px;">Ответ:</div>
-                  <div class="a4-answer-space" style="border-bottom: 1px solid #333; min-height: 18px; margin-top: 5px;"></div>
-                </div>
-              `;
-              container.innerHTML = taskHtml;
-              await new Promise((resolve) => setTimeout(resolve, 10));
-              let taskCanvas = await renderElementToCanvas(
-                container,
-                contentWidthPx,
-              );
-              const taskHeightPt =
-                (taskCanvas.height * contentWidthPt) / taskCanvas.width;
-
-              // Check if task fits on current page
-              const remainingSpace = pageHeightPt - marginPt - currentY;
-
-              if (taskHeightPt > remainingSpace) {
-                // Task doesn't fit - start new page
-                pdf.addPage();
-                currentY = marginPt;
-              }
-
-              // Add task to PDF
-              pdf.addImage(
-                taskCanvas.toDataURL("image/png", 1.0),
-                "PNG",
-                xOffset,
-                currentY,
-                contentWidthPt,
-                taskHeightPt,
-              );
-              currentY += taskHeightPt + taskGapPt;
-            }
-
-            currentStep++;
+            updateProgress(((i + 1) / allPages.length) * 100, "");
           }
 
-          // Phase 2: Render answers table (single page with all variants)
-          updateProgress(
-            (currentStep / totalSteps) * 100,
-            "Формирование таблицы ответов...",
-          );
-          await new Promise((resolve) => requestAnimationFrame(resolve));
-          container.innerHTML = renderAnswersTable(true);
-          await new Promise((resolve) => setTimeout(resolve, 10));
-
-          const answersCanvas = await renderElementToCanvas(
-            container,
-            contentWidthPx,
-          );
-          const answersHeightPt =
-            (answersCanvas.height * contentWidthPt) / answersCanvas.width;
-
-          // Add answers page
-          pdf.addPage();
-          pdf.addImage(
-            answersCanvas.toDataURL("image/png", 1.0),
-            "PNG",
-            xOffset,
-            marginPt,
-            contentWidthPt,
-            answersHeightPt,
-          );
-          currentStep++;
-
           updateProgress(100, "Сохранение файла...");
-          await new Promise((resolve) => requestAnimationFrame(resolve));
-          await new Promise((resolve) => setTimeout(resolve, 200));
-
+          await nextFrame();
+          await delay(200);
           pdf.save(`ВПР_7_класс_варианты.pdf`);
         } finally {
           document.body.removeChild(container);
