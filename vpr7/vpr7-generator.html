@@ -192,6 +192,46 @@
         margin-top: 20px;
       }
 
+      /* Настройки печати: плотность страниц заданий и таблицы ответов */
+      .print-settings {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .print-setting {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      .print-setting select {
+        padding: 8px 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        background: white;
+        font-family: inherit;
+        font-size: 0.95rem;
+        color: #333;
+        cursor: pointer;
+      }
+
+      .print-setting select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .print-settings-hint {
+        width: 100%;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #888;
+      }
+
       .btn {
         border: none;
         padding: 15px 30px;
@@ -308,17 +348,30 @@
         }
       }
 
+      /* Параметры страницы A4. Меняются переключателем «плотные страницы»:
+         обычная вёрстка (12pt) или плотная — 12 заданий на два листа */
+      :root {
+        --a4-font-size: 12pt;
+        --a4-line-height: 1.5;
+        --a4-page-padding: 15mm;
+        --a4-task-gap: 15px;
+        --a4-task-text-gap: 10px;
+        --a4-answer-space: 30px;
+        --a4-answer-margin-top: 10px;
+        --a4-answer-label-gap: 5px;
+      }
+
       /* A4 preview styles */
       .a4-page {
         width: 210mm;
         min-height: 297mm;
-        padding: 15mm;
+        padding: var(--a4-page-padding);
         margin: 0 auto 20px auto;
         background: white;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
         font-family: "Times New Roman", Times, serif;
-        font-size: 12pt;
-        line-height: 1.5;
+        font-size: var(--a4-font-size);
+        line-height: var(--a4-line-height);
       }
 
       /* В предпросмотре страница фиксированной высоты — видны реальные разрывы */
@@ -328,7 +381,7 @@
       }
 
       .a4-task {
-        margin-bottom: 15px;
+        margin-bottom: var(--a4-task-gap);
         padding-left: 25px;
         position: relative;
         page-break-inside: avoid;
@@ -342,7 +395,7 @@
       }
 
       .a4-task-text {
-        margin-bottom: 10px;
+        margin-bottom: var(--a4-task-text-gap);
       }
 
       .a4-task-text .highlight {
@@ -354,14 +407,14 @@
 
       .a4-answer-space {
         border-bottom: 1px solid #333;
-        min-height: 30px;
-        margin-top: 10px;
+        min-height: var(--a4-answer-space);
+        margin-top: var(--a4-answer-margin-top);
       }
 
       .a4-answer-label {
         font-style: italic;
         color: #666;
-        margin-bottom: 5px;
+        margin-bottom: var(--a4-answer-label-gap);
       }
 
       .loading {
@@ -452,6 +505,34 @@
         font-size: 1.5rem;
         font-weight: 700;
         color: #667eea;
+      }
+
+      /* Блок ошибки формирования PDF */
+      .progress-error {
+        margin-top: 15px;
+        padding: 12px 15px;
+        border-radius: 10px;
+        background: #fdecec;
+        color: #96201d;
+        font-size: 0.95rem;
+        line-height: 1.45;
+        text-align: left;
+      }
+
+      .progress-content [hidden] {
+        display: none !important;
+      }
+
+      .progress-close {
+        margin-top: 15px;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 1rem;
+        font-family: inherit;
+        cursor: pointer;
+        background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
       }
 
       .no-preview {
@@ -659,7 +740,7 @@
             class="variant-count-input"
             value="2"
             min="1"
-            max="10"
+            max="30"
           />
           <div class="total-tasks">
             Всего заданий в варианте: <span id="totalTasksCount">12</span>
@@ -707,6 +788,29 @@
             📄 Скачать PDF
           </button>
         </div>
+
+        <div class="print-settings">
+          <label class="print-setting" for="pageDensity">
+            Плотность страниц заданий
+            <select id="pageDensity">
+              <option value="normal">Обычная — 12 pt (4 листа)</option>
+              <option value="medium">Средняя — 9 pt (3 листа)</option>
+              <option value="tight" selected>Плотная — 7.5 pt (2 листа)</option>
+            </select>
+          </label>
+          <label class="print-setting" for="answersDensity">
+            Таблица ответов
+            <select id="answersDensity">
+              <option value="normal">Обычная — крупный шрифт</option>
+              <option value="compact" selected>
+                Компактная — 12x12 на листе
+              </option>
+            </select>
+          </label>
+          <div class="print-settings-hint" id="pagesHint">
+            Листы указаны для варианта из 12 заданий.
+          </div>
+        </div>
       </div>
 
       <div class="card preview-section">
@@ -741,6 +845,10 @@
         </div>
         <div class="progress-text" id="progressText">Подготовка...</div>
         <div class="progress-percent" id="progressPercent">0%</div>
+        <div class="progress-error" id="progressError" hidden></div>
+        <button class="progress-close" id="progressClose" hidden>
+          Закрыть
+        </button>
       </div>
     </div>
 
@@ -800,11 +908,77 @@
       let currentVariantIndex = 0;
       let variantPages = []; // HTML страниц заданий (по вариантам)
       let answersPages = []; // HTML страниц с ответами
+      let compactAnswers = true; // компактная таблица ответов (галочка в UI)
 
       // ---------- Геометрия A4 ----------
-      const PAGE_PADDING_MM = 15;
-      const ANSWERS_TASKS_PER_TABLE = 12;
+      // Пресеты вёрстки страницы. Плотный повторяет прежние версии: 12 заданий
+      // варианта укладываются на две страницы A4 (шрифт мельче, поля 9 мм)
+      const PAGE_STYLES = {
+        normal: {
+          fontPt: 12,
+          lineHeight: 1.5,
+          paddingMm: 15,
+          taskGap: 15,
+          textGap: 10,
+          answerSpace: 30,
+          answerMarginTop: 10,
+          labelGap: 5,
+        },
+        medium: {
+          fontPt: 9,
+          lineHeight: 1.35,
+          paddingMm: 12,
+          taskGap: 8,
+          textGap: 6,
+          answerSpace: 30,
+          answerMarginTop: 6,
+          labelGap: 3,
+        },
+        tight: {
+          fontPt: 7.5,
+          lineHeight: 1.25,
+          paddingMm: 9,
+          taskGap: 4,
+          textGap: 3,
+          answerSpace: 28,
+          answerMarginTop: 3,
+          labelGap: 2,
+        },
+      };
+      let pageStyle = PAGE_STYLES.normal;
+
+      // Переносит пресет в CSS-переменные: их используют предпросмотр, печать
+      // и замер страниц, поэтому предпросмотр и PDF остаются согласованными
+      function applyPageStyle(style) {
+        pageStyle = style;
+        const root = document.documentElement.style;
+        root.setProperty("--a4-font-size", style.fontPt + "pt");
+        root.setProperty("--a4-line-height", String(style.lineHeight));
+        root.setProperty("--a4-page-padding", style.paddingMm + "mm");
+        root.setProperty("--a4-task-gap", style.taskGap + "px");
+        root.setProperty("--a4-task-text-gap", style.textGap + "px");
+        root.setProperty("--a4-answer-space", style.answerSpace + "px");
+        root.setProperty(
+          "--a4-answer-margin-top",
+          style.answerMarginTop + "px",
+        );
+        root.setProperty("--a4-answer-label-gap", style.labelGap + "px");
+        cachedContentHeight = null; // высота области контента изменилась
+        if (measurer) {
+          measurer.style.padding = style.paddingMm + "mm";
+          measurer.style.fontSize = style.fontPt + "pt";
+          measurer.style.lineHeight = String(style.lineHeight);
+        }
+      }
+
+      const ANSWERS_TASKS_PER_TABLE = 12; // максимум заданий (колонок) в таблице
       const ANSWERS_TABLE_SPACING_PX = 30;
+      const MAX_VARIANTS = 30;
+      // Компактный режим таблицы ответов: мелкий шрифт и узкие отступы,
+      // чтобы 12 заданий на 12 вариантов уложились в одну страницу A4
+      const ANSWERS_COMPACT_FONT_PT = 9;
+      const ANSWERS_COMPACT_PADDING_PX = 3;
+      const ANSWERS_COMPACT_LINE_HEIGHT = 1.2;
 
       function measureMm(mm) {
         const probe = document.createElement("div");
@@ -820,7 +994,7 @@
       function getPageContentHeightPx() {
         if (cachedContentHeight === null) {
           // Высота области контента (297мм минус поля) с запасом на округления
-          cachedContentHeight = measureMm(297 - 2 * PAGE_PADDING_MM) - 8;
+          cachedContentHeight = measureMm(297 - 2 * pageStyle.paddingMm) - 8;
         }
         return cachedContentHeight;
       }
@@ -834,10 +1008,13 @@
           measurer.className = "a4-page";
           measurer.style.cssText =
             "position:absolute; left:-9999px; top:0; margin:0; width:210mm; " +
-            "padding:15mm; background:white; box-shadow:none; " +
-            "font-family:'Times New Roman',Times,serif; font-size:12pt; line-height:1.5;";
+            "background:white; box-shadow:none; " +
+            "font-family:'Times New Roman',Times,serif;";
           document.body.appendChild(measurer);
         }
+        measurer.style.padding = pageStyle.paddingMm + "mm";
+        measurer.style.fontSize = pageStyle.fontPt + "pt";
+        measurer.style.lineHeight = String(pageStyle.lineHeight);
         measurer.innerHTML = "";
         return measurer;
       }
@@ -872,19 +1049,21 @@
       }
 
       // ---------- Построение блоков страниц ----------
+      // Шапка варианта: первая строка — название работы и номер варианта,
+      // вторая — поля для фамилии-имени и класса
       function buildVariantHeaderHtml(variantNumber) {
         return `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333; flex-wrap: wrap; gap: 10px;">
-                  <div style="font-size: 14pt; font-weight: bold;">ВПР Информатика 7 класс</div>
-                  <div>
-                    <span style="font-weight: bold;">Фамилия, имя: </span>
-                    <span style="display: inline-block; width: 300px; border-bottom: 1px solid #333;">&nbsp;</span>
+                <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #333;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 15px; margin-bottom: 14px;">
+                    <div style="font-size: 14pt; font-weight: bold;">ВПР Информатика 7 класс</div>
+                    <div style="font-size: 14pt; font-weight: bold; white-space: nowrap;">Вариант ${variantNumber}</div>
                   </div>
-                  <div>
-                    <span style="font-weight: bold;">Класс: </span>
-                    <span style="display: inline-block; width: 60px; border-bottom: 1px solid #333;">&nbsp;</span>
+                  <div style="display: flex; align-items: baseline; gap: 15px;">
+                    <div style="font-weight: bold; white-space: nowrap;">Фамилия, имя:</div>
+                    <div style="flex: 1 1 auto; border-bottom: 1px solid #333;">&nbsp;</div>
+                    <div style="font-weight: bold; white-space: nowrap;">Класс:</div>
+                    <div style="width: 70px; border-bottom: 1px solid #333;">&nbsp;</div>
                   </div>
-                  <div style="font-size: 14pt; font-weight: bold;">Вариант ${variantNumber}</div>
                 </div>
               `;
       }
@@ -928,12 +1107,56 @@
         select.addEventListener("change", updateTotalCount);
       });
 
+      // Настройки печати. Разметка страниц строится на этапе генерации,
+      // поэтому пересобираем её сразу — иначе предпросмотр и PDF расходились бы
+      document.getElementById("pageDensity").addEventListener("change", () => {
+        readPageStyleSetting();
+        if (generatedVariants.length === 0) return;
+        variantPages = generatedVariants.map((variant) =>
+          buildVariantPages(variant),
+        );
+        answersPages = buildAnswersPages();
+        fillPrintContainer();
+        refreshPreviewAfterRebuild();
+      });
+
+      document.getElementById("answersDensity").addEventListener("change", () => {
+        readCompactAnswersSetting();
+        if (generatedVariants.length === 0) return;
+        answersPages = buildAnswersPages();
+        fillPrintContainer();
+        refreshPreviewAfterRebuild();
+      });
+
       // Reset all task counts to 0
       function resetAllTasks() {
         document.querySelectorAll(".task-count-select").forEach((select) => {
           select.value = "0";
         });
         updateTotalCount();
+      }
+
+      // Компактная или обычная таблица ответов — тоже список
+      function readCompactAnswersSetting() {
+        const select = document.getElementById("answersDensity");
+        compactAnswers = !select || select.value === "compact";
+      }
+
+      // Плотность страниц заданий выбирается в списке
+      function readPageStyleSetting() {
+        const select = document.getElementById("pageDensity");
+        const preset = (select && PAGE_STYLES[select.value]) || PAGE_STYLES.tight;
+        applyPageStyle(preset);
+      }
+
+      // Обновляет открытую вкладку предпросмотра после пересборки страниц
+      function refreshPreviewAfterRebuild() {
+        const tabs = document.querySelectorAll(".preview-tab");
+        const answersTabActive =
+          tabs.length > 0 &&
+          tabs[tabs.length - 1].classList.contains("active");
+        if (answersTabActive) showAnswersTable();
+        else renderPreview();
       }
 
       // Set all task counts to 1
@@ -965,8 +1188,13 @@
             taskCounts[taskNum] = parseInt(select.value) || 0;
           });
 
-          const variantCount =
-            parseInt(document.getElementById("variantCount").value) || 1;
+          const variantInput = document.getElementById("variantCount");
+          const variantCount = Math.min(
+            MAX_VARIANTS,
+            Math.max(1, parseInt(variantInput.value) || 1),
+          );
+          // Показываем фактическое значение, если ввели больше максимума
+          variantInput.value = String(variantCount);
 
           // Generate variants
           generatedVariants = [];
@@ -1003,9 +1231,11 @@
           }
 
           // Постраничная разметка (используется в предпросмотре, печати и PDF)
+          readPageStyleSetting();
           variantPages = generatedVariants.map((variant) =>
             buildVariantPages(variant),
           );
+          readCompactAnswersSetting();
           answersPages = buildAnswersPages();
           fillPrintContainer();
 
@@ -1102,38 +1332,96 @@
             `;
       }
 
-      function buildAnswersTableHtml(startTask, endTask) {
-        let headerCells =
-          "<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center;'>Вариант</th>";
+      // Таблица ответов: строки — варианты, столбцы — задания.
+      // Диапазоны заданий и вариантов задаются явно, потому что большие
+      // таблицы режутся на части и по столбцам, и по строкам.
+      // В компактном режиме шрифт мельче, отступы уже и нет max-width у ячеек
+      function buildAnswersTableHtml(
+        startTask,
+        endTask,
+        startVariant = 1,
+        endVariant = generatedVariants.length,
+      ) {
+        const pad = compactAnswers ? ANSWERS_COMPACT_PADDING_PX : 8;
+        const cell = `border: 1px solid #333; padding: ${pad}px;`;
+        const headCell = `${cell} background: #f0f0f0; font-weight: bold; text-align: center;`;
+        const variantCell = `${cell} font-weight: bold; text-align: center;`;
+        const answerCell =
+          `${cell} text-align: center; word-wrap: break-word; word-break: break-all;` +
+          (compactAnswers ? "" : " max-width: 80px;");
+        const tableStyle =
+          "width: 100%; border-collapse: collapse;" +
+          (compactAnswers
+            ? ` font-size: ${ANSWERS_COMPACT_FONT_PT}pt; line-height: ${ANSWERS_COMPACT_LINE_HEIGHT};`
+            : " font-size: 11pt;");
+
+        let headerCells = `<th style='${headCell}'>Вариант</th>`;
         for (let i = startTask; i <= endTask; i++) {
           // Тип задания берём из любого варианта, где оно есть
           const task = generatedVariants
             .map((v) => v.tasks[i - 1])
             .find(Boolean);
           const headerText = task ? `${i} (${task.type})` : `${i}`;
-          headerCells += `<th style='border: 1px solid #333; padding: 8px; background: #f0f0f0; font-weight: bold; text-align: center; min-width: 40px;'>${headerText}</th>`;
+          headerCells += `<th style='${headCell} min-width: ${compactAnswers ? 0 : 40}px;'>${headerText}</th>`;
         }
 
         let bodyRows = "";
-        generatedVariants.forEach((variant) => {
-          let rowCells = `<td style='border: 1px solid #333; padding: 8px; font-weight: bold; text-align: center;'>${variant.number}</td>`;
-          for (let i = startTask; i <= endTask; i++) {
-            const task = variant.tasks[i - 1]; // tasks array is 0-indexed
-            if (task) {
-              // Перенос слов для длинных ответов (например, путей к файлам)
-              rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center; word-wrap: break-word; word-break: break-all; max-width: 80px;'>${task.answer}</td>`;
-            } else {
-              rowCells += `<td style='border: 1px solid #333; padding: 8px; text-align: center;'>&nbsp;</td>`;
+        generatedVariants
+          .slice(startVariant - 1, endVariant)
+          .forEach((variant) => {
+            let rowCells = `<td style='${variantCell}'>${variant.number}</td>`;
+            for (let i = startTask; i <= endTask; i++) {
+              const task = variant.tasks[i - 1]; // tasks array is 0-indexed
+              if (task) {
+                // Перенос слов для длинных ответов (например, путей к файлам)
+                rowCells += `<td style='${answerCell}'>${task.answer}</td>`;
+              } else {
+                rowCells += `<td style='${cell} text-align: center;'>&nbsp;</td>`;
+              }
             }
-          }
-          bodyRows += `<tr>${rowCells}</tr>`;
-        });
+            bodyRows += `<tr>${rowCells}</tr>`;
+          });
 
-        return `<table style="width: 100%; border-collapse: collapse; font-size: 11pt;"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+        return `<table style="${tableStyle}"><thead><tr>${headerCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
       }
 
-      // Строит страницы ответов: таблицы переносятся на следующую страницу
-      // построчно (с повтором шапки колонок), а не обрезаются
+      // Подбирает, сколько заданий (колонок) показывать в одной таблице.
+      // Чем уже колонки, тем сильнее переносятся длинные ответы и тем выше
+      // строки, поэтому перебираем варианты и берём тот, что даёт меньше
+      // страниц (при равенстве — тот, что делит задания на равные части)
+      function chooseAnswersColumns(maxTasks, variantCount, tableLimit) {
+        const maxColumns = Math.min(maxTasks, ANSWERS_TASKS_PER_TABLE);
+        let best = { columns: maxColumns, pages: Infinity, even: false };
+        for (let columns = maxColumns; columns >= 1; columns--) {
+          const fullHeight = measureBlockHeight(
+            buildAnswersTableHtml(1, columns, 1, variantCount),
+          );
+          const headerHeight = measureBlockHeight(
+            buildAnswersTableHtml(1, columns, 1, 1),
+          );
+          const avgRow =
+            (fullHeight - headerHeight) / Math.max(1, variantCount);
+          const rowsPerPage = Math.max(
+            1,
+            Math.floor((tableLimit - headerHeight) / Math.max(1, avgRow)),
+          );
+          const pages =
+            Math.ceil(maxTasks / columns) *
+            Math.ceil(variantCount / rowsPerPage);
+          const even = maxTasks % columns === 0;
+          const better =
+            pages < best.pages ||
+            (pages === best.pages && even && !best.even);
+          if (better) {
+            best = { columns, pages, even };
+          }
+        }
+        return best.columns;
+      }
+
+      // Строит страницы ответов. Таблица режется и по столбцам
+      // (заданиям), и по строкам (вариантам), с повтором шапки: на 25+
+      // вариантов таблица выше A4 и раньше вылезала за границу страницы
       function buildAnswersPages() {
         if (generatedVariants.length === 0) return [];
 
@@ -1147,29 +1435,47 @@
         const contHeaderH = measureBlockHeight(
           buildAnswersContinueHeaderHtml(),
         );
+        const variantCount = generatedVariants.length;
+        // Берём меньший из заголовков: сегмент должен помещаться и на первой
+        // странице, и на страницах-продолжениях
+        const tableLimit = contentHeight - Math.max(titleHeaderH, contHeaderH);
 
-        // Разрезаем каждую таблицу (по 12 колонок) на сегменты строк,
-        // помещающиеся на страницу
+        // Сегменты: [первое задание, последнее задание,
+        //            первый вариант, последний вариант]
+        const columnsPerTable = chooseAnswersColumns(
+          maxTasks,
+          variantCount,
+          tableLimit,
+        );
         const segments = [];
-        for (let s = 1; s <= maxTasks; s += ANSWERS_TASKS_PER_TABLE) {
-          const e = Math.min(s + ANSWERS_TASKS_PER_TABLE - 1, maxTasks);
-          let cur = s;
-          while (cur <= e) {
+        for (let cs = 1; cs <= maxTasks; cs += columnsPerTable) {
+          const ce = Math.min(cs + columnsPerTable - 1, maxTasks);
+          let rs = 1;
+          while (rs <= variantCount) {
+            // Высота таблицы растёт с числом строк, поэтому границу ищем
+            // делением пополам, а не перебором всех вариантов
+            let lo = rs;
+            let hi = variantCount;
             let fit = null;
-            for (let cand = e; cand >= cur; cand--) {
-              const h = measureBlockHeight(buildAnswersTableHtml(cur, cand));
-              if (h <= contentHeight - titleHeaderH) {
-                fit = cand;
-                break;
+            while (lo <= hi) {
+              const mid = Math.floor((lo + hi) / 2);
+              const h = measureBlockHeight(
+                buildAnswersTableHtml(cs, ce, rs, mid),
+              );
+              if (h <= tableLimit) {
+                fit = mid;
+                lo = mid + 1;
+              } else {
+                hi = mid - 1;
               }
             }
             if (fit === null) {
               // Даже одна строка не помещается — аварийный сегмент
-              segments.push([cur, cur]);
-              cur += 1;
+              segments.push([cs, ce, rs, rs]);
+              rs += 1;
             } else {
-              segments.push([cur, fit]);
-              cur = fit + 1;
+              segments.push([cs, ce, rs, fit]);
+              rs = fit + 1;
             }
           }
         }
@@ -1179,8 +1485,8 @@
         let pageSegments = [];
         let used = 0;
         let avail = contentHeight - titleHeaderH;
-        segments.forEach(([s, e]) => {
-          const h = measureBlockHeight(buildAnswersTableHtml(s, e));
+        segments.forEach(([cs, ce, rs, re]) => {
+          const h = measureBlockHeight(buildAnswersTableHtml(cs, ce, rs, re));
           if (
             pageSegments.length > 0 &&
             used + ANSWERS_TABLE_SPACING_PX + h > avail
@@ -1191,7 +1497,7 @@
             avail = contentHeight - contHeaderH;
           }
           used += (pageSegments.length > 0 ? ANSWERS_TABLE_SPACING_PX : 0) + h;
-          pageSegments.push([s, e]);
+          pageSegments.push([cs, ce, rs, re]);
         });
         if (pageSegments.length > 0) pages.push(pageSegments);
 
@@ -1202,10 +1508,10 @@
               : buildAnswersContinueHeaderHtml();
           const tables = segs
             .map(
-              ([s, e], i) =>
+              ([cs, ce, rs, re], i) =>
                 (i > 0
                   ? `<div style="margin-top: ${ANSWERS_TABLE_SPACING_PX}px;"></div>`
-                  : "") + buildAnswersTableHtml(s, e),
+                  : "") + buildAnswersTableHtml(cs, ce, rs, re),
             )
             .join("");
           return `<div class="a4-page preview-page">${header}${tables}</div>`;
@@ -1215,16 +1521,61 @@
       function fillPrintContainer() {
         document.getElementById("printContainer").innerHTML =
           variantPages.flat().join("") + answersPages.join("");
+        updatePagesHint();
+      }
+
+      // Показывает фактический расход бумаги при текущих настройках
+      function updatePagesHint() {
+        const hint = document.getElementById("pagesHint");
+        if (!hint) return;
+        if (generatedVariants.length === 0 || variantPages.length === 0) {
+          hint.textContent = "Листы указаны для варианта из 12 заданий.";
+          return;
+        }
+        const taskPages = variantPages.reduce((a, p) => a + p.length, 0);
+        hint.textContent =
+          `Всего листов: ${taskPages + answersPages.length}` +
+          ` (задания — ${taskPages}, ответы — ${answersPages.length})`;
       }
 
       // Progress modal functions
       function showProgressModal() {
         document.getElementById("progressModal").classList.add("active");
+        const errorBox = document.getElementById("progressError");
+        errorBox.hidden = true;
+        errorBox.textContent = "";
+        document.getElementById("progressClose").hidden = true;
+        document.getElementById("progressPercent").textContent = "0%";
+        document.getElementById("progressBar").style.background = "";
         updateProgress(0, "Подготовка...");
       }
 
       function hideProgressModal() {
         document.getElementById("progressModal").classList.remove("active");
+      }
+
+      // Показывает ошибку в модалке и оставляет её открытой, пока пользователь
+      // не закроет: иначе сбой выглядит как «нажал — и ничего не произошло»
+      function showPdfError(error) {
+        const message = String((error && error.message) || error || "");
+        const tooLarge =
+          /invalid string length|out of memory|allocation size/i.test(message);
+        document.getElementById("progressText").textContent =
+          "Не удалось сформировать PDF";
+        document.getElementById("progressPercent").textContent = "";
+        const bar = document.getElementById("progressBar");
+        bar.style.width = "100%";
+        bar.style.background = "#c0392b";
+        const errorBox = document.getElementById("progressError");
+        errorBox.textContent = tooLarge
+          ? "Файл получился слишком большим для браузера. Уменьшите количество вариантов или заданий и попробуйте снова."
+          : message
+            ? "Ошибка: " + message
+            : "Неизвестная ошибка. Попробуйте уменьшить количество вариантов или заданий.";
+        errorBox.hidden = false;
+        const closeBtn = document.getElementById("progressClose");
+        closeBtn.hidden = false;
+        closeBtn.onclick = hideProgressModal;
       }
 
       function updateProgress(percent, text) {
@@ -1245,6 +1596,17 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
+      // Качество растра страницы. JPEG кладётся в PDF как есть, а PNG jsPDF
+      // хранит как несжатые пиксели (~10 МБ на страницу A4 при scale 2) и на
+      // больших наборах упирается в лимит длины строки V8 — PDF не сохраняется
+      const PDF_IMAGE_QUALITY = 0.9;
+
+      // Освобождает память canvas сразу после добавления страницы в PDF
+      function releaseCanvas(canvas) {
+        canvas.width = 0;
+        canvas.height = 0;
+      }
+
       // Добавляет canvas страницы в PDF; если страница выше A4 —
       // разрезает её на несколько страниц вместо обрезания
       function addPageCanvasToPDF(pdf, canvas, pageWidthPt, pageHeightPt) {
@@ -1252,13 +1614,14 @@
         const imgHeightPt = (canvas.height * pageWidthPt) / canvas.width;
         if (imgHeightPt <= pageHeightPt + 0.5) {
           pdf.addImage(
-            canvas.toDataURL("image/png"),
-            "PNG",
+            canvas.toDataURL("image/jpeg", PDF_IMAGE_QUALITY),
+            "JPEG",
             0,
             0,
             pageWidthPt,
             imgHeightPt,
           );
+          releaseCanvas(canvas);
           return;
         }
         const sliceHeightPx = Math.floor(
@@ -1272,14 +1635,16 @@
           slice.getContext("2d").drawImage(canvas, 0, -y);
           if (y > 0) pdf.addPage();
           pdf.addImage(
-            slice.toDataURL("image/png"),
-            "PNG",
+            slice.toDataURL("image/jpeg", PDF_IMAGE_QUALITY),
+            "JPEG",
             0,
             0,
             pageWidthPt,
             (h * pageWidthPt) / canvas.width,
           );
+          releaseCanvas(slice);
         }
+        releaseCanvas(canvas);
       }
 
       // Download PDF
@@ -1328,8 +1693,9 @@
             // Инлайн-стили: идентичность с замером и защита от media-запросов
             pageEl.style.margin = "0";
             pageEl.style.width = "210mm";
-            pageEl.style.padding = "15mm";
-            pageEl.style.fontSize = "12pt";
+            pageEl.style.padding = pageStyle.paddingMm + "mm";
+            pageEl.style.fontSize = pageStyle.fontPt + "pt";
+            pageEl.style.lineHeight = String(pageStyle.lineHeight);
             pageEl.style.height = "auto";
             pageEl.style.minHeight = "297mm";
             pageEl.style.overflow = "visible";
@@ -1347,6 +1713,7 @@
 
             if (i > 0) pdf.addPage();
             addPageCanvasToPDF(pdf, canvas, pageWidthPt, pageHeightPt);
+            container.innerHTML = ""; // освобождаем разметку страницы
 
             updateProgress(((i + 1) / allPages.length) * 100, "");
           }
@@ -1355,14 +1722,20 @@
           await nextFrame();
           await delay(200);
           pdf.save(`ВПР_7_класс_варианты.pdf`);
-        } finally {
-          document.body.removeChild(container);
           hideProgressModal();
+        } catch (error) {
+          console.error("Ошибка формирования PDF:", error);
+          showPdfError(error);
+        } finally {
+          container.innerHTML = "";
+          document.body.removeChild(container);
         }
       }
 
       // Initialize
       updateTotalCount();
+      readPageStyleSetting();
+      readCompactAnswersSetting();
     </script>
   </body>
 </html>
