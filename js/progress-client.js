@@ -67,11 +67,23 @@
     return config.storageKey + ':outbox';
   }
 
+  function makeOutboxId() {
+    return 'ob-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+
   function getOutbox() {
     try {
       var raw = global.localStorage.getItem(outboxKey());
       var list = raw ? JSON.parse(raw) : [];
-      return Array.isArray(list) ? list : [];
+      if (!Array.isArray(list)) return [];
+      // Миграция старых записей: идентификатор позволяет не удалить запись,
+      // добавленную другой вкладкой во время ожидания ответа сервера.
+      var changed = false;
+      list.forEach(function (item) {
+        if (item && !item.outbox_id) { item.outbox_id = makeOutboxId(); changed = true; }
+      });
+      if (changed) saveOutbox(list);
+      return list;
     } catch (e) {
       return [];
     }
@@ -92,7 +104,7 @@
     if (!updates || !updates.length) return;
     var list = getOutbox();
     for (var i = 0; i < updates.length; i++) {
-      list.push({ course: course, payload: updates[i], queued_at: nowIso() });
+      list.push({ outbox_id: makeOutboxId(), course: course, payload: updates[i], queued_at: nowIso() });
     }
     if (list.length > config.outboxLimit) {
       list = list.slice(-config.outboxLimit);
@@ -109,7 +121,8 @@
     var queue = getOutbox();
     if (!queue.length) return Promise.resolve(0);
     flushing = true;
-    return checkAuth()
+    // Если auth-web был недоступен, не доверяем закэшированному «не авторизован».
+    return checkAuth(unavailable === true)
       .then(function (authedNow) {
         if (!authedNow || unavailable) return 0;
         // Группируем по курсу, склеивая повторы по модулю (последний выигрывает).
@@ -117,7 +130,12 @@
         queue.forEach(function (item) {
           var c = item.course;
           if (!byCourse[c]) byCourse[c] = {};
-          byCourse[c][item.payload.module] = item.payload;
+          var slot = byCourse[c][item.payload.module];
+          if (!slot) {
+            slot = byCourse[c][item.payload.module] = { payload: item.payload, ids: [] };
+          }
+          slot.payload = item.payload;
+          slot.ids.push(item.outbox_id);
         });
         var courses = Object.keys(byCourse);
         var sentCount = 0;
@@ -127,17 +145,21 @@
           for (var i = 0; i < modules.length; i += config.batchLimit) {
             (function (chunk) {
               chain = chain.then(function () {
-                var updates = chunk.map(function (m) { return byCourse[c][m]; });
+                var slots = chunk.map(function (m) { return byCourse[c][m]; });
+                var updates = slots.map(function (slot) { return slot.payload; });
+                var confirmed = {};
+                slots.forEach(function (slot) {
+                  slot.ids.forEach(function (id) { confirmed[id] = true; });
+                });
                 return api('/api/progress.php', {
                   method: 'PUT',
                   body: JSON.stringify({ course: c, updates: updates })
                 }).then(function () {
                   sentCount += updates.length;
-                  // Убираем из очереди только успешно отправленные модули.
-                  var done = {};
-                  updates.forEach(function (u) { done[u.module] = true; });
+                  // Удаляем только подтверждённые записи. Более новые записи
+                  // того же модуля, появившиеся во время запроса, сохраняются.
                   saveOutbox(getOutbox().filter(function (item) {
-                    return !(item.course === c && done[item.payload.module]);
+                    return !(item.course === c && confirmed[item.outbox_id]);
                   }));
                 }).catch(function () { /* оставляем до следующей попытки */ });
               });
@@ -226,12 +248,23 @@
 
   /* --------------------------- слияние LWW --------------------------- */
 
+  // Legacy SQLite пишет 'YYYY-MM-DD HH:MM:SS' (UTC без Z). Браузерный
+  // Date.parse может принять это за локальное время — нормализуем.
+  function parseTime(value) {
+    if (!value || typeof value !== 'string') return NaN;
+    var s = value;
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:\.\d+)?$/.test(s)) {
+      s = s.replace(' ', 'T') + 'Z';
+    }
+    return Date.parse(s);
+  }
+
   // Возвращает более свежую из двух записей прогресса по updated_at.
   function newerEntry(a, b) {
     if (!a) return b;
     if (!b) return a;
-    var ta = Date.parse(a.updated_at || '');
-    var tb = Date.parse(b.updated_at || '');
+    var ta = parseTime(a.updated_at || '');
+    var tb = parseTime(b.updated_at || '');
     if (isNaN(ta) && isNaN(tb)) return Object.assign({}, a, b);
     if (isNaN(ta)) return b;
     if (isNaN(tb)) return a;
@@ -239,13 +272,34 @@
   }
 
   function mergeCourseData(server, local) {
+    server = server && typeof server === 'object' ? server : {};
+    local = local && typeof local === 'object' ? local : {};
     var merged = {};
     var keys = {};
     var k;
     for (k in server) { if (Object.prototype.hasOwnProperty.call(server, k)) keys[k] = true; }
     for (k in local) { if (Object.prototype.hasOwnProperty.call(local, k)) keys[k] = true; }
+
+    // Серверный сброс — это tombstone: локальные модули старше маркера
+    // не должны переживать merge (иначе зеркало nayanova-progress
+    // «воскрешает» прогресс на других устройствах).
+    var resetAt = server.__reset__ ? parseTime(server.__reset__.updated_at || '') : NaN;
+
     Object.keys(keys).forEach(function (key) {
-      merged[key] = newerEntry(server[key], local[key]);
+      var serverRow = server[key];
+      var localRow = local[key];
+      var localTs = localRow ? parseTime(localRow.updated_at || '') : NaN;
+      // Нет времени — тоже считаем старой записью: после сброса такие
+      // записи не должны переживать merge.
+      var localStale = localRow && (isNaN(localTs) || localTs <= resetAt);
+      if (!isNaN(resetAt) && key !== '__reset__' && key !== '__summary__' &&
+          localStale && !serverRow) {
+        return;
+      }
+      if (!isNaN(resetAt) && key === '__summary__' && localStale && !serverRow) {
+        return;
+      }
+      merged[key] = newerEntry(serverRow, localRow);
     });
     return merged;
   }
@@ -254,23 +308,28 @@
 
   /**
    * Получить прогресс по курсу (сервер + локальное хранилище, слияние LWW).
-   * @returns {Promise<{progress:Object, stats:Object|null, unavailable:boolean}>}
+   * server — «сырые» данные сервера (без локальных записей), чтобы вызывающий
+   * мог отличить серверное состояние от объединённого.
+   * @returns {Promise<{progress:Object, stats:Object|null, unavailable:boolean, server:Object|null}>}
    */
   function getCourse(course) {
     var c = course || config.course;
     var local = getLocal(c);
     return checkAuth().then(function (authedNow) {
       if (!authedNow) {
-        return { progress: local, stats: null, unavailable: unavailable };
+        return { progress: local, stats: null, unavailable: unavailable, server: null };
       }
       return api('/api/progress.php?course=' + encodeURIComponent(c))
         .then(function (d) {
           var server = (d && d.progress) ? d.progress : {};
           var merged = mergeCourseData(server, local);
           setLocal(c, merged);
-          return { progress: merged, stats: d.stats || null, unavailable: false };
+          return { progress: merged, stats: d.stats || null, unavailable: false, server: server };
         })
-        .catch(function () { return { progress: local, stats: null, unavailable: unavailable }; });
+        .catch(function () {
+          // Не выдаём локальные данные за серверные: GET не удался.
+          return { progress: local, stats: null, unavailable: true, server: null };
+        });
     });
   }
 
@@ -329,6 +388,19 @@
   }
 
   /**
+   * Серверный сброс прогресса курса (все устройства).
+   * Локальные ключи очищает вызывающий код: библиотека не знает,
+   * какие ещё данные курса живут в приложении.
+   */
+  function resetCourse(course) {
+    var c = course || config.course;
+    return api('/api/progress.php?action=reset', {
+      method: 'POST',
+      body: JSON.stringify({ course: c })
+    });
+  }
+
+  /**
    * Сводка по всем курсам (для портала). Требует авторизации.
    * Для различения «не авторизован» и «сервис недоступен» используйте getAuthState().
    * @returns {Promise<Object|null>} {courses:{course:{total,completed,percentage,updated_at}}}
@@ -345,7 +417,11 @@
   function wireNetworkListeners() {
     if (typeof global.addEventListener !== 'function') return;
     try {
-      global.addEventListener('online', function () { flushOutbox(); });
+      global.addEventListener('online', function () {
+        // Возврат сети: сбрасываем отрицательный кэш авторизации и пробуем снова.
+        resetAuth();
+        flushOutbox();
+      });
       if (typeof global.document !== 'undefined') {
         global.document.addEventListener('visibilitychange', function () {
           if (global.document.visibilityState === 'visible') flushOutbox();
@@ -365,6 +441,7 @@
     getCourse: getCourse,
     setModule: setModule,
     setBatch: setBatch,
+    resetCourse: resetCourse,
     getSummary: getSummary
   };
 
